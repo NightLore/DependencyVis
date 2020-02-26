@@ -1,15 +1,14 @@
-import ReactDOM from 'react-dom';
 import React from 'react';
 import axios from 'axios';
-import logo from './logo.svg';
 import './App.css';
 
 const { useState } = React
 
-const Card = props => {
+const Card = (props, dependency) => {
+  console.log("Card");
+  console.log(dependency);
   return (
     <div style={{ margin: '1em' }}>
-      <img alt="avatar" style={{ width: '70px' }} src={props.avatar_url} />
       <div>
         <div style={{ fontWeight: 'bold' }}>Repo name: {props.full_name}</div>
         <div>Fork count: {props.forks_count}</div>
@@ -21,6 +20,10 @@ const Card = props => {
         <div>Updated: {props.updated_at}</div>
         <div>Pushed: {props.pushed_at}</div>
         <div>License: {props.license ? props.license.name : "None"}</div>
+        <div>Is private: {props.private ? "true" : "false"}</div>
+        <div>Visibility: {props.visibility}</div>
+        <div>Subscribers: {props.subscribers_count}</div>
+        <div>package.json: {dependency.content}</div>
       </div>
     </div>
   )
@@ -34,14 +37,39 @@ const Form = props => {
 
   var handleSubmit = event => {
     event.preventDefault()
+    var cardInfo;
+    var dependency;
+    console.log("SUBMIT");
 
     axios
       .get(`https://api.github.com/repos/${username}/${repo}`)
       .then(resp => {
-        props.onSubmit(resp.data)
-        setUsername('')
-        setRepo('')
-      })
+	cardInfo = resp.data;
+	console.log("Got info");
+	console.log(cardInfo);
+	if (dependency) {
+	  //props.onSubmit(cardInfo, dependency)
+          //setUsername('');
+          //setRepo('');
+        }
+      });
+    axios
+      .get(`https://api.github.com/repos/${username}/${repo}/contents/package.json`)
+      .then(resp => {
+	console.log("Got dependency");
+	dependency = resp.data;
+	console.log(dependency);
+	console.log(dependency.content);
+	console.log(atob(dependency.content));
+	//dependency = JSON.parse(dependency.content);
+	if (cardInfo) {
+	  props.onSubmit(cardInfo, dependency)
+          setUsername('');
+          setRepo('');
+	  cardInfo = false;
+	  dependency = false;
+        }
+      });
   }
 
   return (
@@ -68,8 +96,8 @@ const Form = props => {
 const App = () => {
   const [cards, setCards] = useState([])
 
-  var addNewCard = cardInfo => {
-    setCards(cards.concat(cardInfo))
+  var addNewCard = (cardInfo, dependency) => {
+    setCards(cards.concat(cardInfo, dependency))
   }
 
   return (
