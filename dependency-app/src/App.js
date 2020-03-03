@@ -1,6 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import './App.css';
+import dotenv from 'dotenv';
+dotenv.config();
+console.log(process.env);
 
 const { useState } = React
 
@@ -40,7 +43,7 @@ async function axiosGet(url) {
    return axios.get(url).then(resp => resp.data);
 }
 
-const extractPackageJson = srctree => {
+const extractPackageJson = (url, srctree) => {
    
 }
 
@@ -52,6 +55,7 @@ const Form = props => {
       event.preventDefault()
       var cardInfo = {};
       console.log("SUBMIT");
+
 
       cardInfo["name"] = `${username}/${repo}`;
       cardInfo["info"] = await axiosGet(`https://api.github.com/repos/${username}/${repo}`);

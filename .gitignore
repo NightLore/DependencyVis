@@ -13,6 +13,7 @@
 
 # misc
 .DS_Store
+dependency-app/src/.env
 dependency-app/.env
 .env
 .env.local
