@@ -41,7 +41,7 @@ async function axiosGet(url) {
 }
 
 const extractPackageJson = srctree => {
-
+   
 }
 
 const Form = props => {
@@ -53,6 +53,7 @@ const Form = props => {
       var cardInfo = {};
       console.log("SUBMIT");
 
+      cardInfo["name"] = `${username}/${repo}`;
       cardInfo["info"] = await axiosGet(`https://api.github.com/repos/${username}/${repo}`);
       console.log("Info");
       console.log(cardInfo["info"]);
