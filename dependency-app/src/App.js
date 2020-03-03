@@ -4,9 +4,14 @@ import './App.css';
 
 const { useState } = React
 
-const Card = (props, dependency) => {
+const Card = props => {
   console.log("Card");
+  var dependency = JSON.parse(atob(props["dependency"].content));
+  var srctree = props["srctree"];
+  props = props["info"];
   console.log(dependency);
+  console.log(props);
+  console.log(srctree);
   return (
     <div style={{ margin: '1em' }}>
       <div>
@@ -23,7 +28,7 @@ const Card = (props, dependency) => {
         <div>Is private: {props.private ? "true" : "false"}</div>
         <div>Visibility: {props.visibility}</div>
         <div>Subscribers: {props.subscribers_count}</div>
-        <div>package.json: {dependency.content}</div>
+        <div>package.json: {JSON.stringify(dependency.dependencies)}</div>
       </div>
     </div>
   )
@@ -31,45 +36,33 @@ const Card = (props, dependency) => {
 
 const CardList = props => <div>{props.cards.map(card => <Card {...card} />)}</div>
 
+async function axiosGet(url) {
+  return axios
+    .get(url)
+    .then(resp => resp.data);
+}
+
 const Form = props => {
   const [username, setUsername] = useState('')
   const [repo, setRepo] = useState('')
 
-  var handleSubmit = event => {
+  var handleSubmit = async event => {
     event.preventDefault()
-    var cardInfo;
-    var dependency;
+    var cardInfo = {};
     console.log("SUBMIT");
 
-    axios
-      .get(`https://api.github.com/repos/${username}/${repo}`)
-      .then(resp => {
-	cardInfo = resp.data;
-	console.log("Got info");
-	console.log(cardInfo);
-	if (dependency) {
-	  //props.onSubmit(cardInfo, dependency)
-          //setUsername('');
-          //setRepo('');
-        }
-      });
-    axios
-      .get(`https://api.github.com/repos/${username}/${repo}/contents/package.json`)
-      .then(resp => {
-	console.log("Got dependency");
-	dependency = resp.data;
-	console.log(dependency);
-	console.log(dependency.content);
-	console.log(atob(dependency.content));
-	//dependency = JSON.parse(dependency.content);
-	if (cardInfo) {
-	  props.onSubmit(cardInfo, dependency)
-          setUsername('');
-          setRepo('');
-	  cardInfo = false;
-	  dependency = false;
-        }
-      });
+    cardInfo["info"] = await axiosGet(`https://api.github.com/repos/${username}/${repo}`);
+    console.log("Info");
+    console.log(cardInfo["info"]);
+    cardInfo["dependency"] = await axiosGet(`https://api.github.com/repos/${username}/${repo}/contents/package.json`);
+    console.log("dependency");
+    console.log(cardInfo["dependency"]);
+    cardInfo["srctree"] = await axiosGet(`https://api.github.com/repos/${username}/${repo}/git/trees/master`);
+    console.log("srctree");
+    console.log(cardInfo["srctree"]);
+    props.onSubmit(cardInfo)
+    setUsername('');
+    setRepo('');
   }
 
   return (
@@ -96,8 +89,8 @@ const Form = props => {
 const App = () => {
   const [cards, setCards] = useState([])
 
-  var addNewCard = (cardInfo, dependency) => {
-    setCards(cards.concat(cardInfo, dependency))
+  var addNewCard = cardInfo => {
+    setCards(cards.concat(cardInfo))
   }
 
   return (
