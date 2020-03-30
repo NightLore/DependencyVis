@@ -1,0 +1,20 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "DependencyVis backend makes calls to Github API and MongoDB to retrieve dependency information",
+  "main": "server.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "github-api": "^3.3.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Nathan Lui",
+  "license": "ISC"
+}
