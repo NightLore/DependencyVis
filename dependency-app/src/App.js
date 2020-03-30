@@ -11,30 +11,22 @@ console.log(process.env.REACT_APP_PASSWORD);
 const { useState } = React
 
 const Card = props => {
-   console.log("Card");
-   var dependency = props.dependency;
-   var srctree = props["srctree"];
-   props = props["info"];
-   console.log(dependency);
-   console.log(props);
-   console.log(srctree);
+   console.log("New Card: ", props);
+   
    return (
       <div style={{ margin: '1em' }}>
       <div>
-         <div style={{ fontWeight: 'bold' }}>Repo name: {props.full_name}</div>
+         <div style={{ fontWeight: 'bold' }}>Repo name: {props.username}/{props.repo}</div>
          <div>Fork count: {props.forks_count}</div>
          <div>Star count: {props.stargazers_count}</div>
          <div>Watcher count: {props.watchers_count}</div>
          <div>Size: {props.size}</div>
          <div>Num of Open Issues: {props.open_issues_count}</div>
-         <div>Created: {props.created_at}</div>
-         <div>Updated: {props.updated_at}</div>
-         <div>Pushed: {props.pushed_at}</div>
          <div>License: {props.license ? props.license.name : "None"}</div>
          <div>Is private: {props.private ? "true" : "false"}</div>
          <div>Visibility: {props.visibility}</div>
          <div>Subscribers: {props.subscribers_count}</div>
-         <div>package.json: {JSON.stringify(dependency.dependencies)}</div>
+         <div>package.json: {JSON.stringify(props.dependencies)}</div>
       </div>
       </div>
 )
@@ -49,7 +41,6 @@ function axiosGet(url) {
 }
 
 const extractPackageJson = (srctree) => {
-   console.log("Extract: ", srctree);
    var tree = srctree.tree;
    var path = "";
    for (var i = 0; i < tree.length; i++) {
@@ -58,19 +49,6 @@ const extractPackageJson = (srctree) => {
          path = element.path;
          break;
       }
-      /*
-      if (element.type === "blob" && element.path === "package.json") {
-         console.log("Found package.json");
-         return "package.json";
-      }
-      else if (element.type === "tree") {
-         var path = extractPackageJson(url, newtree);
-         console.log("Recieved ", path);
-         if (path) {
-            return element.path + "/" + path;
-         }
-      }
-      */
    }
    return path; 
 }
@@ -81,10 +59,25 @@ const Form = props => {
 
    var handleSubmit = async event => {
       event.preventDefault()
-      var cardInfo = {};
+      var cardInfo;
+      var userInfo = {
+         username: username,
+         repo: repo
+      };
       console.log("SUBMIT");
 
+      axios.post('http://localhost:3001/lookup', userInfo)
+         .then(resp => {
+            cardInfo = resp.data;
+            if (resp) {
+               props.onSubmit(cardInfo);
+               setUsername('');
+               setRepo('');
+            }
+            console.log("Card Info Response", cardInfo);
+         }).catch(err => {console.error(err);});
 
+      /*
       cardInfo["name"] = `${username}/${repo}`;
       cardInfo.info = await axiosGet(`https://api.github.com/repos/${username}/${repo}`);
       console.log("Info", cardInfo.info);
@@ -102,6 +95,13 @@ const Form = props => {
       props.onSubmit(cardInfo);
       setUsername('');
       setRepo('');
+
+      axios.post('http://localhost:3001/insert', cardInfo)
+         .then(() => console.log("Sent Info"))
+         .catch(err => {
+            console.error(err);
+         });
+      */
    }
 
    return (
