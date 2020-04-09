@@ -3,6 +3,7 @@ import axios from 'axios';
 import './App.css';
 import mongodb from 'mongodb';
 import dotenv from 'dotenv';
+import * as d3 from 'd3';
 
 dotenv.config();
 console.log(process.env);
@@ -76,32 +77,6 @@ const Form = props => {
             }
             console.log("Card Info Response", cardInfo);
          }).catch(err => {console.error(err);});
-
-      /*
-      cardInfo["name"] = `${username}/${repo}`;
-      cardInfo.info = await axiosGet(`https://api.github.com/repos/${username}/${repo}`);
-      console.log("Info", cardInfo.info);
-
-      cardInfo.srctree = await axiosGet(`https://api.github.com/repos/${username}/${repo}/git/trees/master?recursive=1`);
-      console.log("srctree", cardInfo.srctree);
-
-      var manifestPath = extractPackageJson(cardInfo.srctree);
-      console.log("extractJson: ", manifestPath);
-
-      cardInfo.dependency = await axiosGet(`https://api.github.com/repos/${username}/${repo}/contents/${manifestPath}`);
-      cardInfo.dependency = JSON.parse(atob(cardInfo.dependency.content));
-      console.log("dependency", cardInfo.dependency);
-
-      props.onSubmit(cardInfo);
-      setUsername('');
-      setRepo('');
-
-      axios.post('http://localhost:3001/insert', cardInfo)
-         .then(() => console.log("Sent Info"))
-         .catch(err => {
-            console.error(err);
-         });
-      */
    }
 
    return (
