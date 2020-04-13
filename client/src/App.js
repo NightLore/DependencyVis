@@ -4,6 +4,7 @@ import './App.css';
 import mongodb from 'mongodb';
 import dotenv from 'dotenv';
 import * as d3 from 'd3';
+import Graph from './Graph';
 import BarGraph from './BarGraph';
 
 dotenv.config();
@@ -110,6 +111,7 @@ const App = () => {
 
 return (
    <div>
+      <Graph/>
       <BarGraph/>
       <Form onSubmit={addNewCard} />
       <CardList cards={cards} />
