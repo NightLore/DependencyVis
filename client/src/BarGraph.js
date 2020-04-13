@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import * as d3 from 'd3'
 
-class Graph extends Component {
+class BarGraph extends Component {
    componentDidMount() {
       const data = [ 2, 4, 2, 6, 8 ]
       this.drawGraph(data)
@@ -32,4 +32,4 @@ class Graph extends Component {
    }
    render() { return <div ref="canvas"></div> }
 }
-export default Graph
+export default BarGraph
