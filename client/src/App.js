@@ -4,12 +4,13 @@ import './App.css';
 import mongodb from 'mongodb';
 import dotenv from 'dotenv';
 import * as d3 from 'd3';
+import Graph from './Graph';
 
 dotenv.config();
 console.log(process.env);
 console.log(process.env.REACT_APP_PASSWORD);
 
-const { useState } = React
+const { useState } = React;
 
 const Card = props => {
    console.log("New Card: ", props);
@@ -104,14 +105,15 @@ const App = () => {
    const [cards, setCards] = useState([])
 
    var addNewCard = cardInfo => {
-   setCards(cards.concat(cardInfo))
-}
+      setCards(cards.concat(cardInfo))
+   }
 
 return (
    <div>
-   <Form onSubmit={addNewCard} />
-         <CardList cards={cards} />
-       </div>
+      <Graph/>
+      <Form onSubmit={addNewCard} />
+      <CardList cards={cards} />
+   </div>
   )
 }
 
