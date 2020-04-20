@@ -1,9 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import './App.css';
-import mongodb from 'mongodb';
 import dotenv from 'dotenv';
-import * as d3 from 'd3';
 import Graph from './Graph';
 import BarGraph from './BarGraph';
 
@@ -36,25 +34,6 @@ const Card = props => {
 }
 
 const CardList = props => <div>{props.cards.map(card => <Card {...card} />)}</div>
-
-function axiosGet(url) {
-   return axios.get(url)
-      .then(resp => resp.data)
-      .catch(err => {console.log(err);});
-}
-
-const extractPackageJson = (srctree) => {
-   var tree = srctree.tree;
-   var path = "";
-   for (var i = 0; i < tree.length; i++) {
-      var element = tree[i];
-      if (element.path.includes("package.json")) {
-         path = element.path;
-         break;
-      }
-   }
-   return path; 
-}
 
 const Form = props => {
    const [username, setUsername] = useState('')
@@ -109,14 +88,14 @@ const App = () => {
       setCards(cards.concat(cardInfo))
    }
 
-return (
-   <div>
-      <Graph/>
-      <BarGraph/>
-      <Form onSubmit={addNewCard} />
-      <CardList cards={cards} />
-   </div>
-  )
+   return (
+      <div>
+         <Graph/>
+         <BarGraph/>
+         <Form onSubmit={addNewCard} />
+         <CardList cards={cards} />
+      </div>
+   )
 }
 
 export default App;
