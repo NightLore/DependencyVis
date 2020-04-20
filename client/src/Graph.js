@@ -8,19 +8,20 @@ const color = () => {
 }
 
 const nodes = [
-   {id: "1", group: 1, radius: 5},
-   {id: "2", group: 1, radius: 9},
-   {id: "3", group: 2, radius: 5},
+   {id: "lion", group: 1, radius: 5},
+   {id: "roar", group: 1, radius: 9},
+   {id: "absurdlylongname", group: 2, radius: 5},
    {id: "4", group: 2, radius: 9},
    {id: "5", group: 3, radius: 5},
-   {id: "6", group: 3, radius: 9},
+   {id: "test20", group: 3, radius: 9},
 ];
 const links = [
-   {source: "1", target: "2", value: 1},
-   {source: "2", target: "3", value: 1},
-   {source: "3", target: "4", value: 1},
+   {source: "lion", target: "roar", value: 1},
+   {source: "roar", target: "absurdlylongname", value: 1},
+   {source: "absurdlylongname", target: "4", value: 1},
    {source: "4", target: "5", value: 1},
-   {source: "5", target: "6", value: 1},
+   {source: "5", target: "test20", value: 1},
+   {source: "lion", target: "test20", value: 1},
 ];
 
 class Graph extends Component {
@@ -52,14 +53,24 @@ class Graph extends Component {
             .attr("stroke-width", d => Math.sqrt(d.value));
 
       const node = svgCanvas.append("g")
-            .attr("stroke", "#fff")
-            .attr("stroke-width", 1.5)
-         .selectAll("circle")
+         .selectAll("g")
          .data(nodes)
-         .join("circle")
-            .attr("r", d => d.radius)
-            .attr("fill", color())
+         .join("g")
             .call(drag(simulation));
+
+      node.append("circle")
+            .attr("r", d => d.radius)
+            .attr("stroke", "white")
+            .attr("fill", color())
+      node.append("text")
+            .attr("x", d => 1.5 * d.radius)
+            .text(d => d.id)
+            .attr("dominant-baseline", "middle")
+            //.attr("text-anchor", "middle")
+         .clone(true).lower()
+            .attr("fill", "none")
+            .attr("stroke", "white")
+            .attr("stroke-width", 3);
 
       simulation.on("tick", () => {
          link
@@ -68,8 +79,7 @@ class Graph extends Component {
             .attr("x2", d => d.target.x)
             .attr("y2", d => d.target.y)
          node
-            .attr("cx", d => d.x)
-            .attr("cy", d => d.y);
+            .attr("transform", d => `translate(${d.x},${d.y})`)
       });
 
    }
