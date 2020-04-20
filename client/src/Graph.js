@@ -1,8 +1,37 @@
 import React, { Component } from 'react'
 import * as d3 from 'd3'
-//import { forceLink } from "d3-force";
 
-class NodeGraph extends Component {
+const drag = simulation => {
+
+  function dragstarted(d) {
+    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+  }
+
+  function dragended(d) {
+    if (!d3.event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
+
+  return d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+}
+
+const color = () => {
+  const scale = d3.scaleOrdinal(d3.schemeCategory10);
+  return d => scale(d.group);
+}
+
+class Graph extends Component {
 
    componentDidMount() {
       const data = [ 2, 4, 2, 6, 8 ];
@@ -20,19 +49,19 @@ class NodeGraph extends Component {
          .style("border", "1px solid black");
 
       const nodes = [
-         {id: 1},
-         {id: 2},
-         {id: 3},
-         {id: 4},
-         {id: 5},
-         {id: 6},
+         {id: "1", group: 1, radius: 5},
+         {id: "2", group: 1, radius: 9},
+         {id: "3", group: 2, radius: 5},
+         {id: "4", group: 2, radius: 9},
+         {id: "5", group: 3, radius: 5},
+         {id: "6", group: 3, radius: 9},
       ];
       const links = [
-         {source: 1, target: 2, value: 1},
-         {source: 2, target: 3, value: 1},
-         {source: 3, target: 4, value: 1},
-         {source: 4, target: 5, value: 1},
-         {source: 5, target: 6, value: 1},
+         {source: "1", target: "2", value: 1},
+         {source: "2", target: "3", value: 1},
+         {source: "3", target: "4", value: 1},
+         {source: "4", target: "5", value: 1},
+         {source: "5", target: "6", value: 1},
       ];
 
       const simulation = d3.forceSimulation(nodes)
@@ -53,8 +82,9 @@ class NodeGraph extends Component {
          .selectAll("circle")
          .data(nodes)
          .join("circle")
-            .attr("r", 5)
-            .attr("fill", "red")
+            .attr("r", d => d.radius)
+            .attr("fill", color())
+            .call(drag(simulation));
 
       simulation.on("tick", () => {
          link
@@ -88,4 +118,4 @@ function _createForceSimulation() {
       //.force("y", d3.forceY())
 }
 
-export default NodeGraph
+export default Graph
