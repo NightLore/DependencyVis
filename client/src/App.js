@@ -3,11 +3,28 @@ import axios from 'axios';
 import './App.css';
 import dotenv from 'dotenv';
 import Graph from './Graph';
+import NodeGraph from './NodeGraph';
 import BarGraph from './BarGraph';
 
 dotenv.config();
 console.log(process.env);
 console.log(process.env.REACT_APP_PASSWORD);
+
+let nodes = [
+   {id: "lion", group: 1, radius: 5},
+   {id: "roar", group: 1, radius: 9},
+   {id: "absurdlylongname", group: 2, radius: 5},
+   {id: "4", group: 2, radius: 9},
+   {id: "5", group: 3, radius: 5},
+   {id: "test20", group: 3, radius: 9},
+];
+let links = [
+   {source: "lion", target: "roar", value: 1},
+   {source: "roar", target: "absurdlylongname", value: 1},
+   {source: "absurdlylongname", target: "4", value: 1},
+   {source: "4", target: "5", value: 1},
+   {source: "lion", target: "test20", value: 1},
+];
 
 const { useState } = React;
 
@@ -90,7 +107,8 @@ const App = () => {
 
    return (
       <div>
-         <Graph/>
+         <Graph nodes={nodes} links={links}/>
+         <NodeGraph/>
          <BarGraph/>
          <Form onSubmit={addNewCard} />
          <CardList cards={cards} />

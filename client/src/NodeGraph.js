@@ -7,7 +7,24 @@ const color = () => {
   return d => scale(d.group);
 }
 
-class Graph extends Component {
+let nodes = [
+   {id: "lion", group: 1, radius: 5},
+   {id: "roar", group: 1, radius: 9},
+   {id: "absurdlylongname", group: 2, radius: 5},
+   {id: "4", group: 2, radius: 9},
+   {id: "5", group: 3, radius: 5},
+   {id: "test20", group: 3, radius: 9},
+];
+let links = [
+   {source: "lion", target: "roar", value: 1},
+   {source: "roar", target: "absurdlylongname", value: 1},
+   {source: "absurdlylongname", target: "4", value: 1},
+   {source: "4", target: "5", value: 1},
+   {source: "5", target: "test20", value: 1},
+   {source: "lion", target: "test20", value: 1},
+];
+
+class NodeGraph extends Component {
 
    componentDidMount() {
       this.drawGraph();
@@ -16,8 +33,6 @@ class Graph extends Component {
    drawGraph()  {
       const canvasHeight = 400;
       const canvasWidth = 600;
-      let nodes = this.props.nodes;
-      let links = this.props.links;
 
       const svgCanvas = d3.select(this._rootNode)
          .append("svg")
@@ -66,6 +81,38 @@ class Graph extends Component {
             .attr("transform", d => `translate(${d.x},${d.y})`)
       });
 
+      /*
+      function spawn(source) {
+         nodes.push(source);
+         var target = node[0];
+         links.push({source, target});
+
+         link = link
+            .data(links)
+            .join("line");
+
+         node = node
+            .data(nodes)
+            .join(enter => enter.append("circle").attr("r", 0)
+                  .call(enter => enter.transition().attr("r", 5)),
+               update => update,
+               exit => exit.remove()
+            );
+
+         simulation.nodes(nodes);
+         simulation.force("link").links(links);
+         simulation.alpha(1).restart();
+
+         svgCanvas.property("value", {
+            nodes: nodes.map(d => ({id: d.index})),
+            links: links.map(d => ({source: d.source.index, target: d.target.index}))
+         });
+
+         svgCanvas.dispatch("input");
+      }
+      spawn({id: "" + Math.random(), group: 4, radius: Math.random() * 10, x: 0, y: 0});
+      */
+
    }
 
    shouldComponentUpdate() {
@@ -80,4 +127,11 @@ class Graph extends Component {
    render() { return <div ref={this._setRef.bind(this)}></div> }
 }
 
-export default Graph
+function _createForceSimulation() {
+   return d3.forceSimulation()
+      .force("charge", d3.forceManyBody().strength(-60))
+      //.force("x", d3.forceX())
+      //.force("y", d3.forceY())
+}
+
+export default NodeGraph
