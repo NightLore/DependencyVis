@@ -10,22 +10,6 @@ dotenv.config();
 console.log(process.env);
 console.log(process.env.REACT_APP_PASSWORD);
 
-let nodes = [
-   {id: "lion", group: 1, radius: 5},
-   {id: "roar", group: 1, radius: 9},
-   {id: "absurdlylongname", group: 2, radius: 5},
-   {id: "4", group: 2, radius: 9},
-   {id: "5", group: 3, radius: 5},
-   {id: "test20", group: 3, radius: 9},
-];
-let links = [
-   {source: "lion", target: "roar", value: 1},
-   {source: "roar", target: "absurdlylongname", value: 1},
-   {source: "absurdlylongname", target: "4", value: 1},
-   {source: "4", target: "5", value: 1},
-   {source: "lion", target: "test20", value: 1},
-];
-
 const { useState } = React;
 
 const Card = props => {
@@ -63,8 +47,17 @@ const Form = props => {
          username: username,
          repo: repo
       };
+      let nodes = [
+         {id: username, group: 1, radius: 5},
+         {id: repo, group: 2, radius: 6}
+      ]
+      let links = [
+         {source: username, target: repo, value: 5}
+      ]
       console.log("SUBMIT");
+      props.setNodesLinks(nodes, links);
 
+      /*
       axios.post('http://localhost:3001/lookup', userInfo)
          .then(resp => {
             cardInfo = resp.data;
@@ -75,6 +68,7 @@ const Form = props => {
             }
             console.log("Card Info Response", cardInfo);
          }).catch(err => {console.error(err);});
+      */
    }
 
    return (
@@ -100,6 +94,29 @@ const Form = props => {
 
 const App = () => {
    const [cards, setCards] = useState([])
+   const [nodes, setNodes] = useState([
+      {id: "lion", group: 1, radius: 5},
+      {id: "roar", group: 1, radius: 9},
+      {id: "absurdlylongname", group: 2, radius: 5},
+      {id: "4", group: 2, radius: 9},
+      {id: "5", group: 3, radius: 5},
+      {id: "test20", group: 3, radius: 9},
+   ]);
+   const [links, setLinks] = useState([
+      {source: "lion", target: "roar", value: 1},
+      {source: "roar", target: "absurdlylongname", value: 1},
+      {source: "absurdlylongname", target: "4", value: 1},
+      {source: "4", target: "5", value: 1},
+      {source: "lion", target: "test20", value: 1},
+   ]);
+   const [nodesChanged, setNodesChanged] = useState(false);
+
+   let setNodesLinks = (newNodes, newLinks) => {
+      setNodes(newNodes);
+      setLinks(newLinks);
+      setNodesChanged(true);
+      console.log("Nodes set", nodes, links);
+   }
 
    var addNewCard = cardInfo => {
       setCards(cards.concat(cardInfo))
@@ -107,10 +124,13 @@ const App = () => {
 
    return (
       <div>
-         <Graph nodes={nodes} links={links}/>
-         <NodeGraph/>
-         <BarGraph/>
-         <Form onSubmit={addNewCard} />
+         <Graph 
+            nodes={nodes} 
+            links={links}
+            nodesChanged={nodesChanged}
+            setNodesChanged={setNodesChanged}/>
+         <Form onSubmit={addNewCard} 
+            setNodesLinks={setNodesLinks}/>
          <CardList cards={cards} />
       </div>
    )
