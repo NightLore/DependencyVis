@@ -52,7 +52,7 @@ const Form = props => {
          {id: repo, group: 2, radius: 6}
       ]
       let links = [
-         {source: username, target: repo, value: 5}
+         {source: username, target: repo, value: 1}
       ]
       console.log("SUBMIT");
       props.setNodesLinks(nodes, links);
