@@ -3,8 +3,6 @@ import axios from 'axios';
 import './App.css';
 import dotenv from 'dotenv';
 import Graph from './Graph';
-import NodeGraph from './NodeGraph';
-import BarGraph from './BarGraph';
 
 dotenv.config();
 console.log(process.env);
@@ -47,6 +45,7 @@ const Form = props => {
          username: username,
          repo: repo
       };
+
       let nodes = [
          {id: username, group: 1, radius: 5},
          {id: repo, group: 2, radius: 6}
@@ -54,21 +53,21 @@ const Form = props => {
       let links = [
          {source: username, target: repo, value: 1}
       ]
-      console.log("SUBMIT");
-      props.setNodesLinks(nodes, links);
 
-      /*
+      console.log("SUBMIT");
+
       axios.post('http://localhost:3001/lookup', userInfo)
          .then(resp => {
             cardInfo = resp.data;
             if (resp) {
                props.onSubmit(cardInfo);
+               props.setNodesLinks(nodes, links);
                setUsername('');
                setRepo('');
             }
             console.log("Card Info Response", cardInfo);
          }).catch(err => {console.error(err);});
-      */
+
    }
 
    return (
