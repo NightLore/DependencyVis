@@ -32,6 +32,14 @@ function extractPackageJson(tree) {
    return path;
 }
 
+function extractDependencies(dependencies) {
+   let list = [];
+   for (let [key, value] of Object.entries(dependencies)) {
+      list.push({name: key, version: value});
+   }
+   return list;
+}
+
 app.use(
    cors({
       origin:'http://localhost:3000',
@@ -79,11 +87,11 @@ app.post('/lookup', (req, res) => {
 
       repo.getTree(data.default_branch, (err, srctree) => {
          data.manifest = extractPackageJson(srctree.tree);
-         console.log("package", data.manifest);
+         console.log("package", srctree.tree);
 
          repo.getContents(data.default_branch, data.manifest, true, (err, contents) => {
-            console.log("contents");
-            data.dependencies = contents.dependencies;
+            console.log("contents", contents);
+            data.dependencies = extractDependencies(contents.dependencies);
 
             client.connect(err => {
                const collection = client.db(dbName).collection(dbCollection);
@@ -95,7 +103,7 @@ app.post('/lookup', (req, res) => {
 
                const collected = collection.find({username: data.username});
                collected.each(function(err, doc) {
-                  console.log(doc);
+                  //console.log(doc);
                });
                client.close();
             });

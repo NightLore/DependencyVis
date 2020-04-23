@@ -46,20 +46,23 @@ const Form = props => {
          repo: repo
       };
 
-      let nodes = [
-         {id: username, group: 1, radius: 5},
-         {id: repo, group: 2, radius: 6}
-      ]
-      let links = [
-         {source: username, target: repo, value: 1}
-      ]
-
       console.log("SUBMIT");
+
+      let mainId = username + "/" + repo;
+      let nodes = [
+         {id: mainId, color: "blue", radius: 10}
+      ]
+      let links = []
 
       axios.post('http://localhost:3001/lookup', userInfo)
          .then(resp => {
             cardInfo = resp.data;
             if (resp) {
+               resp.data.dependencies.forEach((value, index, array) => {
+                  nodes.push({id: value.name, color: "orange", radius: 8});
+                  links.push({source: mainId, target: value.name, value: 5});
+               });
+               
                props.onSubmit(cardInfo);
                props.setNodesLinks(nodes, links);
                setUsername('');
@@ -84,9 +87,9 @@ const Form = props => {
             value={repo}
             onChange={event => setRepo(event.target.value)}
             placeholder="GitHub repo"
-         required
+            required
          />
-         <button type="submit">Add card</button>
+         <button type="submit">Display</button>
       </form>
    )
 }

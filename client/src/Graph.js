@@ -47,17 +47,34 @@ class Graph extends Component {
 
    _createCanvas() {
       this.svgCanvas = d3.select(this._rootNode)
-            .append("svg")
-            .attr("width", this.canvasWidth)
-            .attr("height", this.canvasHeight)
-            .style("border", "1px solid black");
+         .append("svg")
+         .attr("width", this.canvasWidth)
+         .attr("height", this.canvasHeight)
+         .style("border", "1px solid black");
    }
 
    _createSimulation() {
       this.simulation = d3.forceSimulation(this.props.nodes)
-            .force("link", d3.forceLink(this.props.links).id(d => d.id))
-            .force("charge", d3.forceManyBody())
-            .force("center", d3.forceCenter(this.canvasWidth / 2, this.canvasHeight / 2))
+         .force("link", d3.forceLink(this.props.links)
+            .id(d => d.id)
+            .distance(d => d.value * 20))
+         .force("charge", d3.forceManyBody())
+         .force("center", d3.forceCenter(this.canvasWidth / 2, this.canvasHeight / 2))
+
+      /*
+      this.force = d3.layout.force()
+         .charge(-120)
+         .linkDistance(30)
+         .size([this.canvasWidth, canvasHeight]);
+
+      this.force.nodes(this.props.nodes)
+         .links(json.links)
+         .charge(d => {
+            let charge = -500;
+            if (d.index === 0) charge = 10 * charge;
+            return charge;
+         });
+         */
    }
 
    _setGraphData() {
@@ -77,7 +94,7 @@ class Graph extends Component {
       this.node.append("circle")
             .attr("r", d => d.radius)
             .attr("stroke", "white")
-            .attr("fill", color())
+            .attr("fill", d => d.color)
       this.node.append("text")
             .attr("x", d => 1.5 * d.radius)
             .text(d => d.id)
