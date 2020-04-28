@@ -20,11 +20,12 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://" + username + ":" + password + "@" + url;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
-function extractPackageJson(tree) {
+function extractPackageJson(tree, folder) {
    var path = "";
    for (var i = 0; i < tree.length; i++) {
       var element = tree[i];
-      if (element.path.includes("package.json")) {
+      if (element.path.includes("package.json")
+       && element.path.includes(folder)) {
          path = element.path;
          break;
       }
@@ -55,7 +56,8 @@ app.post('/lookup', (req, res) => {
    console.log(req.body);
    var data = {
       username: req.body.username,
-      repo: req.body.repo
+      repo: req.body.repo,
+      folder: req.body.folder
    };
    var repo = git.getRepo(data.username, data.repo);
 
@@ -85,12 +87,12 @@ app.post('/lookup', (req, res) => {
       data.network_count = details.network_count;
       data.subscribers_count = details.subscribers_count;
 
-      repo.getTree(data.default_branch, (err, srctree) => {
-         data.manifest = extractPackageJson(srctree.tree);
-         console.log("package", srctree.tree);
+      repo.getTree(data.default_branch + "?recursive=1", (err, srctree) => {
+         data.manifest = extractPackageJson(srctree.tree, data.folder);
+         console.log("package", data.manifest);
 
          repo.getContents(data.default_branch, data.manifest, true, (err, contents) => {
-            console.log("contents", contents);
+            console.log("contents");
             data.dependencies = extractDependencies(contents.dependencies);
 
             client.connect(err => {

@@ -37,13 +37,15 @@ const CardList = props => <div>{props.cards.map(card => <Card {...card} />)}</di
 const Form = props => {
    const [username, setUsername] = useState('')
    const [repo, setRepo] = useState('')
+   const [folder, setFolder] = useState('')
 
    var handleSubmit = async event => {
       event.preventDefault()
       var cardInfo;
       var userInfo = {
          username: username,
-         repo: repo
+         repo: repo,
+         folder: folder
       };
 
       console.log("SUBMIT");
@@ -90,6 +92,12 @@ const Form = props => {
             required
          />
          <button type="submit">Display</button>
+         <input
+            type="text"
+            value={folder}
+            onChange={event => setFolder(event.target.value)}
+            placeholder="optional specified folder"
+         />
       </form>
    )
 }
