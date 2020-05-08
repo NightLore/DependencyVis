@@ -2,10 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const Github = require('github-api');
 
-// load APIs
-const git = new Github();
-const app = express();
-
 // load dotenv variables
 require('dotenv').config();
 const port = process.env.PORT || 3001;
@@ -14,6 +10,13 @@ const password = process.env.MONGO_DB_PASSWORD;
 const url = process.env.MONGO_DB_URL;
 const dbName = process.env.MONGO_DB_DATABASE;
 const dbCollection = process.env.MONGO_DB_COLLECTION;
+
+// load APIs
+const git = new Github({
+   username: process.env.GITHUB_USERNAME,
+   token: process.env.GITHUB_ACCESS_TOKEN
+});
+const app = express();
 
 // load MongoDB
 const MongoClient = require('mongodb').MongoClient;
