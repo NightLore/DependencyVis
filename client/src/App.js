@@ -11,8 +11,6 @@ console.log(process.env.REACT_APP_PASSWORD);
 const { useState } = React;
 
 const Card = props => {
-   console.log("New Card: ", props);
-   
    return (
       <div style={{ margin: '1em' }}>
       <div>
@@ -58,25 +56,38 @@ const Form = props => {
 
       axios.post('http://localhost:3001/lookup', userInfo)
          .then(resp => {
-            cardInfo = resp.data;
             if (resp) {
+               cardInfo = resp.data;
+               console.log("Response Data:", cardInfo);
                resp.data.dependencies.forEach((value, index, array) => {
-                  nodes.push({id: value.name, color: "orange", radius: 8});
-                  links.push({source: mainId, target: value.name, value: 5});
+                  console.log("Value:", value, index, array);
+                  
+                  nodes.push({
+                     id: value.name, 
+                     color: "orange", 
+                     radius: 8, 
+                     version: value.version
+                  });
+                  links.push({
+                     source: mainId, 
+                     target: value.name, 
+                     value: value.name.length
+                  });
                });
                
                props.onSubmit(cardInfo);
+               console.log("Nodes Generated", nodes, links);
                props.setNodesLinks(nodes, links);
                setUsername('');
                setRepo('');
             }
-            console.log("Card Info Response", cardInfo);
          }).catch(err => {console.error(err);});
 
    }
 
    return (
-      <form onSubmit={handleSubmit}>
+      <div style={{display: "block", "text-align": "center", margin: "2em"}}>
+      <form onSubmit={handleSubmit} style={{display: "inline-block" }}>
          <input
             type="text"
             value={username}
@@ -99,6 +110,7 @@ const Form = props => {
             placeholder="optional specified folder"
          />
       </form>
+      </div>
    )
 }
 
@@ -134,13 +146,13 @@ const App = () => {
 
    return (
       <div>
+         <Form onSubmit={addNewCard} 
+            setNodesLinks={setNodesLinks}/>
          <Graph 
             nodes={nodes} 
             links={links}
             nodesChanged={nodesChanged}
             setNodesChanged={setNodesChanged}/>
-         <Form onSubmit={addNewCard} 
-            setNodesLinks={setNodesLinks}/>
          <CardList cards={cards} />
       </div>
    )
