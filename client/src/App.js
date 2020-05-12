@@ -6,10 +6,10 @@ import Graph from './Graph';
 
 dotenv.config();
 console.log(process.env);
-console.log(process.env.REACT_APP_PASSWORD);
 
 const { useState } = React;
 
+/*
 const Card = props => {
    return (
       <div style={{ margin: '1em' }}>
@@ -31,6 +31,7 @@ const Card = props => {
 }
 
 const CardList = props => <div>{props.cards.map(card => <Card {...card} />)}</div>
+*/
 
 const Form = props => {
    const [username, setUsername] = useState('')
@@ -54,39 +55,35 @@ const Form = props => {
       ]
       let links = []
 
-      axios.post('http://localhost:3001/lookup', userInfo)
-         .then(resp => {
-            if (resp) {
-               cardInfo = resp.data;
-               console.log("Response Data:", cardInfo);
-               resp.data.dependencies.forEach((value, index, array) => {
-                  console.log("Value:", value, index, array);
-                  
-                  nodes.push({
-                     id: value.name, 
-                     color: "orange", 
-                     radius: 8, 
-                     version: value.version
-                  });
-                  links.push({
-                     source: mainId, 
-                     target: value.name, 
-                     value: value.name.length
-                  });
-               });
-               
-               props.onSubmit(cardInfo);
-               console.log("Nodes Generated", nodes, links);
-               props.setNodesLinks(nodes, links);
-               setUsername('');
-               setRepo('');
-            }
-         }).catch(err => {console.error(err);});
+      let resp = await axios.post('http://localhost:3001/lookup', userInfo)
+      if (resp) {
+         console.log("Response Data:", resp.data);
+         resp.data.dependencies.forEach((value, index, array) => {
+            nodes.push({
+               id: value.name, 
+               color: "orange", 
+               radius: 8, 
+               version: value.version
+            });
+            links.push({
+               source: mainId, 
+               target: value.name, 
+               value: value.name.length
+            });
+         });
+         console.log("Nodes Generated", nodes, links);
+         props.setNodesLinks(nodes, links);
+         setUsername('');
+         setRepo('');
+      }
+      else {
+         console.error("Failed lookup");
+      }
 
    }
 
    return (
-      <div style={{display: "block", "text-align": "center", margin: "2em"}}>
+      <div style={{display: "block", margin: "2em"}}>
       <form onSubmit={handleSubmit} style={{display: "inline-block" }}>
          <input
             type="text"
@@ -116,6 +113,7 @@ const Form = props => {
 
 const App = () => {
    const [cards, setCards] = useState([])
+   // defaults set to be examples of the format
    const [nodes, setNodes] = useState([
       {id: "lion", group: 1, radius: 5},
       {id: "roar", group: 1, radius: 9},
@@ -144,16 +142,30 @@ const App = () => {
       setCards(cards.concat(cardInfo))
    }
 
+   var search = async querry => {
+      console.log("App Click ", querry);
+
+      let resp = await axios.post('http://localhost:3001/search', querry)
+      if (resp) {
+         console.log("Response Search:", resp.data);
+      }
+      else {
+         console.error("Failed search");
+      }
+   }
+
    return (
       <div>
          <Form onSubmit={addNewCard} 
-            setNodesLinks={setNodesLinks}/>
+            setNodesLinks={setNodesLinks}
+         />
          <Graph 
             nodes={nodes} 
             links={links}
             nodesChanged={nodesChanged}
-            setNodesChanged={setNodesChanged}/>
-         <CardList cards={cards} />
+            setNodesChanged={setNodesChanged}
+            search={search}
+         />
       </div>
    )
 }

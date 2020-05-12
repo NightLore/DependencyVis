@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import * as d3 from 'd3'
 import drag from './drag'
 
+/*
 const color = () => {
   const scale = d3.scaleOrdinal(d3.schemeCategory10);
   return d => scale(d.group);
 }
+*/
 
 class Graph extends Component {
    constructor(props) {
@@ -126,6 +128,7 @@ class Graph extends Component {
             .attr("fill", d => d.color)
             .on("mouseover", this._handleMouseOver.bind(this))
             .on("mouseout", this._handleMouseOut.bind(this))
+            .on("click", this._handleMouseClicked.bind(this))
       
       this.node.append("text")
             .attr("x", d => 1.5 * d.radius)
@@ -191,6 +194,11 @@ class Graph extends Component {
          .attr("x", -this.tooltipWidth)
       this.tooltip.selectAll("tspan")
          .attr("x", -this.tooltipWidth)
+   }
+
+   _handleMouseClicked(d) {
+      console.log("Clicked", d);
+      this.props.search(d.id);
    }
 
    _clearCanvas() {
