@@ -146,9 +146,15 @@ app.post('/lookup', async (req, res, next) => {
 });
 
 app.post('/search', async (req, res) => {
-   res.send("test");
+   console.log("search", req.body);
+   let result = await git.search().forRepositories({q: req.body.querry, sort: "best-match"});
+   console.log("searched querry:", result.request.path);
+   console.log("searched data:", result.data[0]);
+   res.send(result.data[0]);
 });
 
+
+// Error handling code, does not work with async
 app.use((req, res, next) => {
    res.status(404).send({
       status: 404,
@@ -158,7 +164,7 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
    console.error(err.stack);
-   res.status(500).send('Something broke!');
+   //res.status(500).send('Something broke!');
    res.status(err.status || 500).send({
       error: {
          status: err.status || 500,

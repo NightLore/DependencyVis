@@ -145,7 +145,7 @@ const App = () => {
    var search = async querry => {
       console.log("App Click ", querry);
 
-      let resp = await axios.post('http://localhost:3001/search', querry)
+      let resp = await axios.post('http://localhost:3001/search', {querry: querry})
       if (resp) {
          console.log("Response Search:", resp.data);
       }
