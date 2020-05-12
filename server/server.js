@@ -44,28 +44,9 @@ function extractDependencies(dependencies) {
    return list;
 }
 
-app.use(
-   cors({
-      origin:'http://localhost:3000',
-      credentials: true
-   })
-);
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.get('/', (req, res) => res.send("Hello World!"));
-
-app.post('/lookup', (req, res) => {
-   console.log(req.body);
-   var data = {
-      username: req.body.username,
-      repo: req.body.repo,
-      folder: req.body.folder
-   };
-   var repo = git.getRepo(data.username, data.repo);
-
-   repo.getDetails((err, details) => {
-      console.log("details");
+async function getRepoDetails(repo) {
+   let data = {};
+   await repo.getDetails((err, details) => {
       data.private = details.private;
       data.description = details.description;
       data.size = details.size;
@@ -89,39 +70,105 @@ app.post('/lookup', (req, res) => {
       data.default_branch = details.default_branch;
       data.network_count = details.network_count;
       data.subscribers_count = details.subscribers_count;
+   });
+   return data;
+}
 
-      repo.getTree(data.default_branch + "?recursive=1", (err, srctree) => {
-         data.manifest = extractPackageJson(srctree.tree, data.folder);
-         console.log("package", data.manifest);
+async function getRepoTree(repo, treeParams, data) {
+   let source = {};
+   await repo.getTree(treeParams, (err, srctree) => {
+      source = srctree;
+   });
+   return source;
+}
 
-         repo.getContents(data.default_branch, data.manifest, true, (err, contents) => {
-            console.log("contents");
-            data.dependencies = extractDependencies(contents.dependencies);
+async function getFileContents(repo, branch, file) {
+   let contents = {};
+   await repo.getContents(branch, file, true, (err, c) => {
+      contents = c;
+   });
+   return contents;
+}
 
-            client.connect(err => {
-               const collection = client.db(dbName).collection(dbCollection);
-               console.log("Connected to Database");
+async function pushToDatabase(data) {
+   client.connect(err => {
+      const collection = client.db(dbName).collection(dbCollection);
+      console.log("Connected to Database");
 
-               collection.insertOne(data)
-                  .then(res => console.log("inserted"))
-                  .catch(err => console.error("Failed to insert", err));
+      collection.insertOne(data)
+         .then(res => console.log("inserted"))
+         .catch(err => console.error("Failed to insert", err));
 
-               const collected = collection.find({username: data.username});
-               collected.each(function(err, doc) {
-                  //console.log(doc);
-               });
-               client.close();
-            });
-            res.status(201).json(data);
-         });
-
-         console.log("End");
+      /*
+      const collected = collection.find({username: data.username});
+      collected.each(function(err, doc) {
+         //console.log(doc);
       });
+      */
 
+      client.close();
+   });
+}
+
+app.use(
+   cors({
+      origin:'http://localhost:3000',
+      credentials: true
+   })
+);
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.get('/', (req, res) => res.send("Hello World!"));
+app.put('/', (req, res) => res.send("Hello World!"));
+
+app.post('/lookup', async (req, res, next) => {
+   let data = {
+      username: req.body.username,
+      repo: req.body.repo,
+      folder: req.body.folder
+   };
+
+   let repo = git.getRepo(data.username, data.repo);
+   Object.assign(data, await getRepoDetails(repo));
+
+   let srctree = await getRepoTree(repo, data.default_branch + "?recursive=1", data);
+   data.manifest = extractPackageJson(srctree.tree, data.folder);
+   console.log("package", data.manifest);
+
+   let contents = await getFileContents(repo, data.default_branch, data.manifest);
+   console.log("contents", contents);
+   data.dependencies = extractDependencies(contents.dependencies);
+   console.log("dependencies", data.dependencies);
+
+   res.status(201).json(data);
+   await pushToDatabase(data);
+});
+
+app.post('/search', async (req, res) => {
+   res.send("test");
+});
+
+/*
+app.use((req, res, next) => {
+   res.status(404).send({
+      status: 404,
+      error: 'Not found'
    });
 });
 
-app.put('/', (req, res) => res.send("Hello World!"));
+app.use((err, req, res, next) => {
+   console.error(err.stack);
+   res.status(500).send('Something broke!');
+   res.status(err.status || 500).send({
+      error: {
+         status: err.status || 500,
+         message: err.message || 'Internal Server Error',
+      },
+   });
+});
+*/
+
 
 app.listen(port, () => console.log(`App listening on port ${port}`));
 
