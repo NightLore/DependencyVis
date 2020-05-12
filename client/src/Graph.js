@@ -23,7 +23,7 @@ class Graph extends Component {
       this.tooltipTextColor = "red";
       this.tooltipCharWidth = 10;
       this.tooltipTextOffset = 20;
-      this.tooltipDy = 1.5;
+      this.tooltipDy = 20;
    }
 
    componentDidMount() {
@@ -158,10 +158,12 @@ class Graph extends Component {
       let rectY = d3.mouse(p)[1] + d.radius * 2;
       this.tooltipWidth = Math.max(d.id.length, ("version: " + d.version).length) 
          * this.tooltipCharWidth;
+      this.tooltipHeight = d.length * this.tooltipDy + this.tooltipTextOffset; 
       let textX = rectX + this.tooltipWidth / 2;
       let textY = rectY + this.tooltipTextOffset;
+      let dy = this.tooltipDy;
+
       console.log("mouseover", d);
-      console.log("Check version", this.props.nodes)
       this.tooltip.transition()
             .duration(200)
             .style("opacity", 0.9)
@@ -169,6 +171,7 @@ class Graph extends Component {
             .attr("x", rectX + "px")
             .attr("y", rectY + "px")
             .attr("width", this.tooltipWidth)
+            .attr("height", this.tooltipHeight)
       this.tooltip.selectAll("text")
          .selectAll("*").remove()
 
@@ -182,8 +185,20 @@ class Graph extends Component {
          .append("tspan")
             .attr("x", textX + "px")
             .attr("y", textY + "px")
-            .attr("dy", this.tooltipDy + "em")
+            .attr("dy", dy + "px")
             .text("version: " + d.version)
+
+      if (!d.info) return;
+      dy += this.tooltipDy;
+      for (const [key, value] of Object.entries(d.info)) {
+         this.tooltip.selectAll("text")
+            .append("tspan")
+               .attr("x", textX + "px")
+               .attr("y", textY + "px")
+               .attr("dy", dy + "px")
+               .text(key + ": " + (value.name || value))
+         dy += this.tooltipDy;
+      }
    }
 
    _handleMouseOut(d) {
@@ -196,9 +211,25 @@ class Graph extends Component {
          .attr("x", -this.tooltipWidth)
    }
 
-   _handleMouseClicked(d) {
-      console.log("Clicked", d);
-      this.props.search(d.id);
+   async _handleMouseClicked(d) {
+      if (d.clicked) return;
+
+      let data = await this.props.search(d.id);
+      d.clicked = true;
+      d.color = "darkorange";
+      if (data) {
+         d.color = "lightblue";
+         d.info = {
+            size: data.size,
+            archived: data.archived,
+            license: data.license,
+            language: data.language,
+            forks: data.forks,
+            watchers: data.watchers
+         }
+         d.length += 6;
+      }
+      console.log("Clicked processed", d);
    }
 
    _clearCanvas() {

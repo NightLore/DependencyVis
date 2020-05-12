@@ -51,7 +51,7 @@ const Form = props => {
 
       let mainId = username + "/" + repo;
       let nodes = [
-         {id: mainId, color: "blue", radius: 10}
+         {id: mainId, color: "blue", radius: 10, length: 1}
       ]
       let links = []
 
@@ -63,7 +63,8 @@ const Form = props => {
                id: value.name, 
                color: "orange", 
                radius: 8, 
-               version: value.version
+               version: value.version,
+               length: 2
             });
             links.push({
                source: mainId, 
@@ -148,9 +149,11 @@ const App = () => {
       let resp = await axios.post('http://localhost:3001/search', {querry: querry})
       if (resp) {
          console.log("Response Search:", resp.data);
+         return resp.data;
       }
       else {
          console.error("Failed search");
+         return resp;
       }
    }
 
