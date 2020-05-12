@@ -181,12 +181,14 @@ class Graph extends Component {
             .attr("y", textY + "px")
             .text(d.id)
 
-      this.tooltip.selectAll("text")
-         .append("tspan")
-            .attr("x", textX + "px")
-            .attr("y", textY + "px")
-            .attr("dy", dy + "px")
-            .text("version: " + d.version)
+      if (d.version) {
+         this.tooltip.selectAll("text")
+            .append("tspan")
+               .attr("x", textX + "px")
+               .attr("y", textY + "px")
+               .attr("dy", dy + "px")
+               .text("version: " + d.version)
+      }
 
       if (!d.info) return;
       dy += this.tooltipDy;

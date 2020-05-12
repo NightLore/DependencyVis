@@ -51,7 +51,7 @@ const Form = props => {
 
       let mainId = username + "/" + repo;
       let nodes = [
-         {id: mainId, color: "blue", radius: 10, length: 1}
+         {id: mainId, color: "blue", radius: 10, length: 1, clicked: true}
       ]
       let links = []
 
