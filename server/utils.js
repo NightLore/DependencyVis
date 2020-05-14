@@ -1,25 +1,55 @@
 
-module.exports = {
+const gitDomain = "github.com/"
 
-   extractPackageJson: function(tree, folder) {
-      var path = "";
-      for (var i = 0; i < tree.length; i++) {
-         var element = tree[i];
-         if (element.path.includes("package.json")
-          && element.path.includes(folder)) {
-            path = element.path;
-            break;
-         }
+function extractPackageJson(tree, folder) {
+   var path = "";
+   for (var i = 0; i < tree.length; i++) {
+      var element = tree[i];
+      if (element.path.includes("package.json")
+       && element.path.includes(folder)) {
+         path = element.path;
+         break;
       }
-      return path;
-   },
+   }
+   return path;
+}
 
-   extractDependencies: function(dependencies) {
-      let list = [];
-      for (let [key, value] of Object.entries(dependencies)) {
-         list.push({name: key, version: value});
+function extractDependencies(dependencies) {
+   let list = [];
+   for (const [key, value] of Object.entries(dependencies)) {
+      list.push({name: key, version: value});
+   }
+   return list;
+}
+
+function findGithubUrl(packageJson) {
+   for (const value of Object.values(packageJson)) {
+      let check = value.url || value || "";
+      if (check.includes && check.includes(gitDomain)) {
+         return check;
       }
-      return list;
+   }
+   return "";
+}
+
+function extractGithubPath(path) {
+   let index = path.indexOf(gitDomain);
+   if (index < 0) {
+      console.log("Not a github path:", path);
+      return {};
    }
 
+   let tokens = path.substring(index + gitDomain.length).split("/");
+   index = tokens[1].indexOf('.git');
+   if (index >= 0) {
+      tokens[1] = tokens[1].substring(0, index);
+   }
+   return {username: tokens[0], repo: tokens[1]};
+}
+
+module.exports = {
+   extractPackageJson: extractPackageJson,
+   extractDependencies: extractDependencies,
+   findGithubUrl: findGithubUrl,
+   extractGithubPath: extractGithubPath
 };

@@ -73,7 +73,11 @@ app.post('/lookup', async (req, res, next) => {
 app.post('/search', async (req, res) => {
    console.log("search", req.body);
    let repo = npm.repo(req.body.querry);
-   console.log("Package.json", await repo.package());
+   let pack = await repo.package();
+   console.log("Package.json", pack);
+   let urlData = utils.extractGithubPath(utils.findGithubUrl(pack));
+   console.log("urlData", urlData);
+
 
    let result = await git.search().forRepositories({q: req.body.querry, sort: "best-match"});
    console.log("searched querry:", result.request.path);
