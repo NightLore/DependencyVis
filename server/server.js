@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const Github = require('github-api');
+const NpmApi = require('npm-api');
 const gitutils = require('./gitutils');
 const utils = require('./utils');
 
@@ -19,6 +20,7 @@ const git = new Github({
    token: process.env.GITHUB_ACCESS_TOKEN
 });
 const app = express();
+const npm = new NpmApi();
 
 // load MongoDB
 const MongoClient = require('mongodb').MongoClient;
@@ -58,23 +60,11 @@ app.get('/', (req, res) => res.send("Hello World!"));
 app.put('/', (req, res) => res.send("Hello World!"));
 
 app.post('/lookup', async (req, res, next) => {
-   let data = {
+   let data = await gitutils.retrieveRepoData(git, {
       username: req.body.username,
       repo: req.body.repo,
-      folder: req.body.folder
-   };
-
-   let repo = await git.getRepo(data.username, data.repo);
-   Object.assign(data, await gitutils.getRepoDetails(repo));
-
-   let srctree = await gitutils.getRepoTree(repo, data.default_branch + "?recursive=1", data);
-   data.manifest = utils.extractPackageJson(srctree.tree, data.folder);
-   console.log("package", data.manifest);
-
-   let contents = await gitutils.getFileContents(repo, data.default_branch, data.manifest);
-   console.log("contents", contents);
-   data.dependencies = utils.extractDependencies(contents.dependencies);
-   console.log("dependencies", data.dependencies);
+      folder:req.body.folder
+   });
 
    res.status(201).json(data);
    await pushToDatabase(data);
@@ -82,6 +72,9 @@ app.post('/lookup', async (req, res, next) => {
 
 app.post('/search', async (req, res) => {
    console.log("search", req.body);
+   let repo = npm.repo(req.body.querry);
+   console.log("Package.json", await repo.package());
+
    let result = await git.search().forRepositories({q: req.body.querry, sort: "best-match"});
    console.log("searched querry:", result.request.path);
    console.log("searched data:", result.data[0]);
