@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const Github = require('github-api');
 const gitutils = require('./gitutils');
+const utils = require('./utils');
 
 // load dotenv variables
 require('dotenv').config();
@@ -23,27 +24,6 @@ const app = express();
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://" + username + ":" + password + "@" + url;
 const client = new MongoClient(uri, { useNewUrlParser: true });
-
-function extractPackageJson(tree, folder) {
-   var path = "";
-   for (var i = 0; i < tree.length; i++) {
-      var element = tree[i];
-      if (element.path.includes("package.json")
-       && element.path.includes(folder)) {
-         path = element.path;
-         break;
-      }
-   }
-   return path;
-}
-
-function extractDependencies(dependencies) {
-   let list = [];
-   for (let [key, value] of Object.entries(dependencies)) {
-      list.push({name: key, version: value});
-   }
-   return list;
-}
 
 async function pushToDatabase(data) {
    client.connect(err => {
@@ -88,12 +68,12 @@ app.post('/lookup', async (req, res, next) => {
    Object.assign(data, await gitutils.getRepoDetails(repo));
 
    let srctree = await gitutils.getRepoTree(repo, data.default_branch + "?recursive=1", data);
-   data.manifest = extractPackageJson(srctree.tree, data.folder);
+   data.manifest = utils.extractPackageJson(srctree.tree, data.folder);
    console.log("package", data.manifest);
 
    let contents = await gitutils.getFileContents(repo, data.default_branch, data.manifest);
    console.log("contents", contents);
-   data.dependencies = extractDependencies(contents.dependencies);
+   data.dependencies = utils.extractDependencies(contents.dependencies);
    console.log("dependencies", data.dependencies);
 
    res.status(201).json(data);
