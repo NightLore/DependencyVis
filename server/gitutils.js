@@ -45,7 +45,15 @@ async function retrieveRepoData(git, data) {
    return data;
 }
 
+async function searchRepo(git, repoName) {
+   let result = await git.search().forRepositories({q: repoName, sort: "best-match"});
+   console.log("searched querry:", result.request.path);
+   console.log("searched data:", result.data[0]);
+   return result.data[0];
+}
+
 module.exports = {
    retrieveRepoData: retrieveRepoData,
    getRepoDetails: getRepoDetails,
+   searchRepo: searchRepo
 };
