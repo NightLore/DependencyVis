@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import * as d3 from 'd3'
 import drag from './drag'
+import mouse from './mouse'
+import d3helpers from './d3helpers'
 
 /*
 const color = () => {
@@ -126,9 +128,9 @@ class Graph extends Component {
             .attr("r", d => d.radius)
             .attr("stroke", "white")
             .attr("fill", d => d.color)
-            .on("mouseover", this._handleMouseOver.bind(this))
-            .on("mouseout", this._handleMouseOut.bind(this))
-            .on("click", this._handleMouseClicked.bind(this))
+            .on("mouseover", mouse.handleMouseOver.bind(this))
+            .on("mouseout", mouse.handleMouseOut.bind(this))
+            .on("click", mouse.handleMouseClicked.bind(this))
       
       this.node.append("text")
             .attr("x", d => 1.5 * d.radius)
@@ -150,88 +152,6 @@ class Graph extends Component {
          this.node
             .attr("transform", d => `translate(${d.x},${d.y})`)
       });
-   }
-
-   _handleMouseOver(d) {
-      let p = d3.event.target.parentElement.parentElement.parentElement;
-      let rectX = d3.mouse(p)[0] + d.radius * 2;
-      let rectY = d3.mouse(p)[1] + d.radius * 2;
-      this.tooltipWidth = Math.max(d.id.length, ("version: " + d.version).length) 
-         * this.tooltipCharWidth;
-      this.tooltipHeight = d.length * this.tooltipDy + this.tooltipTextOffset; 
-      let textX = rectX + this.tooltipWidth / 2;
-      let textY = rectY + this.tooltipTextOffset;
-      let dy = this.tooltipDy;
-
-      console.log("mouseover", d);
-      this.tooltip.transition()
-            .duration(200)
-            .style("opacity", 0.9)
-      this.tooltip.selectAll("rect")
-            .attr("x", rectX + "px")
-            .attr("y", rectY + "px")
-            .attr("width", this.tooltipWidth)
-            .attr("height", this.tooltipHeight)
-      this.tooltip.selectAll("text")
-         .selectAll("*").remove()
-
-      this.tooltip.selectAll("text")
-         .append("tspan")
-            .attr("x", textX + "px")
-            .attr("y", textY + "px")
-            .text(d.id)
-
-      if (d.version) {
-         this.tooltip.selectAll("text")
-            .append("tspan")
-               .attr("x", textX + "px")
-               .attr("y", textY + "px")
-               .attr("dy", dy + "px")
-               .text("version: " + d.version)
-      }
-
-      if (!d.info) return;
-      dy += this.tooltipDy;
-      for (const [key, value] of Object.entries(d.info)) {
-         this.tooltip.selectAll("text")
-            .append("tspan")
-               .attr("x", textX + "px")
-               .attr("y", textY + "px")
-               .attr("dy", dy + "px")
-               .text(key + ": " + (value.name || value))
-         dy += this.tooltipDy;
-      }
-   }
-
-   _handleMouseOut(d) {
-      this.tooltip.transition()
-         .duration(500)
-         .style("opacity", 0);
-      this.tooltip.selectAll("rect")
-         .attr("x", -this.tooltipWidth)
-      this.tooltip.selectAll("tspan")
-         .attr("x", -this.tooltipWidth)
-   }
-
-   async _handleMouseClicked(d) {
-      if (d.clicked) return;
-
-      let data = await this.props.search(d.id);
-      d.clicked = true;
-      d.color = "darkorange";
-      if (data) {
-         d.color = "lightblue";
-         d.info = {
-            size: data.size,
-            archived: data.archived,
-            license: data.license,
-            language: data.language,
-            forks: data.forks,
-            watchers: data.watchers
-         }
-         d.length += 6;
-      }
-      console.log("Clicked processed", d);
    }
 
    _clearCanvas() {
