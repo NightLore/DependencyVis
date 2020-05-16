@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import * as d3 from 'd3'
-import drag from './drag'
 import mouse from './mouse'
 import d3helpers from './d3helpers'
 
@@ -122,7 +121,7 @@ class Graph extends Component {
          .selectAll("g")
          .data(this.props.nodes)
          .join("g")
-            .call(drag(this.simulation));
+            .call(mouse.drag(this.simulation));
 
       this.node.append("circle")
             .attr("r", d => d.radius)

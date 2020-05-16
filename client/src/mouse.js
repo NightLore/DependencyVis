@@ -1,6 +1,31 @@
 import * as d3 from 'd3'
 import d3helpers from './d3helpers'
 
+function drag(simulation) {
+
+  function dragstarted(d) {
+    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+  }
+
+  function dragended(d) {
+    if (!d3.event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
+
+  return d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+}
+
 // most of these helper functions expect to be called with .bind(Graph)
 
 function handleMouseOver(d) {
@@ -56,6 +81,7 @@ async function handleMouseClicked(d) {
 }
 
 const mouse = {
+   drag: drag,
    handleMouseOver: handleMouseOver,
    handleMouseOut: handleMouseOut,
    handleMouseClicked: handleMouseClicked
