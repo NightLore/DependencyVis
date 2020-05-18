@@ -7,6 +7,9 @@ let graphData = {
    canvasHeight: 800,
    canvasWidth: 1200,
 
+   sidebarWidth: 200,
+   sidebarFill: "lightsteelblue",
+
    tooltipWidth: 100,
    tooltipHeight: 100,
    tooltipCornerRadius: 15,
@@ -35,7 +38,8 @@ class Graph extends Component {
          graphData.props = this.props;
          this._createSimulation();
          this._setGraphData();
-         this._createToolTip();
+         this._createTooltip();
+         this._createSideBar();
          this._startGraph();
 
          console.log("Changed");
@@ -55,7 +59,7 @@ class Graph extends Component {
       graphData.rootNode = componentNode;
    }
 
-   _createToolTip() {
+   _createTooltip() {
       // Define the div for the tooltip
       graphData.tooltip = graphData.svgCanvas.append("g")	
          .style("opacity", 0)
@@ -71,7 +75,28 @@ class Graph extends Component {
             .attr("dominant-baseline", "middle")
             .attr("text-anchor", "middle")
             .attr("fill", graphData.tooltipTextColor)
-            
+
+   }
+
+   _createSideBar() {
+
+      graphData.sidebar = graphData.svgCanvas.append("g")
+
+      graphData.sidebar.append("rect")
+            .attr("width", graphData.sidebarWidth)
+            .attr("height", graphData.canvasHeight)
+            .attr("fill", graphData.sidebarFill)
+
+      graphData.sidebar.content = graphData.sidebar
+         .selectAll("g")
+         .data(graphData.props.nodes)
+         .join("g")
+
+      graphData.sidebar.content.append("text")
+            .attr("x", (d, i) => graphData.tooltipCharWidth)
+            .attr("y", (d, i) => graphData.tooltipDy * (i+1))
+            .text(d => d.id)
+
    }
 
    _createCanvas() {
@@ -121,13 +146,14 @@ class Graph extends Component {
             .call(mouse.drag(graphData.simulation));
 
       graphData.node.append("circle")
+            .attr("id", d => d.id)
             .attr("r", d => d.radius)
             .attr("stroke", "white")
             .attr("fill", d => d.color)
             .on("mouseover", mouse.handleMouseOver.bind(graphData))
             .on("mouseout", mouse.handleMouseOut.bind(graphData))
             .on("click", mouse.handleMouseClicked.bind(graphData))
-      
+
       graphData.node.append("text")
             .attr("x", d => 1.5 * d.radius)
             .text(d => d.id)
@@ -136,6 +162,7 @@ class Graph extends Component {
             .attr("fill", "none")
             .attr("stroke", "white")
             .attr("stroke-width", 3);
+
    }
 
    _startGraph() {

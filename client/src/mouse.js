@@ -27,6 +27,8 @@ function drag(simulation) {
 }
 
 // most of these helper functions expect to be called with .bind(Graph)
+// WARNING: find a way to not use .bind for 'this', it overwrites what d3 sets 
+// the 'this' variable to (element that was actually hovered over.
 
 function handleMouseOver(d) {
    let p = d3.event.target.parentElement.parentElement.parentElement;
@@ -57,8 +59,11 @@ function handleMouseOut(d) {
 
 async function handleMouseClicked(d) {
    if (d.clicked) return;
-   let circle = d3.select(d.id);
-   d.color = "darkorange";
+
+   d.color = "red";
+   let circle = d3.select("#" + d.id);
+   circle.attr("fill", d.color);
+
 
    let data = await this.props.search(d.id);
    if (data) {
@@ -73,7 +78,9 @@ async function handleMouseClicked(d) {
          watchers: data.watchers
       }
       d.length += 6;
+
       d3helpers.updateTooltip(this.tooltip, d, this);
+      circle.attr("fill", d.color);
    }
 
    console.log("circle", circle);

@@ -9,30 +9,6 @@ console.log(process.env);
 
 const { useState } = React;
 
-/*
-const Card = props => {
-   return (
-      <div style={{ margin: '1em' }}>
-      <div>
-         <div style={{ fontWeight: 'bold' }}>Repo name: {props.username}/{props.repo}</div>
-         <div>Fork count: {props.forks_count}</div>
-         <div>Star count: {props.stargazers_count}</div>
-         <div>Watcher count: {props.watchers_count}</div>
-         <div>Size: {props.size}</div>
-         <div>Num of Open Issues: {props.open_issues_count}</div>
-         <div>License: {props.license ? props.license.name : "None"}</div>
-         <div>Is private: {props.private ? "true" : "false"}</div>
-         <div>Visibility: {props.visibility}</div>
-         <div>Subscribers: {props.subscribers_count}</div>
-         <div>package.json: {JSON.stringify(props.dependencies)}</div>
-      </div>
-      </div>
-)
-}
-
-const CardList = props => <div>{props.cards.map(card => <Card {...card} />)}</div>
-*/
-
 const Form = props => {
    const [username, setUsername] = useState('')
    const [repo, setRepo] = useState('')
@@ -40,7 +16,6 @@ const Form = props => {
 
    var handleSubmit = async event => {
       event.preventDefault()
-      var cardInfo;
       var userInfo = {
          username: username,
          repo: repo,
@@ -64,7 +39,8 @@ const Form = props => {
                color: "orange", 
                radius: 8, 
                version: value.version,
-               length: 2
+               length: 2,
+               source: "api.github.com/repos/" + username + "/" + repo
             });
             links.push({
                source: mainId, 
