@@ -3,28 +3,23 @@ import * as d3 from 'd3'
 import mouse from './mouse'
 import d3helpers from './d3helpers'
 
-/*
-const color = () => {
-  const scale = d3.scaleOrdinal(d3.schemeCategory10);
-  return d => scale(d.group);
-}
-*/
+let graphData = {
+   canvasHeight: 800,
+   canvasWidth: 1200,
+
+   tooltipWidth: 100,
+   tooltipHeight: 100,
+   tooltipCornerRadius: 15,
+   tooltipFill: "lightsteelblue",
+   tooltipTextColor: "red",
+   tooltipCharWidth: 10,
+   tooltipTextOffset: 20,
+   tooltipDy: 20
+};
 
 class Graph extends Component {
    constructor(props) {
       super(props);
-
-      this.canvasHeight = 800;
-      this.canvasWidth = 1200;
-
-      this.tooltipWidth = 100;
-      this.tooltipHeight = 100;
-      this.tooltipCornerRadius = 15;
-      this.tooltipFill = "lightsteelblue";
-      this.tooltipTextColor = "red";
-      this.tooltipCharWidth = 10;
-      this.tooltipTextOffset = 20;
-      this.tooltipDy = 20;
    }
 
    componentDidMount() {
@@ -34,14 +29,16 @@ class Graph extends Component {
    render() { 
       if (this.props.nodesChanged)
       {
+         this.props.setNodesChanged(false);
          this._clearCanvas();
+
+         graphData.props = this.props;
          this._createSimulation();
          this._setGraphData();
          this._createToolTip();
          this._startGraph();
 
          console.log("Changed");
-         this.props.setNodesChanged(false);
       }
       return <div ref={this._setRef.bind(this)}></div> 
    }
@@ -55,51 +52,51 @@ class Graph extends Component {
 
    // connects component to this
    _setRef(componentNode) {
-      this._rootNode = componentNode;
+      graphData.rootNode = componentNode;
    }
 
    _createToolTip() {
       // Define the div for the tooltip
-      this.tooltip = this.svgCanvas.append("g")	
+      graphData.tooltip = graphData.svgCanvas.append("g")	
          .style("opacity", 0)
          //.style("text-align", "center")
 
-      this.tooltip.append("rect")
-            .attr("width", this.tooltipWidth)
-            .attr("height", this.tooltipHeight)
-            .attr("rx", this.tooltipCornerRadius)
-            .attr("fill", this.tooltipFill)
+      graphData.tooltip.append("rect")
+            .attr("width", graphData.tooltipWidth)
+            .attr("height", graphData.tooltipHeight)
+            .attr("rx", graphData.tooltipCornerRadius)
+            .attr("fill", graphData.tooltipFill)
 
-      this.tooltip.append("text")
+      graphData.tooltip.append("text")
             .attr("dominant-baseline", "middle")
             .attr("text-anchor", "middle")
-            .attr("fill", this.tooltipTextColor)
+            .attr("fill", graphData.tooltipTextColor)
             
    }
 
    _createCanvas() {
-      this.svgCanvas = d3.select(this._rootNode)
+      graphData.svgCanvas = d3.select(graphData.rootNode)
          .append("svg")
-         .attr("width", this.canvasWidth)
-         .attr("height", this.canvasHeight)
+         .attr("width", graphData.canvasWidth)
+         .attr("height", graphData.canvasHeight)
          .style("border", "1px solid black");
    }
 
    _createSimulation() {
-      this.simulation = d3.forceSimulation(this.props.nodes)
-         .force("link", d3.forceLink(this.props.links)
+      graphData.simulation = d3.forceSimulation(graphData.props.nodes)
+         .force("link", d3.forceLink(graphData.props.links)
             .id(d => d.id)
             .distance(d => d.value * 20))
          .force("charge", d3.forceManyBody())
-         .force("center", d3.forceCenter(this.canvasWidth / 2, this.canvasHeight / 2))
+         .force("center", d3.forceCenter(graphData.canvasWidth / 2, graphData.canvasHeight / 2))
 
       /*
-      this.force = d3.layout.force()
+      graphData.force = d3.layout.force()
          .charge(-120)
          .linkDistance(30)
-         .size([this.canvasWidth, canvasHeight]);
+         .size([graphData.canvasWidth, canvasHeight]);
 
-      this.force.nodes(this.props.nodes)
+      graphData.force.nodes(graphData.props.nodes)
          .links(json.links)
          .charge(d => {
             let charge = -500;
@@ -110,28 +107,28 @@ class Graph extends Component {
    }
 
    _setGraphData() {
-      this.link = this.svgCanvas.append("g")
+      graphData.link = graphData.svgCanvas.append("g")
             .attr("stroke", "#999")
          .selectAll("line")
-         .data(this.props.links)
+         .data(graphData.props.links)
          .join("line")
             .attr("stroke-width", d => Math.sqrt(d.value));
 
-      this.node = this.svgCanvas.append("g")
+      graphData.node = graphData.svgCanvas.append("g")
          .selectAll("g")
-         .data(this.props.nodes)
+         .data(graphData.props.nodes)
          .join("g")
-            .call(mouse.drag(this.simulation));
+            .call(mouse.drag(graphData.simulation));
 
-      this.node.append("circle")
+      graphData.node.append("circle")
             .attr("r", d => d.radius)
             .attr("stroke", "white")
             .attr("fill", d => d.color)
-            .on("mouseover", mouse.handleMouseOver.bind(this))
-            .on("mouseout", mouse.handleMouseOut.bind(this))
-            .on("click", mouse.handleMouseClicked.bind(this))
+            .on("mouseover", mouse.handleMouseOver.bind(graphData))
+            .on("mouseout", mouse.handleMouseOut.bind(graphData))
+            .on("click", mouse.handleMouseClicked.bind(graphData))
       
-      this.node.append("text")
+      graphData.node.append("text")
             .attr("x", d => 1.5 * d.radius)
             .text(d => d.id)
             .attr("dominant-baseline", "middle")
@@ -142,19 +139,19 @@ class Graph extends Component {
    }
 
    _startGraph() {
-      this.simulation.on("tick", () => {
-         this.link
+      graphData.simulation.on("tick", () => {
+         graphData.link
             .attr("x1", d => d.source.x)
             .attr("y1", d => d.source.y)
             .attr("x2", d => d.target.x)
             .attr("y2", d => d.target.y)
-         this.node
+         graphData.node
             .attr("transform", d => `translate(${d.x},${d.y})`)
       });
    }
 
    _clearCanvas() {
-      this.svgCanvas.selectAll("*").remove();
+      graphData.svgCanvas.selectAll("*").remove();
    }
 
 }
