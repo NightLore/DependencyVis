@@ -25,9 +25,14 @@ const Form = props => {
       console.log("SUBMIT");
 
       let mainId = username + "/" + repo;
-      let nodes = [
-         {id: mainId, color: "blue", radius: 10, length: 1, clicked: true}
-      ]
+      let nodes = [{
+         id: mainId, 
+         color: "blue", 
+         radius: 10, 
+         length: 1, 
+         clicked: true,
+         source: "api.github.com/repos/" + username + "/" + repo
+      }]
       let links = []
 
       let resp = await axios.post('http://localhost:3001/lookup', userInfo)

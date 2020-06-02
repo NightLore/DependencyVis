@@ -75,15 +75,16 @@ async function handleMouseClicked(d) {
          license: data.license,
          language: data.language,
          forks: data.forks,
-         watchers: data.watchers
-      }
+         watchers: data.watchers,
+      };
       d.length += 6;
+      d.source = data.source;
+      d.vulnerabilities = data.vulnerabilities;
 
       d3helpers.updateTooltip(this.tooltip, d, this);
       circle.attr("fill", d.color);
    }
 
-   console.log("circle", circle);
    console.log("Clicked processed", d);
 }
 

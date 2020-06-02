@@ -1,6 +1,8 @@
 const utils = require('./utils');
+const npmFetch = require('npm-registry-fetch');
 
 async function getRepoDetails(repo) {
+   console.log("getRepoDetails", repo);
    let data = {};
    await repo.getDetails((err, details) => {
       data.private = details.private;
@@ -31,16 +33,44 @@ async function getRepoDetails(repo) {
 }
 
 async function retrieveRepoData(git, data) {
+   // get the repo object
    let repo = await git.getRepo(data.username, data.repo);
+   // get the repo detailed information
    Object.assign(data, await getRepoDetails(repo));
 
+   // get the file system/source tree of the branch
    let srctree = (await repo.getTree(data.default_branch + "?recursive=1")).data;
+
+   // find package.json path
    data.manifest = utils.extractPackageJson(srctree.tree, data.folder);
    console.log("package", data.manifest);
 
+   // get package.json contents
    let contents = (await repo.getContents(data.default_branch, data.manifest, true)).data;
    console.log("contents", contents);
 
+   // get npm registry data
+   const auditData = {
+      "name": contents.name,
+      "version": contents.version,
+      "requires": contents.dependencies,
+      "dependencies": utils.convertToAuditDependencyFormat(contents.dependencies)
+   };
+   const opts = {
+      "color": true,
+      "json": true,
+      "unicode": true,
+      method: 'POST',
+      gzip: true,
+      body: auditData
+   };
+   console.log("opts", opts);
+   let npmData = await npmFetch('/-/npm/v1/security/audits', opts);
+   npmData = await npmData.json();
+   console.log("npmData", npmData);
+   data.vulnerabilities = npmData.metadata.vulnerabilities;
+
+   // extract dependencies from the package.json per our specifications
    data.dependencies = utils.extractDependencies(contents.dependencies);
    return data;
 }

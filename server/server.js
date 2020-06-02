@@ -78,7 +78,10 @@ app.post('/search', async (req, res) => {
    let urlData = utils.extractGithubPath(utils.findGithubUrl(pack));
    console.log("urlData", urlData);
 
-   let result = await gitutils.searchRepo(git, req.body.querry);
+   let result = await gitutils.retrieveRepoData(git, urlData);
+   result.source = "api.github.com/repos/" + urlData.username + "/" + urlData.repo
+   console.log("result", result);
+   //let result = await gitutils.searchRepo(git, req.body.querry);
    res.send(result);
 });
 
