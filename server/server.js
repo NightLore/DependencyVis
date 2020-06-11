@@ -1,9 +1,26 @@
+'use strict'
 const express = require('express');
 const cors = require('cors');
 const Github = require('github-api');
 const NpmApi = require('npm-api');
 const gitutils = require('./gitutils');
 const utils = require('./utils');
+
+// npm audit test
+const Report = require('npm-audit-report');
+const Arborist = require('@npmcli/arborist');
+const options = {
+   reporter: 'json',
+   indent: 1
+};
+const arb = new Arborist({ path: '../client' });
+arb.audit().then(report => {
+   console.log("Report", Report);
+   console.log("Received", report);
+   const result = Report(report, options);
+   console.log(result);
+   process.exitCode = result.exitCode;
+});
 
 // load dotenv variables
 require('dotenv').config();

@@ -56,13 +56,14 @@ async function retrieveRepoData(git, data) {
       "requires": contents.dependencies,
       "dependencies": utils.convertToAuditDependencyFormat(contents.dependencies)
    };
+   contents.requires = auditData.requires;
    const opts = {
       "color": true,
       "json": true,
       "unicode": true,
       method: 'POST',
       gzip: true,
-      body: auditData
+      body: contents
    };
    console.log("opts", opts);
    let npmData = await npmFetch('/-/npm/v1/security/audits', opts);
