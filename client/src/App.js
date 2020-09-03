@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import './App.css';
 import dotenv from 'dotenv';
-import Graph from './Graph';
+import Graph from './d3/Graph';
 
 dotenv.config();
 console.log(process.env);
