@@ -9,13 +9,46 @@ console.log(process.env);
 
 const { useState } = React;
 
+function getGithubURL(username, repo) {
+   return "api.github.com/repos/" + username + "/" + repo;
+}
+
+function createCentralNode(id, username, repo) {
+   return createNode(id, "blue", 10, 1, true, getGithubURL(username, repo));
+}
+
+function createSideNode(id, username, repo, version) {
+   return createNode(id, "orange", 8, 2, undefined, getGithubURL(username, repo), version)
+}
+
+/*
+ * id = identifier
+ * color = color of node
+ * radius = size of node
+ * length
+ * clicked = has node been clicked or not
+ * source = url to info about node
+ */
+function createNode(id, color, radius, length, clicked, source, version)
+{
+   return {
+      id: id,
+      color: color,
+      radius: radius,
+      length: length,
+      clicked: clicked,
+      source: source,
+      version: version
+   };
+}
+
 const Form = props => {
    const [username, setUsername] = useState('')
    const [repo, setRepo] = useState('')
    const [folder, setFolder] = useState('')
 
    var handleSubmit = async event => {
-      event.preventDefault()
+      event.preventDefault();
       var userInfo = {
          username: username,
          repo: repo,
@@ -25,42 +58,24 @@ const Form = props => {
       console.log("SUBMIT");
 
       let mainId = username + "/" + repo;
-      let nodes = [{
-         id: mainId, 
-         color: "blue", 
-         radius: 10, 
-         length: 1, 
-         clicked: true,
-         source: "api.github.com/repos/" + username + "/" + repo
-      }]
-      let links = []
+      let nodes = [createCentralNode(mainId, username, repo)];
+      let links = [];
+      let resp = await axios.post('http://localhost:3001/lookup', userInfo);
+      if (!resp) {console.error("Failed lookup"); return;}
 
-      let resp = await axios.post('http://localhost:3001/lookup', userInfo)
-      if (resp) {
-         console.log("Response Data:", resp.data);
-         resp.data.dependencies.forEach((value, index, array) => {
-            nodes.push({
-               id: value.name, 
-               color: "orange", 
-               radius: 8, 
-               version: value.version,
-               length: 2,
-               source: "api.github.com/repos/" + username + "/" + repo
-            });
-            links.push({
-               source: mainId, 
-               target: value.name, 
-               value: value.name.length
-            });
+      console.log("Response Data:", resp.data);
+      resp.data.dependencies.forEach((value, index, array) => {
+         nodes.push(createSideNode(value.name, username, repo, value.version));
+         links.push({
+            source: mainId, 
+            target: value.name, 
+            value: value.name.length
          });
-         console.log("Nodes Generated", nodes, links);
-         props.setNodesLinks(nodes, links);
-         setUsername('');
-         setRepo('');
-      }
-      else {
-         console.error("Failed lookup");
-      }
+      });
+      console.log("Nodes Generated", nodes, links);
+      props.setNodesLinks(nodes, links);
+      setUsername('');
+      setRepo('');
 
    }
 
