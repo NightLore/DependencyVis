@@ -35,6 +35,8 @@ async function getRepoDetails(repo) {
 async function retrieveRepoData(git, data) {
    // get the repo object
    let repo = await git.getRepo(data.username, data.repo);
+   if (!repo.__currentTree.branch) {console.log("Failed getRepo", repo.__fullname); return false;}
+
    // get the repo detailed information
    Object.assign(data, await getRepoDetails(repo));
 

@@ -47,6 +47,14 @@ async function pushToDatabase(data) {
    });
 }
 
+function error404(res) {
+   console.error("404 error, not found");
+   res.status(404).send({
+      status: 404,
+      error: 'Not found'
+   });
+}
+
 app.use(
    cors({
       origin:'http://localhost:3000',
@@ -65,9 +73,10 @@ app.post('/lookup', async (req, res, next) => {
       repo: req.body.repo,
       folder:req.body.folder
    });
+   if (!data) {error404(res); return;}
 
    res.status(201).json(data);
-   await pushToDatabase(data);
+   //await pushToDatabase(data);
 });
 
 app.post('/search', async (req, res) => {

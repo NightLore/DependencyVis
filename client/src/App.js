@@ -7,7 +7,9 @@ import Graph from './d3/Graph';
 dotenv.config();
 console.log(process.env);
 
-const { useState } = React;
+function post(querry) {
+
+}
 
 function getGithubURL(username, repo) {
    return "api.github.com/repos/" + username + "/" + repo;
@@ -42,6 +44,8 @@ function createNode(id, color, radius, length, clicked, source, version)
    };
 }
 
+const { useState } = React;
+
 const Form = props => {
    const [username, setUsername] = useState('')
    const [repo, setRepo] = useState('')
@@ -60,8 +64,14 @@ const Form = props => {
       let mainId = username + "/" + repo;
       let nodes = [createCentralNode(mainId, username, repo)];
       let links = [];
-      let resp = await axios.post('http://localhost:3001/lookup', userInfo);
-      if (!resp) {console.error("Failed lookup"); return;}
+      let resp = null;
+      try {
+         resp = await axios.post('http://localhost:3001/lookup', userInfo);
+      }
+      catch (err) {
+         console.error("Failed lookup");
+         return;
+      }
 
       console.log("Response Data:", resp.data);
       resp.data.dependencies.forEach((value, index, array) => {
@@ -76,7 +86,6 @@ const Form = props => {
       props.setNodesLinks(nodes, links);
       setUsername('');
       setRepo('');
-
    }
 
    return (
