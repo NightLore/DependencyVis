@@ -47,9 +47,10 @@ function createNode(id, color, radius, length, clicked, source, version)
 const { useState } = React;
 
 const Form = props => {
-   const [username, setUsername] = useState('')
-   const [repo, setRepo] = useState('')
-   const [folder, setFolder] = useState('')
+   const [username, setUsername] = useState('');
+   const [repo, setRepo] = useState('');
+   const [folder, setFolder] = useState('');
+   const [errorText, setErrorText] = useState('');
 
    var handleSubmit = async event => {
       event.preventDefault();
@@ -69,7 +70,8 @@ const Form = props => {
          resp = await axios.post('http://localhost:3001/lookup', userInfo);
       }
       catch (err) {
-         console.error("Failed lookup");
+         console.error("Failed lookup!");
+         setErrorText("Failed lookup!");
          return;
       }
 
@@ -105,7 +107,7 @@ const Form = props => {
             placeholder="GitHub repo"
             required
          />
-         <button type="submit">Display</button>
+         <button type="submit">Search</button>
          <input
             type="text"
             value={folder}
@@ -113,6 +115,7 @@ const Form = props => {
             placeholder="optional specified folder"
          />
       </form>
+      <span style={{color:"red", margin: "1em"}}>{errorText}</span>
       </div>
    )
 }
