@@ -3,8 +3,13 @@ const npmFetch = require('npm-registry-fetch');
 
 async function getRepoDetails(repo) {
    console.log("getRepoDetails", repo);
-   let data = {};
+   let data = null;
    await repo.getDetails((err, details) => {
+      if (err) return;
+
+      // TODO: turn into loop
+      // manually done to pick and choose properties we want
+      data = {};
       data.private = details.private;
       data.description = details.description;
       data.size = details.size;
@@ -35,10 +40,10 @@ async function getRepoDetails(repo) {
 async function retrieveRepoData(git, data) {
    // get the repo object
    let repo = await git.getRepo(data.username, data.repo);
-   if (!repo.__currentTree.branch) {console.log("Failed getRepo", repo.__fullname); return false;}
-
-   // get the repo detailed information
-   Object.assign(data, await getRepoDetails(repo));
+   // attempt to get information
+   let repoDetails = await getRepoDetails(repo);
+   if (!repoDetails) {console.log("Failed getRepo", repo.__fullname); return false;}
+   Object.assign(data, repoDetails);
 
    // get the file system/source tree of the branch
    let srctree = (await repo.getTree(data.default_branch + "?recursive=1")).data;

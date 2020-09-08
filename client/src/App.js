@@ -7,8 +7,17 @@ import Graph from './d3/Graph';
 dotenv.config();
 console.log(process.env);
 
-function post(querry) {
-
+async function post(lookup, data) {
+   let resp = null;
+   let err = null;
+   try {
+      resp = await axios.post('http://localhost:3001/' + lookup, data);
+   }
+   catch (e) {
+      err = e;
+      console.error("Failed querry!");
+   }
+   return {resp: resp, error: err};
 }
 
 function getGithubURL(username, repo) {
@@ -65,18 +74,13 @@ const Form = props => {
       let mainId = username + "/" + repo;
       let nodes = [createCentralNode(mainId, username, repo)];
       let links = [];
-      let resp = null;
-      try {
-         resp = await axios.post('http://localhost:3001/lookup', userInfo);
-      }
-      catch (err) {
-         console.error("Failed lookup!");
-         setErrorText("Failed lookup!");
-         return;
-      }
 
-      console.log("Response Data:", resp.data);
-      resp.data.dependencies.forEach((value, index, array) => {
+      let querryResp = await post("lookup", userInfo);
+      if (querryResp.error) {setErrorText("Failed lookup!"); return;}
+
+      let data = querryResp.resp.data;
+      console.log("Response Data:", data);
+      data.dependencies.forEach((value, index, array) => {
          nodes.push(createSideNode(value.name, username, repo, value.version));
          links.push({
             source: mainId, 
@@ -86,12 +90,15 @@ const Form = props => {
       });
       console.log("Nodes Generated", nodes, links);
       props.setNodesLinks(nodes, links);
+
       setUsername('');
       setRepo('');
+      setFolder('');
+      setErrorText('');
    }
 
    return (
-      <div style={{display: "block", margin: "2em"}}>
+      <div style={{display: "block", margin: "1em"}}>
       <form onSubmit={handleSubmit} style={{display: "inline-block" }}>
          <input
             type="text"

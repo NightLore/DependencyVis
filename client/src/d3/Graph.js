@@ -44,7 +44,7 @@ class Graph extends Component {
 
          console.log("Changed");
       }
-      return <div ref={this._setRef.bind(this)}></div> 
+      return <span ref={this._setRef.bind(this)}/> 
    }
 
    /*
