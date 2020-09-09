@@ -34,7 +34,7 @@ function updateTooltip(tooltip, d, attributes) {
    if (!d.info) return;
    dy += attributes.tooltipDy;
    for (const [key, value] of Object.entries(d.info)) {
-      if (key == "source") continue;
+      if (key === "source") continue;
       tooltip.selectAll("text")
          .append("tspan")
             .attr("x", textX + "px")

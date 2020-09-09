@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import * as d3 from 'd3'
 import mouse from './mouse'
-import d3helpers from './d3helpers'
 
 let graphData = {
    canvasHeight: 800,
@@ -18,10 +17,6 @@ let graphData = {
 };
 
 class Graph extends Component {
-   constructor(props) {
-      super(props);
-   }
-
    componentDidMount() {
       this._createCanvas();
    }
