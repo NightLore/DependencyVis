@@ -3,9 +3,11 @@ import axios from 'axios';
 import './App.css';
 import dotenv from 'dotenv';
 import Graph from './d3/Graph';
+import Sidebar from './d3/Sidebar';
 
 dotenv.config();
 console.log(process.env);
+const { useState } = React;
 
 async function post(lookup, data) {
    let resp = null;
@@ -52,8 +54,6 @@ function createNode(id, color, radius, length, clicked, source, version)
       version: version
    };
 }
-
-const { useState } = React;
 
 const Form = props => {
    const [username, setUsername] = useState('');
@@ -176,6 +176,11 @@ const App = () => {
       <div>
          <Form onSubmit={addNewCard} 
             setNodesLinks={setNodesLinks}
+         />
+         <Sidebar 
+            nodes={nodes} 
+            links={links}
+            height={800}
          />
          <Graph 
             nodes={nodes} 

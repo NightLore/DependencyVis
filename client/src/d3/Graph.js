@@ -7,9 +7,6 @@ let graphData = {
    canvasHeight: 800,
    canvasWidth: 1200,
 
-   sidebarWidth: 200,
-   sidebarFill: "lightsteelblue",
-
    tooltipWidth: 100,
    tooltipHeight: 100,
    tooltipCornerRadius: 15,
@@ -39,12 +36,11 @@ class Graph extends Component {
          this._createSimulation();
          this._setGraphData();
          this._createTooltip();
-         this._createSideBar();
          this._startGraph();
 
          console.log("Changed");
       }
-      return <span ref={this._setRef.bind(this)}/> 
+      return <div ref={this._setRef.bind(this)}/> 
    }
 
    /*
@@ -75,7 +71,6 @@ class Graph extends Component {
             .attr("dominant-baseline", "middle")
             .attr("text-anchor", "middle")
             .attr("fill", graphData.tooltipTextColor)
-
    }
 
    _createSideBar() {
