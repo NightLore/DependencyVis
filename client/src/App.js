@@ -3,7 +3,7 @@ import axios from 'axios';
 import './App.css';
 import dotenv from 'dotenv';
 import Graph from './d3/Graph';
-import Sidebar from './d3/Sidebar';
+import Sidebar from './Sidebar';
 
 dotenv.config();
 console.log(process.env);
@@ -27,11 +27,16 @@ function getGithubURL(username, repo) {
 }
 
 function createCentralNode(id, username, repo) {
-   return createNode(id, "blue", 10, 1, true, getGithubURL(username, repo));
+   let details = {source: getGithubURL(username, repo)};
+   return createNode(id, "blue", 10, 1, true, details);
 }
 
 function createSideNode(id, username, repo, version) {
-   return createNode(id, "orange", 8, 2, undefined, getGithubURL(username, repo), version)
+   let details = {
+      source: getGithubURL(username, repo),
+      version: version
+   };
+   return createNode(id, "orange", 8, 2, undefined, details);
 }
 
 /*
@@ -42,7 +47,7 @@ function createSideNode(id, username, repo, version) {
  * clicked = has node been clicked or not
  * source = url to info about node
  */
-function createNode(id, color, radius, length, clicked, source, version)
+function createNode(id, color, radius, length, clicked, details)
 {
    return {
       id: id,
@@ -50,8 +55,7 @@ function createNode(id, color, radius, length, clicked, source, version)
       radius: radius,
       length: length,
       clicked: clicked,
-      source: source,
-      version: version
+      details: details
    };
 }
 
@@ -180,7 +184,6 @@ const App = () => {
          <Sidebar 
             nodes={nodes} 
             links={links}
-            height={800}
          />
          <Graph 
             nodes={nodes} 
