@@ -34,7 +34,7 @@ function createSideNode(id, username, repo, version) {
       source: getGithubURL(username, repo),
       version: version
    };
-   return createNode(id, "orange", 8, 2, undefined, details);
+   return createNode(id, "orange", 8, 2, undefined, details, {version: version});
 }
 
 /*
@@ -45,7 +45,7 @@ function createSideNode(id, username, repo, version) {
  * clicked = has node been clicked or not
  * source = url to info about node
  */
-function createNode(id, color, radius, length, clicked, details)
+function createNode(id, color, radius, length, clicked, details, info)
 {
    return {
       id: id,
@@ -53,7 +53,8 @@ function createNode(id, color, radius, length, clicked, details)
       radius: radius,
       length: length,
       clicked: clicked,
-      details: details
+      details: details,
+      info: info
    };
 }
 

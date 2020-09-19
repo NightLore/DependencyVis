@@ -22,17 +22,7 @@ function updateTooltip(tooltip, d, attributes) {
          .attr("y", textY + "px")
          .text(d.id)
 
-   if (d.version) {
-      tooltip.selectAll("text")
-         .append("tspan")
-            .attr("x", textX + "px")
-            .attr("y", textY + "px")
-            .attr("dy", dy + "px")
-            .text("version: " + d.version)
-   }
-
    if (!d.info) return;
-   dy += attributes.tooltipDy;
    for (const [key, value] of Object.entries(d.info)) {
       if (key === "source") continue;
       tooltip.selectAll("text")
