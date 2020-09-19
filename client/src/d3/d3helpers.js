@@ -40,7 +40,7 @@ function updateTooltip(tooltip, d, attributes) {
             .attr("x", textX + "px")
             .attr("y", textY + "px")
             .attr("dy", dy + "px")
-            .text(key + ": " + (value.name || value))
+            .text(key + ": " + value)
       dy += attributes.tooltipDy;
    }
 

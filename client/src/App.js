@@ -9,11 +9,11 @@ dotenv.config();
 console.log(process.env);
 const { useState } = React;
 
-async function post(lookup, data) {
+async function post(querry, data) {
    let resp = null;
    let err = null;
    try {
-      resp = await axios.post('http://localhost:3001/' + lookup, data);
+      resp = await axios.post('http://localhost:3001/' + querry, data);
    }
    catch (e) {
       err = e;
@@ -59,11 +59,14 @@ function createNode(id, color, radius, length, clicked, details)
    };
 }
 
+const ErrorText = props => {
+   return (<span style={{color:"red", margin: "1em"}}>{props.text}</span>)
+}
+
 const Form = props => {
    const [username, setUsername] = useState('');
    const [repo, setRepo] = useState('');
    const [folder, setFolder] = useState('');
-   const [errorText, setErrorText] = useState('');
 
    var handleSubmit = async event => {
       event.preventDefault();
@@ -80,7 +83,7 @@ const Form = props => {
       let links = [];
 
       let querryResp = await post("lookup", userInfo);
-      if (querryResp.error) {setErrorText("Failed lookup!"); return;}
+      if (querryResp.error) {props.setErrorText("Failed lookup!"); return;}
 
       let data = querryResp.resp.data;
       console.log("Response Data:", data);
@@ -98,12 +101,12 @@ const Form = props => {
       setUsername('');
       setRepo('');
       setFolder('');
-      setErrorText('');
+      props.setErrorText('');
    }
 
    return (
-      <div style={{display: "block", margin: "1em"}}>
-      <form onSubmit={handleSubmit} style={{display: "inline-block" }}>
+      <span style={{display: "inline-block", margin: "1em"}}>
+      <form onSubmit={handleSubmit}>
          <input
             type="text"
             value={username}
@@ -126,8 +129,7 @@ const Form = props => {
             placeholder="optional specified folder"
          />
       </form>
-      <span style={{color:"red", margin: "1em"}}>{errorText}</span>
-      </div>
+      </span>
    )
 }
 
@@ -150,6 +152,7 @@ const App = () => {
       {source: "lion", target: "test20", value: 1},
    ]);
    const [nodesChanged, setNodesChanged] = useState(false);
+   const [errorText, setErrorText] = useState('');
 
    let setNodesLinks = (newNodes, newLinks) => {
       setNodes(newNodes);
@@ -165,22 +168,24 @@ const App = () => {
    var search = async querry => {
       console.log("App Click ", querry);
 
-      let resp = await axios.post('http://localhost:3001/search', {querry: querry})
-      if (resp) {
-         console.log("Response Search:", resp.data);
-         return resp.data;
-      }
-      else {
-         console.error("Failed search");
-         return resp;
-      }
+      let querryResp = await post("search", {querry: querry});
+      if (querryResp.error) {setErrorText("Failed search!"); return querryResp;}
+
+      console.log("Response Search:", querryResp);
+      return querryResp.resp.data;
    }
 
    return (
       <div>
-         <Form onSubmit={addNewCard} 
+         <Form 
+            onSubmit={addNewCard} 
             setNodesLinks={setNodesLinks}
+            setErrorText={setErrorText}
          />
+         <ErrorText 
+            text={errorText}
+         />
+         <div>
          <Sidebar 
             nodes={nodes} 
             links={links}
@@ -192,6 +197,7 @@ const App = () => {
             setNodesChanged={setNodesChanged}
             search={search}
          />
+         </div>
       </div>
    )
 }

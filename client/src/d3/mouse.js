@@ -67,16 +67,21 @@ async function handleMouseClicked(d) {
 
    let data = await this.props.search(d.id);
    if (data) {
-      d.clicked = true;
-      d.color = "lightblue";
-      d.info = {
+      let importData = {
          size: data.size,
          archived: data.archived,
-         license: data.license,
+         license: data.license.name,
          language: data.language,
          forks: data.forks,
          watchers: data.watchers,
       };
+      if (!d.info) d.info = {}
+      if (!d.details) d.details = {}
+      Object.assign(d.info, importData);
+      Object.assign(d.details, importData);
+
+      d.clicked = true;
+      d.color = "lightblue";
       d.length += 6;
       d.source = data.source;
       d.vulnerabilities = data.vulnerabilities;
