@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import d3helpers from './d3helpers'
+import { updateTooltip } from './d3utils'
 
 function drag(simulation) {
 
@@ -44,7 +44,7 @@ function handleMouseOver(d) {
          .attr("x", this.rectX + "px")
          .attr("y", this.rectY + "px")
 
-   d3helpers.updateTooltip(this.tooltip, d, this);
+   updateTooltip(this.tooltip, d, this);
 }
 
 function handleMouseOut(d) {
@@ -86,7 +86,7 @@ async function handleMouseClicked(d) {
       d.source = data.source;
       d.vulnerabilities = data.vulnerabilities;
 
-      d3helpers.updateTooltip(this.tooltip, d, this);
+      updateTooltip(this.tooltip, d, this);
       circle.attr("fill", d.color);
    }
 

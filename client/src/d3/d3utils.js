@@ -36,8 +36,50 @@ function updateTooltip(tooltip, d, attributes) {
 
 }
 
-const d3helpers = {
-   updateTooltip: updateTooltip
-};
+function createCentralNode(id, username, repo) {
+   let details = {source: getGithubURL(username, repo)};
+   return createNode(id, "blue", 10, 1, true, details);
+}
 
-export default d3helpers;
+function createSideNode(id, username, repo, version) {
+   let details = {
+      source: getGithubURL(username, repo),
+      version: version
+   };
+   return createNode(id, "orange", 8, 2, undefined, details, {version: version});
+}
+
+function getGithubSearchURL(username, repo) {
+   return "api.github.com/repos/" + username + "/" + repo;
+}
+
+function getGithubURL(username, repo) {
+   return "github.com/" + username + "/" + repo;
+}
+
+/*
+ * id = identifier
+ * color = color of node
+ * radius = size of node
+ * length
+ * clicked = has node been clicked or not
+ * source = url to info about node
+ */
+function createNode(id, color, radius, length, clicked, details, info)
+{
+   return {
+      id: id,
+      color: color,
+      radius: radius,
+      length: length,
+      clicked: clicked,
+      details: details,
+      info: info
+   };
+}
+
+export { 
+   updateTooltip,
+   createCentralNode,
+   createSideNode
+}

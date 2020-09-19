@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import Graph from './d3/Graph';
 import Sidebar from './Sidebar';
 import Form from './Form';
-import Axios from './AxiosHelpers';
+import { search } from './AxiosUtils';
 
 dotenv.config();
 console.log(process.env);
@@ -46,14 +46,14 @@ const App = () => {
       setCards(cards.concat(cardInfo))
    }
 
-   var search = async querry => {
+   var querrySearch = async querry => {
       console.log("App Click ", querry);
 
-      let querryResp = await Axios.search(querry);
-      if (querryResp.error) {setErrorText("Failed search!"); return querryResp;}
+      let querryResp = await search(querry);
+      if (querryResp.error) {setErrorText("Failed search!"); return;}
 
       console.log("Response Search:", querryResp);
-      return querryResp.resp.data;
+      return querryResp.resp;
    }
 
    return (
@@ -76,7 +76,7 @@ const App = () => {
             links={links}
             nodesChanged={nodesChanged}
             setNodesChanged={setNodesChanged}
-            search={search}
+            search={querrySearch}
          />
          </div>
       </div>

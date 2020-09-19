@@ -1,5 +1,6 @@
 import React from 'react'
-import Axios from './AxiosHelpers'
+import { lookup } from './AxiosUtils'
+import { createCentralNode, createSideNode } from './d3/d3utils'
 const { useState } = React;
 
 const Form = props => {
@@ -7,27 +8,38 @@ const Form = props => {
    const [repo, setRepo] = useState('');
    const [folder, setFolder] = useState('');
 
-   var handleSubmit = async event => {
-      event.preventDefault();
-      var userInfo = {
+   function getUserInfo() {
+      return {
          username: username,
          repo: repo,
          folder: folder
       };
+   }
+
+   function reset() {
+      setUsername('');
+      setRepo('');
+      setFolder('');
+      props.setErrorText('');
+   }
+
+   var handleSubmit = async event => {
+      event.preventDefault();
+      var userInfo = getUserInfo();
 
       console.log("SUBMIT");
 
       let mainId = username + "/" + repo;
-      let nodes = [Axios.createCentralNode(mainId, username, repo)];
+      let nodes = [createCentralNode(mainId, username, repo)];
       let links = [];
 
-      let querryResp = await Axios.lookup(userInfo);
+      let querryResp = await lookup(userInfo);
       if (querryResp.error) {props.setErrorText("Failed lookup!"); return;}
 
-      let data = querryResp.resp.data;
+      let data = querryResp.resp;
       console.log("Response Data:", data);
       data.dependencies.forEach((value, index, array) => {
-         nodes.push(Axios.createSideNode(value.name, username, repo, value.version));
+         nodes.push(createSideNode(value.name, username, repo, value.version));
          links.push({
             source: mainId, 
             target: value.name, 
@@ -37,10 +49,7 @@ const Form = props => {
       console.log("Nodes Generated", nodes, links);
       props.setNodesLinks(nodes, links);
 
-      setUsername('');
-      setRepo('');
-      setFolder('');
-      props.setErrorText('');
+      reset();
    }
 
    return (
