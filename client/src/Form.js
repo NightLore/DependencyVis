@@ -39,7 +39,7 @@ const Form = props => {
       let data = querryResp.resp;
       console.log("Response Data:", data);
       data.dependencies.forEach((value, index, array) => {
-         nodes.push(createSideNode(value.name, username, repo, value.version));
+         nodes.push(createSideNode(value.name, value.version));
          links.push({
             source: mainId, 
             target: value.name, 

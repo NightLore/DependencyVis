@@ -41,9 +41,8 @@ function createCentralNode(id, username, repo) {
    return createNode(id, "blue", 10, 1, true, details);
 }
 
-function createSideNode(id, username, repo, version) {
+function createSideNode(id, version) {
    let details = {
-      source: getGithubURL(username, repo),
       version: version
    };
    return createNode(id, "orange", 8, 2, undefined, details, {version: version});
@@ -81,5 +80,6 @@ function createNode(id, color, radius, length, clicked, details, info)
 export { 
    updateTooltip,
    createCentralNode,
-   createSideNode
+   createSideNode,
+   getGithubURL
 }

@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { updateTooltip } from './d3utils'
+import { updateTooltip, getGithubURL } from './d3utils'
 
 function drag(simulation) {
 
@@ -79,6 +79,7 @@ async function handleMouseClicked(d) {
       if (!d.details) d.details = {}
       Object.assign(d.info, importData);
       Object.assign(d.details, importData);
+      d.details.source = getGithubURL(data.username, data.repo);
 
       d.clicked = true;
       d.color = "lightblue";

@@ -15,7 +15,6 @@ const ErrorText = props => {
 }
 
 const App = () => {
-   const [cards, setCards] = useState([])
    // defaults set to be examples of the format
    const [nodes, setNodes] = useState([
       {id: "lion", group: 1, radius: 5},
@@ -42,10 +41,6 @@ const App = () => {
       console.log("Nodes set", nodes, links);
    }
 
-   var addNewCard = cardInfo => {
-      setCards(cards.concat(cardInfo))
-   }
-
    var querrySearch = async querry => {
       console.log("App Click ", querry);
 
@@ -59,7 +54,6 @@ const App = () => {
    return (
       <div>
          <Form 
-            onSubmit={addNewCard} 
             setNodesLinks={setNodesLinks}
             setErrorText={setErrorText}
          />
