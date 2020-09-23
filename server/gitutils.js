@@ -56,27 +56,6 @@ async function retrieveRepoData(git, data) {
    let contents = (await repo.getContents(data.default_branch, data.manifest, true)).data;
    console.log("contents", contents);
 
-   // get npm registry data
-   const auditData = {
-      "name": contents.name,
-      "version": contents.version,
-      "requires": contents.dependencies,
-      "dependencies": utils.convertToAuditDependencyFormat(contents.dependencies)
-   };
-   const opts = {
-      "color": true,
-      "json": true,
-      "unicode": true,
-      method: 'POST',
-      gzip: true,
-      body: auditData
-   };
-   console.log("opts", opts);
-   let npmData = await npmFetch('/-/npm/v1/security/audits', opts);
-   npmData = await npmData.json();
-   console.log("npmData", npmData);
-   data.vulnerabilities = npmData.metadata.vulnerabilities;
-
    // extract dependencies from the package.json per our specifications
    data.dependencies = utils.extractDependencies(contents.dependencies);
    return data;

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const Github = require('github-api');
 const NpmApi = require('npm-api');
+const regFetch = require('npm-registry-fetch');
 const gitutils = require('./gitutils');
 const utils = require('./utils');
 
@@ -26,6 +27,44 @@ const npm = new NpmApi();
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://" + username + ":" + password + "@" + url;
 const client = new MongoClient(uri, { useNewUrlParser: true });
+
+async function npmAudit(dependencies) {
+   const auditData = utils.toAuditFormat(dependencies);
+   console.log("AuditData: ", auditData);
+
+   let opts = {
+       "color":true,
+       "json":true,
+       "unicode":true,
+       method: 'POST',
+       gzip: true,
+       body: auditData
+   };
+
+   var res = {}
+   try {
+      res.resp = await (await regFetch('/-/npm/v1/security/audits', opts)).json();
+   }
+   catch (err) {
+      res.error = err;
+      console.error(err);
+   }
+   console.log("audit response:", JSON.stringify(res, "", 3));
+   return res;
+}
+
+npmAudit([
+   { name: '@testing-library/jest-dom', version: '^4.2.4' },
+   { name: '@testing-library/react', version: '^9.4.0' },
+   { name: '@testing-library/user-event', version: '^7.2.1' },
+   { name: 'axios', version: '0.0.2' },
+   { name: 'd3', version: '1.1.1' },
+   { name: 'dotenv', version: '1.1.0' },
+   { name: 'react', version: '1.1.0' },
+   { name: 'react-dom', version: '1.1.0' },
+   { name: 'react-scripts', version: '0.0.0' }
+])
+   .then(res => console.log("Test Audit", res));
 
 async function pushToDatabase(data) {
    client.connect(err => {
@@ -70,10 +109,16 @@ app.put('/', (req, res) => res.send("Hello World!"));
 app.post('/lookup', async (req, res, next) => {
    let data = await gitutils.retrieveRepoData(git, {
       username: req.body.username,
-      repo: req.body.repo,
-      folder:req.body.folder
+      repo:     req.body.repo,
+      folder:   req.body.folder
    });
    if (!data) {error404(res); return;}
+
+   let audit = await npmAudit(data.dependencies);
+   if (!audit.error) {
+      data.audit = audit.resp;
+   }
+   console.log("lookup response data: ", data);
 
    res.status(201).json(data);
    //await pushToDatabase(data);

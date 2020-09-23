@@ -14,15 +14,19 @@ function extractPackageJson(tree, folder) {
    return path;
 }
 
-function convertToAuditDependencyFormat(dependencies) {
-   let converted = {};
-   if (dependencies)
-      for (const [key, value] of Object.entries(dependencies)) {
-         // remove semantics: https://docs.npmjs.com/files/package.json#dependencies
-         let version = value.replace(/>=|<=|<|>|~|^/g, "")
-         converted[key] = { "version": value };
-      }
-   return converted;
+function toAuditFormat(dependencies) {
+   let auditData = {"requires": {}, "dependencies": {}}
+   dependencies.forEach(element => {
+      let name = element.name;
+      let version = element.version;
+      auditData.requires[name] = version;
+      auditData.dependencies[name] = {version: version};
+   });
+   return auditData;
+}
+
+function mapAuditToDependency(dependencies, audit) {
+   
 }
 
 function extractDependencies(dependencies) {
@@ -61,7 +65,7 @@ function extractGithubPath(path) {
 
 module.exports = {
    extractPackageJson: extractPackageJson,
-   convertToAuditDependencyFormat: convertToAuditDependencyFormat,
+   toAuditFormat: toAuditFormat,
    extractDependencies: extractDependencies,
    findGithubUrl: findGithubUrl,
    extractGithubPath: extractGithubPath
