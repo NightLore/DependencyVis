@@ -2,9 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const Github = require('github-api');
 const NpmApi = require('npm-api');
-const regFetch = require('npm-registry-fetch');
 const gitutils = require('./gitutils');
 const utils = require('./utils');
+const auditutils = require('./audit');
 
 // load dotenv variables
 require('dotenv').config();
@@ -27,31 +27,6 @@ const npm = new NpmApi();
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://" + username + ":" + password + "@" + url;
 const client = new MongoClient(uri, { useNewUrlParser: true });
-
-async function npmAudit(dependencies) {
-   const auditData = utils.toAuditFormat(dependencies);
-   console.log("AuditData: ", auditData);
-
-   let opts = {
-       "color":true,
-       "json":true,
-       "unicode":true,
-       method: 'POST',
-       gzip: true,
-       body: auditData
-   };
-
-   var res = {}
-   try {
-      res.resp = await (await regFetch('/-/npm/v1/security/audits', opts)).json();
-   }
-   catch (err) {
-      res.error = err;
-      console.error(err);
-   }
-   console.log("audit response:", JSON.stringify(res, "", 3));
-   return res;
-}
 
 async function pushToDatabase(data) {
    client.connect(err => {
@@ -101,10 +76,10 @@ app.post('/lookup', async (req, res, next) => {
    });
    if (!data) {error404(res); return;}
 
-   let audit = await npmAudit(data.dependencies);
+   let audit = await auditutils.requestAudit(data.dependencies);
    if (!audit.error) {
-      utils.mapAuditToDependency(data.dependencies, audit.resp);
-      utils.sortAudit(data.dependencies);
+      auditutils.mapAuditToDependency(data.dependencies, audit.resp);
+      auditutils.sortAudit(data.dependencies);
    }
    console.log("lookup response data: ", data);
 
