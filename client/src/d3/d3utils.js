@@ -54,10 +54,11 @@ function createSideNode(node) {
 
 function auditToColor(audit) {
    var severity = 0;
+   // audit might not exist if no vulnerabilities
    if (audit) {
-      audit.forEach(val => {
-         severity = Math.max(auditSeverityToValue(val.severity), severity);
-      });
+      // audit should come in as a list of vulnerabilities
+      // audit should be sorted from highest severity to lowest
+      severity = Math.max(auditSeverityToValue(audit[0].severity));
    }
    return auditSeverityValueToColor(severity);
 }
