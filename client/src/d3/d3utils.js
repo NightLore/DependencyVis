@@ -53,12 +53,44 @@ function createSideNode(node) {
 }
 
 function auditToColor(audit) {
-   if (!audit) return "green";
-   if (audit.severity === "critical") return "darkred";
-   if (audit.severity === "high") return "red";
-   if (audit.severity === "moderate") return "orange";
-   if (audit.severity === "low") return "yellow";
-   console.error("Audit cannot convert to color", audit);
+   var severity = 0;
+   if (audit) {
+      audit.forEach(val => {
+         severity = Math.max(auditSeverityToValue(val.severity), severity);
+      });
+   }
+   return auditSeverityValueToColor(severity);
+}
+
+function auditSeverityToValue(severity) {
+   switch (severity) {
+      case "critical":
+         return 4;
+      case "high":
+         return 3;
+      case "moderate":
+         return 2;
+      case "low":
+         return 1;
+      default:
+         console.error("Audit default color used: ", severity);
+         return 0;
+   }
+}
+
+function auditSeverityValueToColor(severity) {
+   switch (severity) {
+      case 4:
+         return "darkred";
+      case 3:
+         return "red";
+      case 2:
+         return "orange";
+      case 1:
+         return "yellow";
+      default:
+         return "green";
+   }
 }
 
 function getGithubSearchURL(username, repo) {

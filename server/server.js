@@ -53,19 +53,6 @@ async function npmAudit(dependencies) {
    return res;
 }
 
-npmAudit([
-   { name: '@testing-library/jest-dom', version: '^4.2.4' },
-   { name: '@testing-library/react', version: '^9.4.0' },
-   { name: '@testing-library/user-event', version: '^7.2.1' },
-   { name: 'axios', version: '0.0.2' },
-   { name: 'd3', version: '1.1.1' },
-   { name: 'dotenv', version: '1.1.0' },
-   { name: 'react', version: '1.1.0' },
-   { name: 'react-dom', version: '1.1.0' },
-   { name: 'react-scripts', version: '0.0.0' }
-])
-   .then(res => console.log("Test Audit", res));
-
 async function pushToDatabase(data) {
    client.connect(err => {
       const collection = client.db(dbName).collection(dbCollection);
@@ -116,8 +103,8 @@ app.post('/lookup', async (req, res, next) => {
 
    let audit = await npmAudit(data.dependencies);
    if (!audit.error) {
-      data.audit = audit.resp;
       utils.mapAuditToDependency(data.dependencies, audit.resp);
+      utils.sortAudit(data.dependencies);
    }
    console.log("lookup response data: ", data);
 
