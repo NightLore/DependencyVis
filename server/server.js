@@ -117,6 +117,7 @@ app.post('/lookup', async (req, res, next) => {
    let audit = await npmAudit(data.dependencies);
    if (!audit.error) {
       data.audit = audit.resp;
+      utils.mapAuditToDependency(data.dependencies, audit.resp);
    }
    console.log("lookup response data: ", data);
 

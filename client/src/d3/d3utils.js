@@ -41,11 +41,24 @@ function createCentralNode(id, username, repo) {
    return createNode(id, "blue", 10, 1, true, details);
 }
 
-function createSideNode(id, version) {
+function createSideNode(node) {
+   let id = node.name;
+   let version = node.version;
+   let color = auditToColor(node.audit);
    let details = {
       version: version
    };
-   return createNode(id, "orange", 8, 2, undefined, details, {version: version});
+   console.log("Create side Node:", color, node);
+   return createNode(id, color, 8, 2, undefined, details, {version: version});
+}
+
+function auditToColor(audit) {
+   if (!audit) return "green";
+   if (audit.severity === "critical") return "darkred";
+   if (audit.severity === "high") return "red";
+   if (audit.severity === "moderate") return "orange";
+   if (audit.severity === "low") return "yellow";
+   console.error("Audit cannot convert to color", audit);
 }
 
 function getGithubSearchURL(username, repo) {

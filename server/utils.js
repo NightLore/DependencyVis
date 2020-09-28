@@ -26,7 +26,14 @@ function toAuditFormat(dependencies) {
 }
 
 function mapAuditToDependency(dependencies, audit) {
-   
+   for (const val of Object.values(audit.advisories)) {
+      const dependency = dependencies.find(d => d.name === val.module_name);
+      if (dependency) {
+         dependency.audit = val;
+      }
+      else
+         console.error("Could not find audit value: ", val);
+   }
 }
 
 function extractDependencies(dependencies) {
@@ -66,6 +73,7 @@ function extractGithubPath(path) {
 module.exports = {
    extractPackageJson: extractPackageJson,
    toAuditFormat: toAuditFormat,
+   mapAuditToDependency: mapAuditToDependency,
    extractDependencies: extractDependencies,
    findGithubUrl: findGithubUrl,
    extractGithubPath: extractGithubPath
