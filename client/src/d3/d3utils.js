@@ -36,22 +36,6 @@ function updateTooltip(tooltip, d, attributes) {
 
 }
 
-function createCentralNode(id, username, repo) {
-   let details = {source: getGithubURL(username, repo)};
-   return createNode(id, "blue", 10, 1, true, details);
-}
-
-function createSideNode(node) {
-   let id = node.name;
-   let version = node.version;
-   let color = auditToColor(node.audit);
-   let details = {
-      version: version
-   };
-   console.log("Create side Node:", color, node);
-   return createNode(id, color, 8, 2, undefined, details, {version: version});
-}
-
 function auditToColor(audit) {
    var severity = 0;
    // audit might not exist if no vulnerabilities
@@ -102,25 +86,37 @@ function getGithubURL(username, repo) {
    return "github.com/" + username + "/" + repo;
 }
 
-/*
- * id = identifier
- * color = color of node
- * radius = size of node
- * length
- * clicked = has node been clicked or not
- * source = url to info about node
- */
-function createNode(id, color, radius, length, clicked, details, info)
-{
-   return {
+function createCentralNode(id, username, repo) {
+   let centralNode = {
       id: id,
-      color: color,
-      radius: radius,
-      length: length,
-      clicked: clicked,
-      details: details,
-      info: info
+      color: "blue",
+      radius: 10,
+      length: 1, // size of tooltip, deprecated
+      clicked: true,
+      details: {
+         source: getGithubURL(username, repo)
+      }
    };
+   console.log("Create central Node:", centralNode);
+   return centralNode;
+}
+
+function createSideNode(node) {
+   let sideNode = {
+      id: node.name,
+      audit: node.audit,
+      color: auditToColor(node.audit),
+      radius: 8,
+      length: 2, // size of tooltip, deprecated
+      details: {
+         version: node.version
+      },
+      info: {
+         version: node.version
+      },
+   };
+   console.log("Create side Node:", sideNode);
+   return sideNode;
 }
 
 export { 
