@@ -5,9 +5,6 @@ function updateTooltip(tooltip, d, attributes) {
       * attributes.tooltipCharWidth;
    attributes.tooltipHeight = 
       d.length * attributes.tooltipDy + attributes.tooltipTextOffset; 
-   let textX = attributes.rectX + attributes.tooltipWidth / 2;
-   let textY = attributes.rectY + attributes.tooltipTextOffset;
-   let dy = attributes.tooltipDy;
 
    tooltip.selectAll("rect")
          .attr("width", attributes.tooltipWidth)
@@ -16,24 +13,53 @@ function updateTooltip(tooltip, d, attributes) {
    tooltip.selectAll("text")
       .selectAll("*").remove()
 
+   let textX = attributes.rectX + attributes.tooltipWidth / 2;
+   let textY = attributes.rectY + attributes.tooltipTextOffset;
+   let dy = 0;
+
+   // dy = setName(tooltip, d, attributes, textX, textY, dy);
+   // dy = setInfo(tooltip, d, attributes, textX, textY, dy);
+   dy = setAudit(tooltip, d, attributes, textX, textY, dy);
+}
+
+function addText(tooltip, textX, textY, dy, text) {
    tooltip.selectAll("text")
       .append("tspan")
          .attr("x", textX + "px")
          .attr("y", textY + "px")
-         .text(d.id)
+         .attr("dy", dy + "px")
+         .text(text)
+}
 
+function setName(tooltip, d, attributes, textX, textY, dy) {
+   addText(tooltip, textX, textY, dy, d.id);
+   return dy + attributes.tooltipDy;
+}
+
+function setInfo(tooltip, d, attributes, textX, textY, dy) {
    if (!d.info) return;
+
    for (const [key, value] of Object.entries(d.info)) {
-      if (key === "source") continue;
-      tooltip.selectAll("text")
-         .append("tspan")
-            .attr("x", textX + "px")
-            .attr("y", textY + "px")
-            .attr("dy", dy + "px")
-            .text(key + ": " + value)
+      addText(tooltip, textX, textY, dy, key + ": " + value);
       dy += attributes.tooltipDy;
    }
+   return dy;
+}
 
+function setAudit(tooltip, d, attributes, textX, textY, dy) {
+   if (!d.audit) {
+      addText(tooltip, textX, textY, dy, "No severities");
+      return;
+   }
+   addText(tooltip, textX, textY, dy, "ID | SEVERITY");
+   dy += attributes.tooltipDy;
+
+   d.audit.forEach(a => {
+      addText(tooltip, textX, textY, dy, a.id + ": " + a.severity);
+      dy += attributes.tooltipDy;
+      
+   });
+   return dy;
 }
 
 function auditToColor(audit) {
