@@ -1,4 +1,3 @@
-
 const gitDomain = "github.com/"
 
 function extractPackageJson(tree, folder) {

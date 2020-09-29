@@ -5,6 +5,7 @@ const NpmApi = require('npm-api');
 const gitutils = require('./gitutils');
 const utils = require('./utils');
 const auditutils = require('./audit');
+const database = require('./database');
 
 // load dotenv variables
 require('dotenv').config();
@@ -23,31 +24,10 @@ const git = new Github({
 const app = express();
 const npm = new NpmApi();
 
-// load MongoDB
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://" + username + ":" + password + "@" + url;
-const client = new MongoClient(uri, { useNewUrlParser: true });
+// initialize database
+database.initialize(username, password);
 
-async function pushToDatabase(data) {
-   client.connect(err => {
-      const collection = client.db(dbName).collection(dbCollection);
-      console.log("Connected to Database");
-
-      collection.insertOne(data)
-         .then(res => console.log("inserted"))
-         .catch(err => console.error("Failed to insert", err));
-
-      /*
-      const collected = collection.find({username: data.username});
-      collected.each(function(err, doc) {
-         //console.log(doc);
-      });
-      */
-
-      client.close();
-   });
-}
-
+// setup server
 function error404(res) {
    console.error("404 error, not found");
    res.status(404).send({
