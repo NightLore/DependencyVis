@@ -3,12 +3,6 @@ function updateTooltip(tooltip, d, attributes) {
    attributes.tooltipWidth = 
       Math.max(d.id.length, ("version: " + d.version).length) 
       * attributes.tooltipCharWidth;
-   attributes.tooltipHeight = 
-      d.length * attributes.tooltipDy + attributes.tooltipTextOffset; 
-
-   tooltip.selectAll("rect")
-         .attr("width", attributes.tooltipWidth)
-         .attr("height", attributes.tooltipHeight)
 
    tooltip.selectAll("text")
       .selectAll("*").remove()
@@ -20,6 +14,11 @@ function updateTooltip(tooltip, d, attributes) {
    // dy = setName(tooltip, d, attributes, textX, textY, dy);
    // dy = setInfo(tooltip, d, attributes, textX, textY, dy);
    dy = setAudit(tooltip, d, attributes, textX, textY, dy);
+
+   attributes.tooltipHeight = dy + attributes.tooltipTextOffset;
+   tooltip.selectAll("rect")
+         .attr("width", attributes.tooltipWidth)
+         .attr("height", attributes.tooltipHeight)
 }
 
 function addText(tooltip, textX, textY, dy, text) {
@@ -49,7 +48,7 @@ function setInfo(tooltip, d, attributes, textX, textY, dy) {
 function setAudit(tooltip, d, attributes, textX, textY, dy) {
    if (!d.audit) {
       addText(tooltip, textX, textY, dy, "No severities");
-      return;
+      return dy + attributes.tooltipDy;
    }
    addText(tooltip, textX, textY, dy, "ID | SEVERITY");
    dy += attributes.tooltipDy;
