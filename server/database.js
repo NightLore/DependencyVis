@@ -1,15 +1,20 @@
 const MongoClient = require('mongodb').MongoClient;
 
 var client;
+var info;
 
-function initialize(username, password) {
-   let uri = "mongodb+srv://" + username + ":" + password + "@" + url;
+function initialize(databaseInfo) {
+   info = databaseInfo;
+   let uri = "mongodb+srv://" 
+      + info.username + ":" 
+      + info.password + "@" 
+      + info.url;
    client = new MongoClient(uri, { useNewUrlParser: true });
 }
 
 async function pushToDatabase(data) {
    client.connect(err => {
-      const collection = client.db(dbName).collection(dbCollection);
+      const collection = client.db(info.dbName).collection(info.dbCollection);
       console.log("Connected to Database");
 
       collection.insertOne(data)

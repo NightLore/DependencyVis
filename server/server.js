@@ -10,11 +10,13 @@ const database = require('./database');
 // load dotenv variables
 require('dotenv').config();
 const port = process.env.PORT || 3001;
-const username = process.env.MONGO_DB_USERNAME;
-const password = process.env.MONGO_DB_PASSWORD;
-const url = process.env.MONGO_DB_URL;
-const dbName = process.env.MONGO_DB_DATABASE;
-const dbCollection = process.env.MONGO_DB_COLLECTION;
+const databaseInfo = {
+   username: process.env.MONGO_DB_USERNAME,
+   password: process.env.MONGO_DB_PASSWORD,
+   url: process.env.MONGO_DB_URL,
+   dbName: process.env.MONGO_DB_DATABASE,
+   dbCollection: process.env.MONGO_DB_COLLECTION
+};
 
 // load APIs
 const git = new Github({
@@ -25,7 +27,7 @@ const app = express();
 const npm = new NpmApi();
 
 // initialize database
-database.initialize(username, password);
+database.initialize(databaseInfo);
 
 // setup server
 function error404(res) {
