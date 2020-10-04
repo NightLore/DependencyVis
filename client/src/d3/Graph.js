@@ -11,9 +11,6 @@ const DIVSTYLE = {
 }
 
 let graphData = {
-   canvasHeight: 800,
-   canvasWidth: 1200,
-
    tooltipWidth: 100,
    tooltipHeight: 100,
    tooltipCornerRadius: 15,
@@ -25,19 +22,34 @@ let graphData = {
 };
 
 class Graph extends Component {
+   state = { width: 0, height: 0 };
+   updateDimensions = () => {
+      this.setState({ width: window.innerWidth, height: window.innerHeight });
+
+      if (graphData.svgCanvas)
+         graphData.svgCanvas
+            .attr("width", this.state.width)
+            .attr("height", this.state.height)
+
+      if (graphData.simulation) {
+         graphData.simulation.force("center")
+            .x(this.state.width / 2)
+            .y(this.state.height / 2)
+         graphData.simulation.alpha(0.3).restart();
+      }
+   };
+
    componentDidMount() {
+      this.updateDimensions();
       this._createCanvas();
+      window.addEventListener('resize', this.updateDimensions);
+   }
+
+   componentWillUnmount() {
+      window.removeEventListener('resize', this.updateDimensions);
    }
 
    render() { 
-      let rootNode = graphData.rootNode;
-      graphData.canvasWidth = rootNode ? rootNode.clientWidth : graphData.canvasWidth;
-      graphData.canvasHeight = rootNode ? rootNode.clientHeight : graphData.canvasHeight;
-      if (graphData.svgCanvas)
-         graphData.svgCanvas
-            .attr("width", graphData.canvasWidth)
-            .attr("height", graphData.canvasHeight)
-
       if (this.props.nodesChanged)
       {
          this.props.setNodesChanged(false);
@@ -87,8 +99,8 @@ class Graph extends Component {
    _createCanvas() {
       graphData.svgCanvas = d3.select(graphData.rootNode)
          .append("svg")
-         .attr("width", graphData.canvasWidth)
-         .attr("height", graphData.canvasHeight)
+         .attr("width", this.state.width)
+         .attr("height", this.state.height)
          .style("border", "1px solid black");
    }
 
@@ -98,8 +110,8 @@ class Graph extends Component {
             .id(d => d.id)
             .distance(d => d.value * 20))
          .force("charge", d3.forceManyBody())
-         .force("center", d3.forceCenter(graphData.canvasWidth / 2, 
-                                         graphData.canvasHeight / 2))
+         .force("center", d3.forceCenter(this.state.width / 2, 
+                                         this.state.height / 2))
    }
 
    _setGraphData() {
