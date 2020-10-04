@@ -3,6 +3,26 @@ import { lookup } from './AxiosUtils'
 import { createCentralNode, createSideNode } from './d3/d3utils'
 const { useState } = React;
 
+const FORMBACKGROUND = {
+   zIndex: "5",
+   backgroundColor: "rgb(191, 226, 227)",
+
+   position: "absolute",
+   width: "100%",
+   height: "100%",
+}
+
+const FORMSTYLE = {
+   width: "fit-content",
+
+   // center on page 
+   position: "absolute",
+   margin: "auto",
+   left: "50%",
+   top: "30%",
+   transform: "translate(-50%, -50%)",
+}
+
 const Form = props => {
    const [username, setUsername] = useState('');
    const [repo, setRepo] = useState('');
@@ -49,11 +69,16 @@ const Form = props => {
       console.log("Nodes Generated", nodes, links);
       props.setNodesLinks(nodes, links);
 
+      props.setFormVisibility(false);
       reset();
    }
 
+   let display = props.showForm ? "block" : "none";
    return (
-      <span style={{display: "inline-block", margin: "1em"}}>
+      <div style={{display: display}}>
+      <div style={FORMBACKGROUND}>
+      <div style={FORMSTYLE}>
+      <h1 style={props.titleStyle}>{props.title}</h1>
       <form onSubmit={handleSubmit}>
          <input
             type="text"
@@ -77,7 +102,9 @@ const Form = props => {
             placeholder="optional specified folder"
          />
       </form>
-      </span>
+      </div>
+      </div>
+      </div>
    )
 }
 

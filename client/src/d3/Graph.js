@@ -103,22 +103,8 @@ class Graph extends Component {
             .id(d => d.id)
             .distance(d => d.value * 20))
          .force("charge", d3.forceManyBody())
-         .force("center", d3.forceCenter(graphData.canvasWidth / 2, graphData.canvasHeight / 2))
-
-      /*
-      graphData.force = d3.layout.force()
-         .charge(-120)
-         .linkDistance(30)
-         .size([graphData.canvasWidth, canvasHeight]);
-
-      graphData.force.nodes(graphData.props.nodes)
-         .links(json.links)
-         .charge(d => {
-            let charge = -500;
-            if (d.index === 0) charge = 10 * charge;
-            return charge;
-         });
-         */
+         .force("center", d3.forceCenter(graphData.canvasWidth / 2, 
+                                         graphData.canvasHeight / 2))
    }
 
    _setGraphData() {

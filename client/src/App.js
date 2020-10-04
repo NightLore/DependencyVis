@@ -10,8 +10,33 @@ dotenv.config();
 console.log(process.env);
 const { useState } = React;
 
+const TITLE = "DependencyVis"
+const TITLESTYLE = {
+   fontSize: "4em",
+   fontStyle: "italic",
+   textAlign: "center",
+   color: "rgb(75, 35, 92)",
+}
+
+const ERRORSTYLE = {
+   zIndex: "10",
+
+   // font
+   color:"red", 
+   fontSize: "2em",
+   fontWeight: "bold",
+
+   // center on page 
+   position: "absolute",
+   margin: "auto",
+   width: "fit-content",
+   left: "50%",
+   top: "50%",
+   transform: "translate(-50%, -50%)",
+}
+
 const ErrorText = props => {
-   return (<span style={{color:"red", margin: "1em"}}>{props.text}</span>)
+   return (<span style={ERRORSTYLE}>{props.text}</span>)
 }
 
 const App = () => {
@@ -32,6 +57,7 @@ const App = () => {
       {source: "lion", target: "test20", value: 1},
    ]);
    const [nodesChanged, setNodesChanged] = useState(false);
+   const [showForm, setFormVisibility] = useState(true);
    const [errorText, setErrorText] = useState('');
 
    let setNodesLinks = (newNodes, newLinks) => {
@@ -54,13 +80,16 @@ const App = () => {
    return (
       <div>
          <Form 
+            title={TITLE}
+            titleStyle={TITLESTYLE}
             setNodesLinks={setNodesLinks}
             setErrorText={setErrorText}
+            showForm={showForm}
+            setFormVisibility={setFormVisibility}
          />
          <ErrorText 
             text={errorText}
          />
-         <div>
          <Sidebar 
             nodes={nodes} 
             links={links}
@@ -72,7 +101,6 @@ const App = () => {
             setNodesChanged={setNodesChanged}
             search={querrySearch}
          />
-         </div>
       </div>
    )
 }
