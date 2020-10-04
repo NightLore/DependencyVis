@@ -2,6 +2,14 @@ import React, { Component } from 'react'
 import * as d3 from 'd3'
 import mouse from './mouse'
 
+const DIVSTYLE = {
+   position: "absolute",
+   left: "0px",
+   top: "0px",
+   right: "0px",
+   bottom: "0px",
+}
+
 let graphData = {
    canvasHeight: 800,
    canvasWidth: 1200,
@@ -22,6 +30,14 @@ class Graph extends Component {
    }
 
    render() { 
+      let rootNode = graphData.rootNode;
+      graphData.canvasWidth = rootNode ? rootNode.clientWidth : graphData.canvasWidth;
+      graphData.canvasHeight = rootNode ? rootNode.clientHeight : graphData.canvasHeight;
+      if (graphData.svgCanvas)
+         graphData.svgCanvas
+            .attr("width", graphData.canvasWidth)
+            .attr("height", graphData.canvasHeight)
+
       if (this.props.nodesChanged)
       {
          this.props.setNodesChanged(false);
@@ -35,7 +51,7 @@ class Graph extends Component {
 
          console.log("Changed");
       }
-      return <div ref={this._setRef.bind(this)}/> 
+      return <div style={DIVSTYLE} ref={this._setRef.bind(this)}/> 
    }
 
    /*
@@ -66,27 +82,6 @@ class Graph extends Component {
             .attr("dominant-baseline", "middle")
             .attr("text-anchor", "middle")
             .attr("fill", graphData.tooltipTextColor)
-   }
-
-   _createSideBar() {
-
-      graphData.sidebar = graphData.svgCanvas.append("g")
-
-      graphData.sidebar.append("rect")
-            .attr("width", graphData.sidebarWidth)
-            .attr("height", graphData.canvasHeight)
-            .attr("fill", graphData.sidebarFill)
-
-      graphData.sidebar.content = graphData.sidebar
-         .selectAll("g")
-         .data(graphData.props.nodes)
-         .join("g")
-
-      graphData.sidebar.content.append("text")
-            .attr("x", (d, i) => graphData.tooltipCharWidth)
-            .attr("y", (d, i) => graphData.tooltipDy * (i+1))
-            .text(d => d.id)
-
    }
 
    _createCanvas() {
