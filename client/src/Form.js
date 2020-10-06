@@ -1,6 +1,6 @@
 import React from 'react'
 import { lookup } from './AxiosUtils'
-import { createCentralNode, createSideNode } from './d3/d3utils'
+import { createCentralNode, dependenciesToNodes } from './d3/d3utils'
 const { useState } = React;
 
 const FORMBACKGROUND = {
@@ -58,14 +58,7 @@ const Form = props => {
 
       let data = querryResp.resp;
       console.log("Response Data:", data);
-      data.dependencies.forEach((value, index, array) => {
-         nodes.push(createSideNode(value));
-         links.push({
-            source: mainId, 
-            target: value.name, 
-            value: value.name.length
-         });
-      });
+      dependenciesToNodes(data.dependencies, mainId, nodes, links);
       console.log("Nodes Generated", nodes, links);
       props.setNodesLinks(nodes, links);
 

@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { updateTooltip, getGithubURL } from './d3utils'
+import { updateTooltip, getGithubURL, dependenciesToNodes } from './d3utils'
 
 function drag(simulation) {
 
@@ -67,6 +67,7 @@ async function handleMouseClicked(d) {
 
    let data = await this.props.search(d.id);
    if (data) {
+      console.log("Search Result:", data);
       let importData = {
          size: data.size,
          archived: data.archived,
@@ -89,6 +90,12 @@ async function handleMouseClicked(d) {
 
       updateTooltip(this.tooltip, d, this);
       circle.attr("fill", d.color);
+
+      // update graph
+      let newNodes = [];
+      let newLinks = [];
+      dependenciesToNodes(data.dependencies, d.id, newNodes, newLinks);
+      this.props.setNodesLinks(this.props.nodes.concat(newNodes), this.props.links.concat(newLinks));
    }
 
    console.log("Clicked processed", d);

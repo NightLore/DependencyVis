@@ -103,6 +103,17 @@ function auditSeverityValueToColor(severity) {
    }
 }
 
+function dependenciesToNodes(dependencies, mainNode, nodes, links) {
+   dependencies.forEach((value, index, array) => {
+      nodes.push(createSideNode(value));
+      links.push({
+         source: mainNode, 
+         target: value.name, 
+         value: value.name.length
+      });
+   });
+}
+
 function getGithubSearchURL(username, repo) {
    return "api.github.com/repos/" + username + "/" + repo;
 }
@@ -147,6 +158,6 @@ function createSideNode(node) {
 export { 
    updateTooltip,
    createCentralNode,
-   createSideNode,
+   dependenciesToNodes,
    getGithubURL
 }

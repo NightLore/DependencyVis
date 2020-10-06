@@ -40,22 +40,8 @@ const ErrorText = props => {
 }
 
 const App = () => {
-   // defaults set to be examples of the format
-   const [nodes, setNodes] = useState([
-      {id: "lion", group: 1, radius: 5},
-      {id: "roar", group: 1, radius: 9},
-      {id: "absurdlylongname", group: 2, radius: 5},
-      {id: "4", group: 2, radius: 9},
-      {id: "5", group: 3, radius: 5},
-      {id: "test20", group: 3, radius: 9},
-   ]);
-   const [links, setLinks] = useState([
-      {source: "lion", target: "roar", value: 1},
-      {source: "roar", target: "absurdlylongname", value: 1},
-      {source: "absurdlylongname", target: "4", value: 1},
-      {source: "4", target: "5", value: 1},
-      {source: "lion", target: "test20", value: 1},
-   ]);
+   const [nodes, setNodes] = useState([]);
+   const [links, setLinks] = useState([]);
    const [nodesChanged, setNodesChanged] = useState(false);
    const [showForm, setFormVisibility] = useState(true);
    const [errorText, setErrorText] = useState('');
@@ -99,6 +85,7 @@ const App = () => {
             links={links}
             nodesChanged={nodesChanged}
             setNodesChanged={setNodesChanged}
+            setNodesLinks={setNodesLinks}
             search={querrySearch}
          />
       </div>
