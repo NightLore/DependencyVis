@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
 const { useState } = React;
 
-const PROPS = {
-   sidebarHeight: 800,
-   sidebarWidth: 200,
-   sidebarFill: "lightsteelblue",
-};
+let SIDEBARSTYLE = {
+   margin: "1px",
+   position: "absolute",
+   zIndex: "4",
+   display: "inline-block", 
+   backgroundColor: "lightsteelblue",
+   overflow: "auto",
+   width: 200,
+   height: 800
+}
 
-const listStyle = 
+const LISTSTYLE = 
    '.caret::before {\n'
  + '  content: "\\25B6";\n' // Unicode for small right-pointing black triangle
  + '  color: black;\n'
@@ -85,19 +90,29 @@ const ListNode = props => {
 };
 
 class Sidebar extends Component {
+   state = { width: 0, height: 0 };
+   updateDimensions = () => {
+      this.setState({ width: window.innerWidth, height: window.innerHeight});
+   };
+
+   componentDidMount() {
+      window.addEventListener('resize', this.updateDimensions);
+      this.updateDimensions();
+   }
+
+   componentWillUnmount() {
+      window.removeEventListener('resize', this.updateDimensions);
+   }
+
    render() {
-      let nodes = this.props.nodes.map((value, index) =>
-         <ListNode key={value.id} node={value}/>);
+      let nodes = this.props.nodes.map(
+         (value, index) => <ListNode key={value.id} node={value}/>
+      );
+      let style = Object.assign({}, SIDEBARSTYLE);
+      style.height = this.state.height;
       return (
-         <div style={{
-               margin: "1px",
-               position: "absolute",
-               display: "inline-block", 
-               backgroundColor: PROPS.sidebarFill, 
-               width: PROPS.sidebarWidth,
-               height: PROPS.sidebarHeight
-         }}>
-            <style>{listStyle}</style>
+         <div style={style}>
+            <style>{LISTSTYLE}</style>
             <ul className='sidebar-list'>{nodes}</ul>
 
          </div>

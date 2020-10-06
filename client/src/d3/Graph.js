@@ -4,10 +4,6 @@ import mouse from './mouse'
 
 const DIVSTYLE = {
    position: "absolute",
-   left: "0px",
-   top: "0px",
-   right: "0px",
-   bottom: "0px",
 }
 
 let graphData = {
@@ -40,9 +36,9 @@ class Graph extends Component {
    };
 
    componentDidMount() {
+      window.addEventListener('resize', this.updateDimensions);
       this.updateDimensions();
       this._createCanvas();
-      window.addEventListener('resize', this.updateDimensions);
    }
 
    componentWillUnmount() {
