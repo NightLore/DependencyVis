@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import Graph from './d3/Graph';
 import Sidebar from './Sidebar';
 import Form from './Form';
+import OptionsPane from './OptionsPane';
 import { search } from './AxiosUtils';
 
 dotenv.config();
@@ -80,6 +81,7 @@ const App = () => {
             nodes={nodes} 
             links={links}
          />
+         <OptionsPane/>
          <Graph 
             nodes={nodes} 
             links={links}
