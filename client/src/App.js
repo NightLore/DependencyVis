@@ -46,6 +46,7 @@ const App = () => {
    const [nodesChanged, setNodesChanged] = useState(false);
    const [showForm, setFormVisibility] = useState(true);
    const [errorText, setErrorText] = useState('');
+   const [colorOption, setColorOption] = useState('loaded');
 
    let setNodesLinks = (newNodes, newLinks) => {
       setNodes(newNodes);
@@ -81,7 +82,10 @@ const App = () => {
             nodes={nodes} 
             links={links}
          />
-         <OptionsPane/>
+         <OptionsPane 
+            colorOption={colorOption}
+            setColorOption={setColorOption}
+         />
          <Graph 
             nodes={nodes} 
             links={links}
