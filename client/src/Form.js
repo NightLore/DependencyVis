@@ -58,7 +58,9 @@ const Form = props => {
 
       let data = querryResp.resp;
       console.log("Response Data:", data);
-      dependenciesToNodes(data.dependencies, mainId, nodes, links);
+      dependenciesToNodes(data.dependencies, mainId, nodes, links, {
+         color: props.colorOption
+      });
       console.log("Nodes Generated", nodes, links);
       props.setNodesLinks(nodes, links);
 

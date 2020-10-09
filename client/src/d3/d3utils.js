@@ -103,13 +103,28 @@ function auditSeverityValueToColor(severity) {
    }
 }
 
-function dependenciesToNodes(dependencies, mainNode, nodes, links) {
-   dependencies.forEach((value, index, array) => {
-      nodes.push(createSideNode(value));
+function toNodeColor(data, options) {
+   if (data.isCentral)
+      return "blue";
+   console.log("Converting color option:", options);
+   switch (options.color) {
+      case "loaded":
+         if (data.loaded)
+            return data.loaded.color;
+         break;
+      case "audit":
+         return auditToColor(data.audit);
+   }
+   return "orange";
+}
+
+function dependenciesToNodes(dependencies, mainNode, nodes, links, options) {
+   dependencies.forEach((data, index, array) => {
+      nodes.push(createSideNode(data, options));
       links.push({
          source: mainNode, 
-         target: value.name, 
-         value: value.name.length
+         target: data.name, 
+         value: data.name.length
       });
    });
 }
@@ -125,9 +140,9 @@ function getGithubURL(username, repo) {
 function createCentralNode(id, username, repo) {
    let centralNode = {
       id: id,
+      isCentral: true,
       color: "blue",
       radius: 10,
-      length: 1, // size of tooltip, deprecated
       clicked: true,
       details: {
          source: getGithubURL(username, repo)
@@ -137,13 +152,12 @@ function createCentralNode(id, username, repo) {
    return centralNode;
 }
 
-function createSideNode(node) {
+function createSideNode(node, options) {
    let sideNode = {
       id: node.name,
       audit: node.audit,
-      color: auditToColor(node.audit),
+      color: toNodeColor(node, options),
       radius: 8,
-      length: 2, // size of tooltip, deprecated
       details: {
          version: node.version
       },
@@ -159,5 +173,6 @@ export {
    updateTooltip,
    createCentralNode,
    dependenciesToNodes,
+   toNodeColor,
    getGithubURL
 }

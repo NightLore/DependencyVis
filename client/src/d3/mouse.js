@@ -60,7 +60,7 @@ function handleMouseOut(d) {
 async function handleMouseClicked(d) {
    if (d.clicked) return;
 
-   d.color = "red";
+   d.color = "grey"; // loading color
    let circle = d3.select("#" + d.id);
    circle.attr("fill", d.color);
 
@@ -82,19 +82,20 @@ async function handleMouseClicked(d) {
       Object.assign(d.details, importData);
       d.details.source = getGithubURL(data.username, data.repo);
 
+      d.loaded = {
+         color: "lightblue"
+      }
       d.clicked = true;
-      d.color = "lightblue";
-      d.length += 6;
       d.source = data.source;
-      d.vulnerabilities = data.vulnerabilities;
 
       updateTooltip(this.tooltip, d, this);
-      circle.attr("fill", d.color);
 
       // update graph
       let newNodes = [];
       let newLinks = [];
-      dependenciesToNodes(data.dependencies, d.id, newNodes, newLinks);
+      dependenciesToNodes(data.dependencies, d.id, newNodes, newLinks, {
+         color: this.props.colorOption
+      });
       this.props.setNodesLinks(this.props.nodes.concat(newNodes), this.props.links.concat(newLinks));
    }
 

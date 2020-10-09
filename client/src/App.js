@@ -1,14 +1,11 @@
 import React from 'react';
 import './App.css';
-import dotenv from 'dotenv';
 import Graph from './d3/Graph';
 import Sidebar from './Sidebar';
 import Form from './Form';
 import OptionsPane from './OptionsPane';
 import { search } from './AxiosUtils';
 
-dotenv.config();
-console.log(process.env);
 const { useState } = React;
 
 const TITLE = "DependencyVis"
@@ -48,14 +45,19 @@ const App = () => {
    const [errorText, setErrorText] = useState('');
    const [colorOption, setColorOption] = useState('loaded');
 
-   let setNodesLinks = (newNodes, newLinks) => {
+   const setNodesLinks = (newNodes, newLinks) => {
       setNodes(newNodes);
       setLinks(newLinks);
       setNodesChanged(true);
       console.log("Nodes set", nodes, links);
    }
 
-   var querrySearch = async querry => {
+   const handleColorOption = option => {
+      setColorOption(option);
+      setNodesChanged(true);
+   }
+
+   const querrySearch = async querry => {
       console.log("App Click ", querry);
 
       let querryResp = await search(querry);
@@ -65,6 +67,7 @@ const App = () => {
       return querryResp.resp;
    }
 
+   console.log("ColorOption", colorOption);
    return (
       <div>
          <Form 
@@ -74,6 +77,7 @@ const App = () => {
             setErrorText={setErrorText}
             showForm={showForm}
             setFormVisibility={setFormVisibility}
+            colorOption={colorOption}
          />
          <ErrorText 
             text={errorText}
@@ -84,7 +88,7 @@ const App = () => {
          />
          <OptionsPane 
             colorOption={colorOption}
-            setColorOption={setColorOption}
+            setColorOption={handleColorOption}
          />
          <Graph 
             nodes={nodes} 
@@ -93,6 +97,7 @@ const App = () => {
             setNodesChanged={setNodesChanged}
             setNodesLinks={setNodesLinks}
             search={querrySearch}
+            colorOption={colorOption}
          />
       </div>
    )

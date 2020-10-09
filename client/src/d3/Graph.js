@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import * as d3 from 'd3'
 import mouse from './mouse'
+import { toNodeColor } from './d3utils'
 
 const DIVSTYLE = {
    position: "absolute",
@@ -35,6 +36,15 @@ class Graph extends Component {
       }
    };
 
+   verifyNodes = () => {
+      const options = {
+         color: this.props.colorOption
+      };
+      this.props.nodes.forEach(node => {
+         node.color = toNodeColor(node, options);
+      });
+   };
+
    componentDidMount() {
       this._createCanvas();
    }
@@ -48,6 +58,7 @@ class Graph extends Component {
          this._clearCanvas();
 
          graphData.props = this.props;
+         this.verifyNodes();
          this._createSimulation(window.innerWidth, window.innerHeight);
          this._setGraphData();
          this._createTooltip();
