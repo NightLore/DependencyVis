@@ -45,11 +45,10 @@ const App = () => {
    const [errorText, setErrorText] = useState('');
    const [colorOption, setColorOption] = useState('loaded');
 
-   const setNodesLinks = (newNodes, newLinks) => {
-      setNodes(newNodes);
-      setLinks(newLinks);
+   const setGraph = graph  => {
+      setNodes(graph.nodes);
+      setLinks(graph.links);
       setNodesChanged(true);
-      console.log("Nodes set", nodes, links);
    }
 
    const handleColorOption = option => {
@@ -73,7 +72,7 @@ const App = () => {
          <Form 
             title={TITLE}
             titleStyle={TITLESTYLE}
-            setNodesLinks={setNodesLinks}
+            setGraph={setGraph}
             setErrorText={setErrorText}
             showForm={showForm}
             setFormVisibility={setFormVisibility}
@@ -95,7 +94,7 @@ const App = () => {
             links={links}
             nodesChanged={nodesChanged}
             setNodesChanged={setNodesChanged}
-            setNodesLinks={setNodesLinks}
+            setGraph={setGraph}
             search={querrySearch}
             colorOption={colorOption}
          />

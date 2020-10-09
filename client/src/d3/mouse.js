@@ -97,7 +97,7 @@ async function handleMouseClicked(d) {
             color: this.props.colorOption
          }
       );
-      this.props.setNodesLinks(newGraph.nodes, newGraph.links);
+      this.props.setGraph(newGraph);
    }
 
    console.log("Clicked processed", d);

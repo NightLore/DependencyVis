@@ -62,7 +62,7 @@ const Form = props => {
          color: props.colorOption
       });
       console.log("Nodes Generated", nodes, links);
-      props.setNodesLinks(newGraph.nodes, newGraph.links);
+      props.setGraph(newGraph);
 
       props.setFormVisibility(false);
       reset();
