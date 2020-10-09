@@ -58,11 +58,11 @@ const Form = props => {
 
       let data = querryResp.resp;
       console.log("Response Data:", data);
-      dependenciesToNodes(data.dependencies, mainId, nodes, links, {
+      let newGraph = dependenciesToNodes(data.dependencies, mainId, nodes, links, {
          color: props.colorOption
       });
       console.log("Nodes Generated", nodes, links);
-      props.setNodesLinks(nodes, links);
+      props.setNodesLinks(newGraph.nodes, newGraph.links);
 
       props.setFormVisibility(false);
       reset();

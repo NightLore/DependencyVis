@@ -91,12 +91,13 @@ async function handleMouseClicked(d) {
       updateTooltip(this.tooltip, d, this);
 
       // update graph
-      let newNodes = [];
-      let newLinks = [];
-      dependenciesToNodes(data.dependencies, d.id, newNodes, newLinks, {
-         color: this.props.colorOption
-      });
-      this.props.setNodesLinks(this.props.nodes.concat(newNodes), this.props.links.concat(newLinks));
+      let newGraph = dependenciesToNodes(
+         data.dependencies, d.id, 
+         this.props.nodes, this.props.links, {
+            color: this.props.colorOption
+         }
+      );
+      this.props.setNodesLinks(newGraph.nodes, newGraph.links);
    }
 
    console.log("Clicked processed", d);

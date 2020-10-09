@@ -106,7 +106,6 @@ function auditSeverityValueToColor(severity) {
 function toNodeColor(data, options) {
    if (data.isCentral)
       return "blue";
-   console.log("Converting color option:", options);
    switch (options.color) {
       case "loaded":
          if (data.loaded)
@@ -118,15 +117,34 @@ function toNodeColor(data, options) {
    return "orange";
 }
 
+function hasNode(nodes, data) {
+   console.log("hasNode ", nodes, data, nodes.length);
+   for (let i = 0; i < nodes.length; i++) {
+      console.log("Comparing", nodes[i].id, data.name, nodes[i].id === data.name);
+      if (nodes[i].id === data.name) {
+         console.log("HAS NODE: TRUE");
+         return true;
+      }
+   }
+   console.log("hasNode failed");
+   return false;
+}
+
 function dependenciesToNodes(dependencies, mainNode, nodes, links, options) {
+   let newNodes = [];
+   let newLinks = [];
    dependencies.forEach((data, index, array) => {
-      nodes.push(createSideNode(data, options));
-      links.push({
+      if (!hasNode(nodes, data)) {
+         newNodes.push(createSideNode(data, options));
+      }
+      newLinks.push({
          source: mainNode, 
          target: data.name, 
          value: data.name.length
       });
    });
+   console.log("Dependencies registered: ", newNodes, newLinks);
+   return { nodes: nodes.concat(newNodes), links: links.concat(newLinks) };
 }
 
 function getGithubSearchURL(username, repo) {

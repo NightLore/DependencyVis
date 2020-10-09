@@ -64,7 +64,7 @@ class Graph extends Component {
          this._createTooltip();
          this._startGraph();
 
-         console.log("Changed");
+         console.log("Changed", this.props.nodes);
       }
       return <div style={DIVSTYLE} ref={this._setRef.bind(this)}/> 
    }
