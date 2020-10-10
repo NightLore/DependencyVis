@@ -96,6 +96,23 @@ const ListNode = props => {
 
 };
 
+const HideButton = props => {
+   const toggleHidden = () => {
+      props.setHidden(!props.isHidden);
+   };
+
+   let buttonContents = props.isHidden 
+      ? props.hiddenState 
+      : props.visibleState; // unicode
+
+   return (
+      <button style={HIDEBUTTONSTYLE} 
+            onClick={toggleHidden}>
+         {buttonContents}
+      </button>
+   )
+};
+
 class Sidebar extends Component {
    constructor(props) {
       super(props);
@@ -110,8 +127,8 @@ class Sidebar extends Component {
    updateDimensions = () => {
       this.setState({ width: window.innerWidth, height: window.innerHeight});
    };
-   toggleHidden = () => {
-      this.setState({isHidden: !this.state.isHidden});
+   setHidden = hidden => {
+      this.setState({isHidden: hidden});
    }
 
    // ---------------- render functions ---------- //
@@ -132,7 +149,6 @@ class Sidebar extends Component {
       style.height = this.state.height;
       if (this.state.isHidden)
          style.transform = "translate(-100%, 0%)";
-      let buttonContents = this.state.isHidden ? "\u27EB" : "\u27EA"; // unicode
 
       return (
          <div style={style}>
@@ -140,7 +156,12 @@ class Sidebar extends Component {
                <style>{LISTSTYLE}</style>
                <ul className='sidebar-list'>{nodes}</ul>
             </div>
-            <button style={HIDEBUTTONSTYLE} onClick={this.toggleHidden}>{buttonContents}</button>
+            <HideButton
+               isHidden={this.state.isHidden}
+               setHidden={this.setHidden}
+               hiddenState={"\u27EB"}
+               visibleState={"\u27EA"}
+            />
          </div>
       )
    }
