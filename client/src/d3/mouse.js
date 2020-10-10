@@ -66,41 +66,41 @@ async function handleMouseClicked(d) {
 
 
    let data = await this.props.search(d.id);
-   if (data) {
-      console.log("Search Result:", data);
-      let importData = {
-         size: data.size,
-         archived: data.archived,
-         license: data.license.name,
-         language: data.language,
-         forks: data.forks,
-         watchers: data.watchers,
-      };
-      if (!d.info) d.info = {}
-      if (!d.details) d.details = {}
-      Object.assign(d.info, importData);
-      Object.assign(d.details, importData);
-      d.details.source = getGithubURL(data.username, data.repo);
+   if (!data) {console.log("Failed Search"); return;}
 
-      d.loaded = {
-         color: "lightblue"
-      }
-      d.clicked = true;
-      d.source = data.source;
+   console.log("Search Result:", data);
+   let importData = {
+      size: data.size,
+      archived: data.archived,
+      license: data.license.name,
+      language: data.language,
+      forks: data.forks,
+      watchers: data.watchers,
+   };
+   if (!d.info) d.info = {}
+   if (!d.details) d.details = {}
+   Object.assign(d.info, importData);
+   Object.assign(d.details, importData);
+   d.details.source = getGithubURL(data.username, data.repo);
 
-      updateTooltip(this.tooltip, d, this);
-
-      // update graph
-      let newGraph = dependenciesToNodes(
-         data.dependencies, d.id, 
-         this.props.nodes, this.props.links, {
-            color: this.props.colorOption
-         }
-      );
-      this.props.setGraph(newGraph);
+   d.loaded = {
+      color: "lightblue"
    }
+   d.clicked = true;
+   d.source = data.source;
 
-   console.log("Clicked processed", d);
+   updateTooltip(this.tooltip, d, this);
+
+   // update graph
+   let newGraph = dependenciesToNodes(
+      data.dependencies, d.id, 
+      this.props.nodes, this.props.links, {
+         color: this.props.colorOption
+      }
+   );
+   this.props.setGraph(newGraph);
+
+   console.log("Click processed", d);
 }
 
 const mouse = {

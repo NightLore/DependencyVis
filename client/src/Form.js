@@ -47,21 +47,19 @@ const Form = props => {
       event.preventDefault();
       var userInfo = getUserInfo();
 
-      console.log("SUBMIT");
-
       let mainId = username + "/" + repo;
+      console.log("SUBMIT", mainId);
+
       let nodes = [createCentralNode(mainId, username, repo)];
-      let links = [];
 
       let querryResp = await lookup(userInfo);
       if (querryResp.error) {props.setErrorText("Failed lookup!"); return;}
 
       let data = querryResp.resp;
       console.log("Response Data:", data);
-      let newGraph = dependenciesToNodes(data.dependencies, mainId, nodes, links, {
+      let newGraph = dependenciesToNodes(data.dependencies, mainId, nodes, [], {
          color: props.colorOption
       });
-      console.log("Nodes Generated", nodes, links);
       props.setGraph(newGraph);
 
       props.setFormVisibility(false);
