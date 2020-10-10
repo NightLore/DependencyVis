@@ -7,9 +7,15 @@ let SIDEBARSTYLE = {
    zIndex: "4",
    display: "inline-block", 
    backgroundColor: "lightsteelblue",
-   overflow: "auto",
    width: 200,
    height: 800
+}
+
+const HIDEBUTTONSTYLE = {
+   position: "absolute",
+   left: "100%",
+   top: "50%",
+   transform: "translate(-50%, -50%)"
 }
 
 const LISTSTYLE = 
@@ -90,11 +96,24 @@ const ListNode = props => {
 };
 
 class Sidebar extends Component {
-   state = { width: 0, height: 0 };
+   constructor(props) {
+      super(props);
+      this.state = {
+         width: 0,
+         height: 0,
+         isHidden: false,
+      };
+   }
+
+   // ---------------- helper functions ---------- //
    updateDimensions = () => {
       this.setState({ width: window.innerWidth, height: window.innerHeight});
    };
+   toggleHidden = () => {
+      this.setState({isHidden: !this.state.isHidden});
+   }
 
+   // ---------------- render functions ---------- //
    componentDidMount() {
       window.addEventListener('resize', this.updateDimensions);
       this.updateDimensions();
@@ -110,11 +129,17 @@ class Sidebar extends Component {
       );
       let style = Object.assign({}, SIDEBARSTYLE);
       style.height = this.state.height;
+      if (this.state.isHidden)
+         style.transform = "translate(-100%, 0%)";
+      let buttonContents = this.state.isHidden ? ">>" : "<<";
+
       return (
          <div style={style}>
-            <style>{LISTSTYLE}</style>
-            <ul className='sidebar-list'>{nodes}</ul>
-
+            <div style={{overflow: "auto"}}>
+               <style>{LISTSTYLE}</style>
+               <ul className='sidebar-list'>{nodes}</ul>
+            </div>
+            <button style={HIDEBUTTONSTYLE} onClick={this.toggleHidden}>{buttonContents}</button>
          </div>
       )
    }
