@@ -15,7 +15,8 @@ const HIDEBUTTONSTYLE = {
    position: "absolute",
    left: "100%",
    top: "50%",
-   transform: "translate(-50%, -50%)"
+   transform: "translate(0%, -50%)",
+   padding: "0px"
 }
 
 const LISTSTYLE = 
@@ -131,7 +132,7 @@ class Sidebar extends Component {
       style.height = this.state.height;
       if (this.state.isHidden)
          style.transform = "translate(-100%, 0%)";
-      let buttonContents = this.state.isHidden ? ">>" : "<<";
+      let buttonContents = this.state.isHidden ? "\u27EB" : "\u27EA"; // unicode
 
       return (
          <div style={style}>
