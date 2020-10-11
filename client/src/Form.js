@@ -50,7 +50,7 @@ const Form = props => {
       let mainId = username + "/" + repo;
       console.log("SUBMIT", mainId);
 
-      let nodes = [createCentralNode(mainId, username, repo)];
+      let nodes = [createCentralNode(mainId, username, repo, props.options)];
 
       let querryResp = await lookup(userInfo);
       if (querryResp.error) {props.setErrorText("Failed lookup!"); return;}

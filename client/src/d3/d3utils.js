@@ -113,20 +113,31 @@ function toNodeColor(data, options) {
          break;
       case "audit":
          return auditToColor(data.audit);
+      default:
    }
    return "orange";
 }
 
+function toNodeSize(data, options) {
+   switch (options.size) {
+      case "nothing":
+         console.log("toNodeSize nothing:", data, options);
+         return data.isCentral ? 10 : 8;
+      case "stars":
+         console.log("toNodeSize stars:", data, options);
+         // Note: centralNode does not save this info
+         return data.all ? data.all.stargazers_count : 8;
+      default:
+   }
+   return data.isCentral ? 10 : 8;
+}
+
 function hasNode(nodes, data) {
-   console.log("hasNode ", nodes, data, nodes.length);
    for (let i = 0; i < nodes.length; i++) {
-      console.log("Comparing", nodes[i].id, data.name, nodes[i].id === data.name);
       if (nodes[i].id === data.name) {
-         console.log("HAS NODE: TRUE");
          return true;
       }
    }
-   console.log("hasNode failed");
    return false;
 }
 
@@ -155,17 +166,18 @@ function getGithubURL(username, repo) {
    return "github.com/" + username + "/" + repo;
 }
 
-function createCentralNode(id, username, repo) {
+function createCentralNode(id, username, repo, options) {
    let centralNode = {
       id: id,
       isCentral: true,
-      color: "blue",
       radius: 10,
       clicked: true,
       details: {
          source: getGithubURL(username, repo)
       }
    };
+   centralNode.color = toNodeColor(centralNode, options);
+   centralNode.radius = toNodeSize(centralNode, options);
    console.log("Create central Node:", centralNode);
    return centralNode;
 }
@@ -175,7 +187,7 @@ function createSideNode(node, options) {
       id: node.name,
       audit: node.audit,
       color: toNodeColor(node, options),
-      radius: 8,
+      radius: toNodeSize(node, options),
       details: {
          version: node.version
       },
@@ -192,5 +204,6 @@ export {
    createCentralNode,
    dependenciesToNodes,
    toNodeColor,
+   toNodeSize,
    getGithubURL
 }

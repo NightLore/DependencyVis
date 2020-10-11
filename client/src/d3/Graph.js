@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import * as d3 from 'd3'
 import mouse from './mouse'
-import { toNodeColor } from './d3utils'
+import { toNodeColor, toNodeSize } from './d3utils'
 
 const DIVSTYLE = {
    position: "absolute",
@@ -39,6 +39,7 @@ class Graph extends Component {
    verifyNodes = () => {
       this.props.nodes.forEach(node => {
          node.color = toNodeColor(node, this.props.options);
+         node.radius = toNodeSize(node, this.props.options);
       });
    };
 

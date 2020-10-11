@@ -81,6 +81,7 @@ async function handleMouseClicked(d) {
    if (!d.details) d.details = {}
    Object.assign(d.info, importData);
    Object.assign(d.details, importData);
+   d.all = data;
    d.details.source = getGithubURL(data.username, data.repo);
 
    d.loaded = {
