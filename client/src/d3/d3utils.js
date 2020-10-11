@@ -121,10 +121,8 @@ function toNodeColor(data, options) {
 function toNodeSize(data, options) {
    switch (options.size) {
       case "nothing":
-         console.log("toNodeSize nothing:", data, options);
          return data.isCentral ? 10 : 8;
       case "stars":
-         console.log("toNodeSize stars:", data, options);
          // Note: centralNode does not save this info
          return data.all ? data.all.stargazers_count : 8;
       default:

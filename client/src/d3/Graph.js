@@ -18,7 +18,26 @@ let graphData = {
    tooltipDy: 20
 };
 
+function setScale(minDomain, maxDomain) {
+   const minRange = 8;
+   const maxRange = Math.max(minRange + 1, 
+      Math.min(window.innerWidth, window.innerHeight)/4);
+
+   graphData.scale = d3.scaleLinear()
+      .domain([minDomain, maxDomain])
+      .range([minRange, maxRange]);
+   console.log("Scale", minDomain, maxDomain, minRange, maxRange);
+}
+
 class Graph extends Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+         width: window.innerWidth,
+         height: window.innerHeight
+      };
+   }
+
    resize = () => {
       let width = window.innerWidth;
       let height = window.innerHeight;
@@ -34,21 +53,33 @@ class Graph extends Component {
             .y(height / 2)
          graphData.simulation.alpha(0.3).restart();
       }
+      this.setState({width: width, height: height});
    };
 
    verifyNodes = () => {
+      let maxRadius = 10;
+      let minRadius = Infinity;
       this.props.nodes.forEach(node => {
          node.color = toNodeColor(node, this.props.options);
          node.radius = toNodeSize(node, this.props.options);
+         if (node.radius > maxRadius) 
+            maxRadius = node.radius;
+         if (node.radius < minRadius)
+            minRadius = node.radius;
       });
+      setScale(minRadius, Math.max(maxRadius, minRadius + 1));
    };
 
    componentDidMount() {
-      this._createCanvas();
+      this._createCanvas(this.state.width, this.state.height);
+      window.addEventListener('resize', this.resize);
+   }
+
+   componentWillUnmount() {
+      window.removeEventListener('resize', this.resize);
    }
 
    render() { 
-      this.resize();
 
       if (this.props.nodesChanged)
       {
@@ -57,7 +88,7 @@ class Graph extends Component {
 
          graphData.props = this.props;
          this.verifyNodes();
-         this._createSimulation(window.innerWidth, window.innerHeight);
+         this._createSimulation(this.state.width, this.state.height);
          this._setGraphData();
          this._createTooltip();
          this._startGraph();
@@ -97,9 +128,11 @@ class Graph extends Component {
             .attr("fill", graphData.tooltipTextColor)
    }
 
-   _createCanvas() {
+   _createCanvas(width, height) {
       graphData.svgCanvas = d3.select(graphData.rootNode)
          .append("svg")
+         .attr("width", width)
+         .attr("height", height)
          .style("border", "1px solid black");
    }
 
@@ -126,9 +159,13 @@ class Graph extends Component {
          .join("g")
             .call(mouse.drag(graphData.simulation));
 
+      const radius = d => {
+         return graphData.scale ? graphData.scale(d.radius) : d.radius;
+      };
+
       graphData.node.append("circle")
             .attr("id", d => d.id)
-            .attr("r", d => d.radius)
+            .attr("r", d => radius(d))
             .attr("stroke", "white")
             .attr("fill", d => d.color)
             .on("mouseover", mouse.handleMouseOver.bind(graphData))
@@ -136,7 +173,7 @@ class Graph extends Component {
             .on("click", mouse.handleMouseClicked.bind(graphData))
 
       graphData.node.append("text")
-            .attr("x", d => 1.5 * d.radius)
+            .attr("x", d => 5 + radius(d))
             .text(d => d.id)
             .attr("dominant-baseline", "middle")
          .clone(true).lower()
