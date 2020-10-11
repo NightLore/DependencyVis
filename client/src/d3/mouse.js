@@ -93,10 +93,11 @@ async function handleMouseClicked(d) {
 
    // update graph
    let newGraph = dependenciesToNodes(
-      data.dependencies, d.id, 
-      this.props.nodes, this.props.links, {
-         color: this.props.colorOption
-      }
+      data.dependencies, 
+      d.id, 
+      this.props.nodes, 
+      this.props.links, 
+      this.props.options
    );
    this.props.setGraph(newGraph);
 

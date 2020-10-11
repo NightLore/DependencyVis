@@ -44,6 +44,7 @@ const App = () => {
    const [showForm, setFormVisibility] = useState(true);
    const [errorText, setErrorText] = useState('');
    const [colorOption, setColorOption] = useState('loaded');
+   const [sizeOption, setSizeOption] = useState('nothing');
 
    const setGraph = graph  => {
       setNodes(graph.nodes);
@@ -53,6 +54,11 @@ const App = () => {
 
    const handleColorOption = option => {
       setColorOption(option);
+      setNodesChanged(true);
+   }
+
+   const handleSizeOption = option => {
+      setSizeOption(option);
       setNodesChanged(true);
    }
 
@@ -66,7 +72,11 @@ const App = () => {
       return querryResp.resp;
    }
 
-   console.log("ColorOption", colorOption);
+   let options = {
+      color: colorOption,
+      size: sizeOption
+   };
+   console.log("options", options);
    return (
       <div>
          <Form 
@@ -76,7 +86,7 @@ const App = () => {
             setErrorText={setErrorText}
             showForm={showForm}
             setFormVisibility={setFormVisibility}
-            colorOption={colorOption}
+            options={options}
          />
          <ErrorText 
             text={errorText}
@@ -86,8 +96,9 @@ const App = () => {
             links={links}
          />
          <OptionsPane 
-            colorOption={colorOption}
+            options={options}
             setColorOption={handleColorOption}
+            setSizeOption={handleSizeOption}
          />
          <Graph 
             nodes={nodes} 
@@ -96,7 +107,7 @@ const App = () => {
             setNodesChanged={setNodesChanged}
             setGraph={setGraph}
             search={querrySearch}
-            colorOption={colorOption}
+            options={options}
          />
       </div>
    )

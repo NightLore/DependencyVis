@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 
+// -------------- Styles ------------- //
 const STYLE = {
    margin: "1px",
-   padding: "1em",
+   padding: "0.5em 1em 1em 1em",
    position: "absolute",
    zIndex: "4",
    top: "0px",
@@ -12,18 +13,28 @@ const STYLE = {
    backgroundColor: "lightsteelblue",
 }
 
-const HSTYLE = {
+const PANE_TITLE_STYLE = {
    margin: "0px",
+   textAlign: "center",
+   fontWeight: "bold",
+   fontStyle: "italic",
+   fontSize: "large",
+}
+
+const HEADER_STYLE = {
+   margin: "0.5em 0 0 0",
    fontWeight: "bold"
 }
 
-const PSTYLE = {
-   margin: "0px"
+const BUTTON_STYLE = {
+   margin: 0
 }
+
+// -------------- Radio Button ------------- //
 
 const RadioButton = props => {
    return (
-      <p style={PSTYLE}>
+      <p style={BUTTON_STYLE}>
       <label>
          <input 
             type="radio" 
@@ -39,35 +50,85 @@ const RadioButton = props => {
    )
 }
 
-class OptionsPane extends Component {
+// -------------- Option helpers ------------- //
 
-   handleColorOption = e => {
-      console.log("selected", e.target.value);
-      this.props.setColorOption(e.target.value);
-   }
+function createOption(title, choices) {
+   return {
+      ID: title.toLowerCase(),
+      TITLE: title,
+      CHOICES: choices,
+      SETTER: "set" + title + "Option"
+   };
+}
+
+function createChoice(name, displayName) {
+   return {
+      NAME: name,
+      DISPLAY: displayName
+   };
+}
+
+function createHandlers(props) {
+   let handlers = {}
+   OPTIONS.forEach(opt => {
+      handlers[opt.ID] = e => {
+         console.log("selected", e.target.value);
+         props[opt.SETTER](e.target.value);
+      };
+   });
+   return handlers;
+}
+
+// -------------- Option Constants -------------- //
+const PANE_TITLE = "Options";
+
+const OPTIONS = [
+   createOption("Color", [
+      createChoice("loaded", "Load Status"),
+      createChoice("audit", "Audit")
+   ]),
+   createOption("Size", [
+      createChoice("nothing", "Nothing"),
+      createChoice("stars", "Stars")
+   ]),
+];
+
+// -------------- Options Pane ------------- //
+
+class OptionsPane extends Component {
+   handlers = createHandlers(this.props);
 
    render() {
+      // set pane title
+      let toRender = [(
+         <p style={PANE_TITLE_STYLE}>{PANE_TITLE}</p>
+      )];
+
+      OPTIONS.forEach((opt, index) => {
+         // push option's title element
+         toRender.push(
+            <p style={HEADER_STYLE}>{opt.TITLE}</p>
+         );
+
+         // push options
+         opt.CHOICES.forEach(choice => {
+            toRender.push(
+               <RadioButton
+                  name={choice.NAME}
+                  group={opt.TITLE}
+                  contents={choice.DISPLAY}
+                  option={this.props.options[opt.ID]}
+                  handler={this.handlers[opt.ID]}
+               />
+            );
+         });
+      });
+
       return (
          <div style={STYLE}>
-            <p style={HSTYLE}>Options:</p>
-
-            <RadioButton
-               name="loaded"
-               group="colorOption"
-               contents="Loaded"
-               option={this.props.colorOption}
-               handler={this.handleColorOption}
-            />
-
-            <RadioButton
-               name="audit"
-               group="colorOption"
-               contents="Audit"
-               option={this.props.colorOption}
-               handler={this.handleColorOption}
-            />
+            {toRender}
          </div>
-      )
+      );
    }
 }
 

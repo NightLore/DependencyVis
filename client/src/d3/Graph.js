@@ -37,11 +37,8 @@ class Graph extends Component {
    };
 
    verifyNodes = () => {
-      const options = {
-         color: this.props.colorOption
-      };
       this.props.nodes.forEach(node => {
-         node.color = toNodeColor(node, options);
+         node.color = toNodeColor(node, this.props.options);
       });
    };
 
