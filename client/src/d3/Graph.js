@@ -22,6 +22,7 @@ function setScale(minDomain, maxDomain) {
    const minRange = 8;
    const maxRange = Math.max(minRange + 1, 
       Math.min(window.innerWidth, window.innerHeight)/4);
+   maxDomain = Math.max(maxDomain, minDomain + maxRange - minRange);
 
    graphData.scale = d3.scaleLinear()
       .domain([minDomain, maxDomain])
