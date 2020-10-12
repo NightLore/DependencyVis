@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import * as d3 from 'd3'
 import mouse from './mouse'
-import { toNodeColor, toNodeSize } from './d3utils'
+import { updateNodes } from './d3utils'
 
 const DIVSTYLE = {
    position: "absolute",
@@ -57,20 +57,6 @@ class Graph extends Component {
       this.setState({width: width, height: height});
    };
 
-   verifyNodes = () => {
-      let maxRadius = 10;
-      let minRadius = Infinity;
-      this.props.nodes.forEach(node => {
-         node.color = toNodeColor(node, this.props.options);
-         node.radius = toNodeSize(node, this.props.options);
-         if (node.radius > maxRadius) 
-            maxRadius = node.radius;
-         if (node.radius < minRadius)
-            minRadius = node.radius;
-      });
-      setScale(minRadius, Math.max(maxRadius, minRadius + 1));
-   };
-
    componentDidMount() {
       this._createCanvas(this.state.width, this.state.height);
       window.addEventListener('resize', this.resize);
@@ -88,7 +74,8 @@ class Graph extends Component {
          this._clearCanvas();
 
          graphData.props = this.props;
-         this.verifyNodes();
+         let {minRadius, maxRadius} = updateNodes(this.props.nodes, this.props.options);
+         setScale(minRadius, maxRadius);
          this._createSimulation(this.state.width, this.state.height);
          this._setGraphData();
          this._createTooltip();

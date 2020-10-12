@@ -166,6 +166,22 @@ async function searchNewGraph(d, graph, options, err) {
 
 // -------------- nodes -------------- //
 
+
+function updateNodes(nodes, options) {
+   let maxRadius = 10;
+   let minRadius = Infinity;
+   nodes.forEach(node => {
+      node.color = toNodeColor(node, options);
+      node.radius = toNodeSize(node, options);
+      if (node.radius > maxRadius) 
+         maxRadius = node.radius;
+      if (node.radius < minRadius)
+         minRadius = node.radius;
+   });
+   maxRadius = Math.max(maxRadius, minRadius + 1);
+   return {minRadius, maxRadius};
+};
+
 function toNodeColor(data, options) {
    if (data.isCentral)
       return "blue";
@@ -265,7 +281,6 @@ export {
    createCentralNode,
    lookupNewGraph,
    searchNewGraph,
-   toNodeColor,
-   toNodeSize,
+   updateNodes,
    getGithubURL
 }
