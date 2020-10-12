@@ -1,6 +1,8 @@
 import React from 'react'
-import { lookup } from './AxiosUtils'
-import { createCentralNode, dependenciesToNodes } from './d3/d3utils'
+import { 
+   createCentralNode, 
+   lookupNewGraph
+} from './d3/d3utils'
 const { useState } = React;
 
 const FORMBACKGROUND = {
@@ -50,15 +52,15 @@ const Form = props => {
       let mainId = username + "/" + repo;
       console.log("SUBMIT", mainId);
 
-      let nodes = [createCentralNode(mainId, username, repo, props.options)];
+      let newGraph = {
+         nodes: [createCentralNode(mainId, username, repo, props.options)],
+         links: []
+      }
 
-      let querryResp = await lookup(userInfo);
-      if (querryResp.error) {props.setErrorText("Failed lookup!"); return;}
-
-      let data = querryResp.resp;
-      console.log("Response Data:", data);
-      let newGraph = dependenciesToNodes(data.dependencies, mainId, nodes, [], props.options
-      );
+      newGraph = await lookupNewGraph(
+         userInfo, mainId,
+         newGraph, props.options,
+         props.setErrorText);
       props.setGraph(newGraph);
 
       props.setFormVisibility(false);

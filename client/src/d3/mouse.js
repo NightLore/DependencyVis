@@ -1,6 +1,8 @@
 import * as d3 from 'd3'
-import { updateTooltip, getGithubURL, dependenciesToNodes } from './d3utils'
-import { search } from '../AxiosUtils';
+import { 
+   updateTooltip, 
+   searchNewGraph 
+} from './d3utils'
 
 function drag(simulation) {
 
@@ -61,52 +63,24 @@ function handleMouseOut(d) {
 async function handleMouseClicked(d) {
    if (d.clicked) return;
 
+   // set load state
    d.color = "grey"; // loading color
+   d.loaded = {
+      color: "red"
+   };
    let circle = d3.select("#" + d.id);
    circle.attr("fill", d.color);
 
-
-   let data = await search(d.id);
-   if (data.error) {
-      console.log("Failed Search"); 
-      this.props.setErrorText("Failed search!");
-      return;
-   }
-   data = data.resp;
-
-   console.log("Search Result:", data);
-   let importData = {
-      size: data.size,
-      archived: data.archived,
-      license: data.license.name,
-      language: data.language,
-      forks: data.forks,
-      watchers: data.watchers,
+   // start search
+   let graph = {
+      nodes: this.props.nodes,
+      links: this.props.links
    };
-   if (!d.info) d.info = {}
-   if (!d.details) d.details = {}
-   Object.assign(d.info, importData);
-   Object.assign(d.details, importData);
-   d.all = data;
-   d.details.source = getGithubURL(data.username, data.repo);
-
-   d.loaded = {
-      color: "lightblue"
-   }
-   d.clicked = true;
-   d.source = data.source;
+   this.props.setGraph(await searchNewGraph(
+      d, graph, this.props.options, this.props.setErrorText
+   ));
 
    updateTooltip(this.tooltip, d, this);
-
-   // update graph
-   let newGraph = dependenciesToNodes(
-      data.dependencies, 
-      d.id, 
-      this.props.nodes, 
-      this.props.links, 
-      this.props.options
-   );
-   this.props.setGraph(newGraph);
 
    console.log("Click processed", d);
 }

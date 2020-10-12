@@ -1,3 +1,6 @@
+import { lookup, search } from '../AxiosUtils'
+
+// -------------- Tooltip -------------- //
 
 function updateTooltip(tooltip, d, attributes) {
    attributes.tooltipWidth = 
@@ -44,6 +47,8 @@ function setInfo(tooltip, d, attributes, textX, textY, dy) {
    }
    return dy;
 }
+
+// -------------- audit -------------- //
 
 function setAudit(tooltip, d, attributes, textX, textY, dy) {
    if (!d.audit) {
@@ -102,6 +107,64 @@ function auditSeverityValueToColor(severity) {
          return "green";
    }
 }
+
+// -------------- axiosToD3 -------------- //
+
+async function lookupNewGraph(userInfo, mainId, graph, options, err) {
+      let querryResp = await lookup(userInfo);
+      if (querryResp.error) {err("Failed lookup!"); return;}
+
+      let data = querryResp.resp;
+      console.log("Response Data:", data);
+      return dependenciesToNodes(
+         data.dependencies, mainId, 
+         graph.nodes, graph.links, 
+         options
+      );
+
+}
+
+async function searchNewGraph(d, graph, options, err) {
+   let data = await search(d.id);
+   if (data.error) {
+      console.log("Failed Search"); 
+      err("Failed search!");
+      return;
+   }
+   data = data.resp;
+
+   console.log("Search Result:", data);
+   let importData = {
+      size: data.size,
+      archived: data.archived,
+      license: data.license.name,
+      language: data.language,
+      forks: data.forks,
+      watchers: data.watchers,
+   };
+   if (!d.info) d.info = {}
+   if (!d.details) d.details = {}
+   if (!d.loaded) d.loaded = {}
+   Object.assign(d.info, importData);
+   Object.assign(d.details, importData);
+   d.all = data;
+   d.details.source = getGithubURL(data.username, data.repo);
+
+   d.loaded.color = "lightblue"
+   d.clicked = true;
+   d.source = data.source;
+
+   // get new graph
+   return dependenciesToNodes(
+      data.dependencies, 
+      d.id, 
+      graph.nodes, 
+      graph.links, 
+      options
+   );
+}
+
+// -------------- nodes -------------- //
 
 function toNodeColor(data, options) {
    if (data.isCentral)
@@ -200,7 +263,8 @@ function createSideNode(node, options) {
 export { 
    updateTooltip,
    createCentralNode,
-   dependenciesToNodes,
+   lookupNewGraph,
+   searchNewGraph,
    toNodeColor,
    toNodeSize,
    getGithubURL
