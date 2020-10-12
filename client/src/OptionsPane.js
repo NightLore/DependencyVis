@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import HideButton from './HideButton'
+import HideButton, { TRANSFORMS } from './HideButton'
 
 // -------------- Styles ------------- //
 const STYLE = {
@@ -109,7 +109,7 @@ class OptionsPane extends Component {
    render() {
       let style = Object.assign({}, STYLE);
       if (this.state.isHidden)
-         style.transform = "translate(0%, -100%)";
+         style.transform = TRANSFORMS.UP;
 
       // set pane title
       let toRender = [(

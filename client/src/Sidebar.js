@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import HideButton from './HideButton';
+import HideButton, { TRANSFORMS } from './HideButton';
 
 const { useState } = React;
 
@@ -125,7 +125,7 @@ class Sidebar extends Component {
       let style = Object.assign({}, SIDEBARSTYLE);
       style.height = this.state.height;
       if (this.state.isHidden)
-         style.transform = "translate(-100%, 0%)";
+         style.transform = TRANSFORMS.LEFT;
 
       return (
          <div style={style}>
