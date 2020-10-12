@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
 import { updateTooltip, getGithubURL, dependenciesToNodes } from './d3utils'
+import { search } from '../AxiosUtils';
 
 function drag(simulation) {
 
@@ -65,8 +66,13 @@ async function handleMouseClicked(d) {
    circle.attr("fill", d.color);
 
 
-   let data = await this.props.search(d.id);
-   if (!data) {console.log("Failed Search"); return;}
+   let data = await search(d.id);
+   if (data.error) {
+      console.log("Failed Search"); 
+      this.props.setErrorText("Failed search!");
+      return;
+   }
+   data = data.resp;
 
    console.log("Search Result:", data);
    let importData = {

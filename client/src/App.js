@@ -4,7 +4,6 @@ import Graph from './d3/Graph';
 import Sidebar from './Sidebar';
 import Form from './Form';
 import OptionsPane from './OptionsPane';
-import { search } from './AxiosUtils';
 
 const { useState } = React;
 
@@ -62,16 +61,6 @@ const App = () => {
       setNodesChanged(true);
    }
 
-   const querrySearch = async querry => {
-      console.log("App Click ", querry);
-
-      let querryResp = await search(querry);
-      if (querryResp.error) {setErrorText("Failed search!"); return;}
-
-      console.log("Response Search:", querryResp);
-      return querryResp.resp;
-   }
-
    let options = {
       color: colorOption,
       size: sizeOption
@@ -106,7 +95,7 @@ const App = () => {
             nodesChanged={nodesChanged}
             setNodesChanged={setNodesChanged}
             setGraph={setGraph}
-            search={querrySearch}
+            setErrorText={setErrorText}
             options={options}
          />
       </div>
