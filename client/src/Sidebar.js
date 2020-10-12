@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import HideButton from './HideButton';
+
 const { useState } = React;
 
 let SIDEBARSTYLE = {
@@ -9,14 +11,6 @@ let SIDEBARSTYLE = {
    backgroundColor: "lightsteelblue",
    width: 200,
    height: 800
-}
-
-const HIDEBUTTONSTYLE = {
-   position: "absolute",
-   left: "100%",
-   top: "50%",
-   transform: "translate(0%, -50%)",
-   padding: "0px"
 }
 
 const LISTSTYLE = 
@@ -96,23 +90,6 @@ const ListNode = props => {
 
 };
 
-const HideButton = props => {
-   const toggleHidden = () => {
-      props.setHidden(!props.isHidden);
-   };
-
-   let buttonContents = props.isHidden 
-      ? props.hiddenState 
-      : props.visibleState; // unicode
-
-   return (
-      <button style={HIDEBUTTONSTYLE} 
-            onClick={toggleHidden}>
-         {buttonContents}
-      </button>
-   )
-};
-
 class Sidebar extends Component {
    constructor(props) {
       super(props);
@@ -159,8 +136,7 @@ class Sidebar extends Component {
             <HideButton
                isHidden={this.state.isHidden}
                setHidden={this.setHidden}
-               hiddenState={"\u27EB"}
-               visibleState={"\u27EA"}
+               direction={"right"}
             />
          </div>
       )

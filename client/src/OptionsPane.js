@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import HideButton from './HideButton'
 
 // -------------- Styles ------------- //
 const STYLE = {
@@ -96,24 +97,42 @@ const OPTIONS = [
 // -------------- Options Pane ------------- //
 
 class OptionsPane extends Component {
+   constructor(props) {
+      super(props);
+      this.state = {
+         isHidden: false
+      };
+   }
+   setHidden = hidden => {this.setState({isHidden: hidden})};
    handlers = createHandlers(this.props);
 
    render() {
+      let style = Object.assign({}, STYLE);
+      if (this.state.isHidden)
+         style.transform = "translate(0%, -100%)";
+
       // set pane title
       let toRender = [(
-         <p style={PANE_TITLE_STYLE}>{PANE_TITLE}</p>
+         <p key={"pane_title"} 
+            style={PANE_TITLE_STYLE}>
+            {PANE_TITLE}
+         </p>
       )];
 
       OPTIONS.forEach((opt, index) => {
          // push option's title element
          toRender.push(
-            <p style={HEADER_STYLE}>{opt.TITLE}</p>
+            <p key={index}
+               style={HEADER_STYLE}>
+               {opt.TITLE}
+            </p>
          );
 
          // push options
          opt.CHOICES.forEach(choice => {
             toRender.push(
                <RadioButton
+                  key={index + choice.NAME}
                   name={choice.NAME}
                   group={opt.TITLE}
                   contents={choice.DISPLAY}
@@ -125,8 +144,13 @@ class OptionsPane extends Component {
       });
 
       return (
-         <div style={STYLE}>
+         <div style={style}>
             {toRender}
+            <HideButton
+               isHidden={this.state.isHidden}
+               setHidden={this.setHidden}
+               direction={"down"}
+            />
          </div>
       );
    }
