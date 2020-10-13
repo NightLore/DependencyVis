@@ -4,6 +4,8 @@ import Graph from './d3/Graph';
 import Sidebar from './Sidebar';
 import Form from './Form';
 import OptionsPane from './OptionsPane';
+import ButtonPane from './ButtonPane';
+import ErrorText from './ErrorText';
 
 const { useState } = React;
 
@@ -13,27 +15,6 @@ const TITLESTYLE = {
    fontStyle: "italic",
    textAlign: "center",
    color: "rgb(75, 35, 92)",
-}
-
-const ERRORSTYLE = {
-   zIndex: "10",
-
-   // font
-   color:"red", 
-   fontSize: "2em",
-   fontWeight: "bold",
-
-   // center on page 
-   position: "absolute",
-   margin: "auto",
-   width: "fit-content",
-   left: "50%",
-   top: "50%",
-   transform: "translate(-50%, -50%)",
-}
-
-const ErrorText = props => {
-   return (<span style={ERRORSTYLE}>{props.text}</span>)
 }
 
 const App = () => {
@@ -46,8 +27,10 @@ const App = () => {
    const [sizeOption, setSizeOption] = useState('nothing');
 
    const setGraph = graph  => {
-      setNodes(graph.nodes);
-      setLinks(graph.links);
+      if (graph.nodes)
+         setNodes(graph.nodes);
+      if (graph.links)
+         setLinks(graph.links);
       setNodesChanged(true);
    }
 
@@ -88,6 +71,10 @@ const App = () => {
             options={options}
             setColorOption={handleColorOption}
             setSizeOption={handleSizeOption}
+         />
+         <ButtonPane
+            nodes={nodes}
+            setGraph={setGraph}
          />
          <Graph 
             nodes={nodes} 

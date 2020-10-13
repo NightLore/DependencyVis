@@ -9,8 +9,8 @@ const STYLE = {
    zIndex: "4",
    top: "0px",
    right: "0px",
-   width: "fit-contents",
-   height: "fit-contents",
+   width: "fit-content",
+   height: "fit-content",
    backgroundColor: "lightsteelblue",
 }
 
