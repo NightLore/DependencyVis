@@ -1,8 +1,6 @@
 import * as d3 from 'd3'
-import { 
-   updateTooltip, 
-   searchNewGraph 
-} from './d3utils'
+import updateTooltip from './tooltip'
+import { searchNewGraph } from './d3utils'
 
 function drag(simulation) {
 
