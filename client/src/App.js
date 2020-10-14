@@ -74,7 +74,10 @@ const App = () => {
          />
          <ButtonPane
             nodes={nodes}
+            links={links}
             setGraph={setGraph}
+            options={options}
+            setErrorText={setErrorText}
          />
          <Graph 
             nodes={nodes} 

@@ -4,13 +4,12 @@ import { lookup, search } from '../AxiosUtils'
 // -------------- axiosToD3 -------------- //
 
 async function lookupNewGraph(userInfo, mainId, graph, options, err) {
-      let querryResp = await lookup(userInfo);
-      if (querryResp.error) {err("Failed lookup!"); return;}
+      let {resp, error} = await lookup(userInfo);
+      if (error) {err("Failed lookup!"); return;}
 
-      let data = querryResp.resp;
-      console.log("Response Data:", data);
+      console.log("Response Data:", resp);
       return dependenciesToNodes(
-         data.dependencies, mainId, 
+         resp.dependencies, mainId, 
          graph.nodes, graph.links, 
          options
       );
@@ -18,13 +17,12 @@ async function lookupNewGraph(userInfo, mainId, graph, options, err) {
 }
 
 async function searchNewGraph(d, graph, options, err) {
-   let data = await search(d.id);
-   if (data.error) {
-      console.log("Failed Search"); 
+   let {resp: data, error} = await search(d.id);
+   if (error) {
+      console.log("Failed Search", d); 
       err("Failed search!");
       return;
    }
-   data = data.resp;
 
    console.log("Search Result:", data);
    let importData = {

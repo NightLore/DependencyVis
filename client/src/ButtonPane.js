@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import HideButton, { TRANSFORMS } from './HideButton';
+import { searchNewGraph } from './d3/d3utils';
 
 const STYLE = {
    position: "absolute",
@@ -20,8 +21,23 @@ class ButtonPane extends Component {
       };
    }
    setHidden = hidden => {this.setState({isHidden: hidden})};
-   loadNextLayer() {
-      console.log("loading next layer:", this.props.nodes);
+
+   async loadNextLayer(graph) {
+      console.log("loading next layer:", graph);
+      let newGraph = {
+         nodes: [].concat(graph.nodes), 
+         links: [].concat(graph.links)
+      };
+
+      console.log("searching...", newGraph);
+      // TODO: parallelism? Promise.all(map(...
+      for (const node of graph.nodes) {
+         if (!node.clicked)
+            newGraph = await searchNewGraph(node, newGraph, this.props.options, this.props.setErrorText);
+         console.log("single search", node, newGraph);
+      }
+      console.log("searched all", newGraph);
+      this.props.setGraph(newGraph);
    }
 
    render() {
@@ -29,9 +45,13 @@ class ButtonPane extends Component {
       if (this.state.isHidden)
          style.transform = TRANSFORMS.UP;
 
+      let graph = {
+         nodes: this.props.nodes,
+         links: this.props.links
+      };
       return (
          <div style={style}>
-            <button type="button" onClick={e => this.loadNextLayer()}>Load Next Layer</button>
+            <button type="button" onClick={e => this.loadNextLayer(graph)}>Load Next Layer</button>
          </div>
       )
 
