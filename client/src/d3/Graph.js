@@ -125,11 +125,12 @@ class Graph extends Component {
    }
 
    _createSimulation(width, height) {
+      let dist = Math.min(width, height) / 6;
       graphData.simulation = d3.forceSimulation(graphData.props.nodes)
          .force("link", d3.forceLink(graphData.props.links)
             .id(d => d.id)
-            .distance(d => d.value * 20))
-         .force("charge", d3.forceManyBody())
+            .distance(d => dist))
+         .force("charge", d3.forceManyBody().strength(d => Math.sqrt(d.radius) * -50))
          .force("center", d3.forceCenter(width / 2, height / 2))
    }
 
@@ -139,7 +140,7 @@ class Graph extends Component {
          .selectAll("line")
          .data(graphData.props.links)
          .join("line")
-            .attr("stroke-width", d => Math.sqrt(d.value));
+            .attr("stroke-width", d => 2);
 
       graphData.node = graphData.svgCanvas.append("g")
          .selectAll("g")
