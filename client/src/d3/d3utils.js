@@ -31,7 +31,7 @@ async function searchNewGraph(d, graph, options, err) {
       license: data.license.name,
       language: data.language,
       forks: data.forks,
-      watchers: data.watchers,
+      watchers: data.subscribers_count,
    };
    if (!d.info) d.info = {}
    if (!d.details) d.details = {}
@@ -95,6 +95,8 @@ function toNodeSize(data, options) {
       case "stars":
          // Note: centralNode does not save this info
          return data.all ? data.all.stargazers_count : 8;
+      case "watchers":
+         return data.all ? data.all.subscribers_count : 8;
       default:
    }
    return data.isCentral ? 10 : 8;

@@ -90,7 +90,8 @@ const OPTIONS = [
    ]),
    createOption("Size", [
       createChoice("nothing", "Nothing"),
-      createChoice("stars", "Stars")
+      createChoice("stars", "Stars"),
+      createChoice("watchers", "Watchers")
    ]),
 ];
 
