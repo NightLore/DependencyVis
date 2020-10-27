@@ -97,6 +97,10 @@ function toNodeSize(data, options) {
          return data.all ? data.all.stargazers_count : 8;
       case "watchers":
          return data.all ? data.all.subscribers_count : 8;
+      case "forks":
+         return data.all ? data.all.forks_count : 8;
+      case "open_issues":
+         return data.all ? data.all.open_issues_count : 8;
       default:
    }
    return data.isCentral ? 10 : 8;
