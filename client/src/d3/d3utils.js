@@ -17,10 +17,12 @@ async function lookupNewGraph(userInfo, mainId, graph, options, err) {
 }
 
 async function searchNewGraph(d, graph, options, err) {
+   if (!d.loaded) d.loaded = {}
    let {resp: data, error} = await search(d.id);
    if (error) {
       console.log("Failed Search", d); 
       err("Failed search!");
+      d.loaded.color = "grey"
       return;
    }
 
@@ -35,7 +37,6 @@ async function searchNewGraph(d, graph, options, err) {
    };
    if (!d.info) d.info = {}
    if (!d.details) d.details = {}
-   if (!d.loaded) d.loaded = {}
    Object.assign(d.info, importData);
    Object.assign(d.details, importData);
    d.all = data;

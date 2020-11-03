@@ -76,6 +76,7 @@ app.post('/search', async (req, res) => {
    console.log("Package.json", pack);
    let urlData = utils.extractGithubPath(utils.findGithubUrl(pack));
    console.log("urlData", urlData);
+   if (!urlData) {error404(res); return; }
 
    let result = await gitutils.retrieveRepoData(git, urlData);
    if (!result) {error404(res); return; }

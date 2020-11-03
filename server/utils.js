@@ -29,6 +29,7 @@ function findGithubUrl(packageJson) {
          return check;
       }
    }
+   console.log("FAILED findGithubUrl", packageJson)
    return "";
 }
 
@@ -36,10 +37,15 @@ function extractGithubPath(path) {
    let index = path.indexOf(gitDomain);
    if (index < 0) {
       console.log("Not a github path:", path);
-      return {};
+      return;
    }
 
    let tokens = path.substring(index + gitDomain.length).split("/");
+   console.log("Extracting index", tokens, "from", path);
+   if (tokens.length < 2) {
+      console.log("Failed to get repo", path)
+      return;
+   }
    index = tokens[1].indexOf('.git');
    if (index >= 0) {
       tokens[1] = tokens[1].substring(0, index);

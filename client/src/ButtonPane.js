@@ -32,9 +32,13 @@ class ButtonPane extends Component {
       console.log("searching...", newGraph);
       // TODO: parallelism? Promise.all(map(...
       for (const node of graph.nodes) {
-         if (!node.clicked)
-            newGraph = await searchNewGraph(node, newGraph, this.props.options, this.props.setErrorText);
-         console.log("single search", node, newGraph);
+         console.log("single search params", node, newGraph);
+         if (node.clicked) continue;
+         let ng = await searchNewGraph(node, newGraph, 
+            this.props.options, 
+            this.props.setErrorText
+         );
+         if (ng) newGraph = ng;
       }
       console.log("searched all", newGraph);
       this.props.setGraph(newGraph);

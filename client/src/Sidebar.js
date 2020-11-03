@@ -129,7 +129,7 @@ class Sidebar extends Component {
 
       return (
          <div style={style}>
-            <div style={{overflow: "auto"}}>
+            <div style={{overflow: "auto", height: "-webkit-fill-available"}}>
                <style>{LISTSTYLE}</style>
                <ul className='sidebar-list'>{nodes}</ul>
             </div>
