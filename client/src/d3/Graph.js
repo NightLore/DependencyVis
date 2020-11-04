@@ -30,6 +30,31 @@ function setScale(minDomain, maxDomain) {
    console.log("Scale", minDomain, maxDomain, minRange, maxRange);
 }
 
+function scale(integer) {
+   return graphData.scale ? graphData.scale(integer) : integer;
+}
+
+function setEndPoints(selection) {
+   selection
+      .each(d => {
+         let dx = d.target.x - d.source.x;
+         let dy = d.target.y - d.source.y;
+         let angle = Math.atan2(dx, dy);
+
+         // Compute the line endpoint such that the arrow
+         // is touching the edge of the node rectangle perfectly.
+         d.sourceX = d.source.x + Math.sin(angle) * scale(d.source.radius);
+         d.targetX = d.target.x - Math.sin(angle) * scale(d.target.radius);
+         d.sourceY = d.source.y + Math.cos(angle) * scale(d.source.radius);
+         d.targetY = d.target.y - Math.cos(angle) * scale(d.target.radius);
+      })
+      .attr("x1", function(d) { return d.sourceX; })
+      .attr("y1", function(d) { return d.sourceY; })
+      .attr("x2", function(d) { return d.targetX; })
+      .attr("y2", function(d) { return d.targetY; });
+
+}
+
 class Graph extends Component {
    constructor(props) {
       super(props);
@@ -122,6 +147,7 @@ class Graph extends Component {
          .attr("width", width)
          .attr("height", height)
          .style("border", "1px solid black");
+
    }
 
    _createSimulation(width, height) {
@@ -135,12 +161,27 @@ class Graph extends Component {
    }
 
    _setGraphData() {
+      const arrowSize = 2;
+      graphData.svgCanvas.append("defs")
+         .append("marker")
+            .attr("id", "arrow")
+            .attr("orient", "auto")
+            .attr("preserveAspectRatio", "none")
+            .attr("viewBox", [0,-arrowSize/2,arrowSize,arrowSize])
+            .attr("refX", arrowSize)
+            .attr("refY", 0)
+            .attr("markerWidth", arrowSize)
+            .attr("markerHeight", arrowSize * 4 / 5)
+         .append("path")
+            .attr("d", "M 0 " + (-arrowSize/2) + " L " + arrowSize + " 0 L 0 " + arrowSize/2)
+            .attr("fill", "#888")
+
       graphData.link = graphData.svgCanvas.append("g")
             .attr("stroke", "#999")
          .selectAll("line")
          .data(graphData.props.links)
          .join("line")
-            .attr("stroke-width", d => 2);
+            .attr("stroke-width", d => 2)
 
       graphData.node = graphData.svgCanvas.append("g")
          .selectAll("g")
@@ -148,21 +189,24 @@ class Graph extends Component {
          .join("g")
             .call(mouse.drag(graphData.simulation));
 
-      const radius = d => {
-         return graphData.scale ? graphData.scale(d.radius) : d.radius;
-      };
-
       graphData.node.append("circle")
             .attr("id", d => d.id)
-            .attr("r", d => radius(d))
+            .attr("r", d => scale(d.radius))
             .attr("stroke", "white")
             .attr("fill", d => d.color)
             .on("mouseover", mouse.handleMouseOver.bind(graphData))
             .on("mouseout", mouse.handleMouseOut.bind(graphData))
             .on("click", mouse.handleMouseClicked.bind(graphData))
 
+      graphData.arrow = graphData.svgCanvas.append("g")
+         .selectAll("line")
+         .data(graphData.props.links)
+         .join("line")
+            .attr("stroke-width", 5)
+            .attr("marker-end", "url(#arrow)");
+
       graphData.node.append("text")
-            .attr("x", d => 5 + radius(d))
+            .attr("x", d => 5 + scale(d.radius))
             .text(d => d.id)
             .attr("dominant-baseline", "middle")
          .clone(true).lower()
@@ -181,6 +225,7 @@ class Graph extends Component {
             .attr("y2", d => d.target.y)
          graphData.node
             .attr("transform", d => `translate(${d.x},${d.y})`)
+         graphData.arrow.call(setEndPoints)
       });
    }
 
