@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import HideButton, { TRANSFORMS } from './HideButton'
+import OPTIONS, { createHandlers } from './Options'
+
+const PANE_TITLE = "Options";
 
 // -------------- Styles ------------- //
 const STYLE = {
@@ -31,6 +34,13 @@ const BUTTON_STYLE = {
    margin: 0
 }
 
+const TOOLTIP_STYLE = {
+}
+
+// -------------- Tooltip ------------- //
+
+
+
 // -------------- Radio Button ------------- //
 
 const RadioButton = props => {
@@ -50,52 +60,6 @@ const RadioButton = props => {
       </p>
    )
 }
-
-// -------------- Option helpers ------------- //
-
-function createOption(title, choices) {
-   return {
-      ID: title.toLowerCase(),
-      TITLE: title,
-      CHOICES: choices,
-      SETTER: "set" + title + "Option"
-   };
-}
-
-function createChoice(name, displayName) {
-   return {
-      NAME: name,
-      DISPLAY: displayName
-   };
-}
-
-function createHandlers(props) {
-   let handlers = {}
-   OPTIONS.forEach(opt => {
-      handlers[opt.ID] = e => {
-         console.log("selected", e.target.value);
-         props[opt.SETTER](e.target.value);
-      };
-   });
-   return handlers;
-}
-
-// -------------- Option Constants -------------- //
-const PANE_TITLE = "Options";
-
-const OPTIONS = [
-   createOption("Color", [
-      createChoice("loaded", "Load Status"),
-      createChoice("audit", "Audit")
-   ]),
-   createOption("Size", [
-      createChoice("nothing", "Nothing"),
-      createChoice("stars", "Stars"),
-      createChoice("watchers", "Watchers"),
-      createChoice("forks", "Forks"),
-      createChoice("open_issues", "Open Issues"),
-   ]),
-];
 
 // -------------- Options Pane ------------- //
 
