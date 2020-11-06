@@ -3,6 +3,7 @@ import './App.css';
 import Graph from './d3/Graph';
 import Sidebar from './Sidebar';
 import Form from './Form';
+import ColorLegend from './ColorLegend';
 import OptionsPane from './OptionsPane';
 import ButtonPane from './ButtonPane';
 import ErrorText from './ErrorText';
@@ -15,6 +16,13 @@ const TITLESTYLE = {
    fontStyle: "italic",
    textAlign: "center",
    color: "rgb(75, 35, 92)",
+}
+
+const TOP_RIGHT_STYLE = {
+   position: "absolute",
+   top: "0px",
+   right: "0px",
+   display: "flex",
 }
 
 const App = () => {
@@ -67,11 +75,16 @@ const App = () => {
             nodes={nodes} 
             links={links}
          />
-         <OptionsPane 
-            options={options}
-            setColorOption={handleColorOption}
-            setSizeOption={handleSizeOption}
-         />
+         <div style={TOP_RIGHT_STYLE}>
+            <ColorLegend
+               colorOption={colorOption}
+            />
+            <OptionsPane 
+               options={options}
+               setColorOption={handleColorOption}
+               setSizeOption={handleSizeOption}
+            />
+         </div>
          <ButtonPane
             nodes={nodes}
             links={links}
@@ -92,4 +105,5 @@ const App = () => {
    )
 }
 
+   //position: "absolute",
 export default App;

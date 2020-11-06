@@ -8,13 +8,12 @@ const PANE_TITLE = "Options";
 const STYLE = {
    margin: "1px",
    padding: "0.5em 1em 1em 1em",
-   position: "absolute",
    zIndex: "4",
-   top: "0px",
-   right: "0px",
+   position: "relative",
    width: "fit-content",
    height: "fit-content",
    backgroundColor: "lightsteelblue",
+   display: "inline-block"
 }
 
 const PANE_TITLE_STYLE = {

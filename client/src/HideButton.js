@@ -2,9 +2,6 @@ import React from 'react'
 
 const HIDEBUTTONSTYLE = {
    position: "absolute",
-   //left: "100%",
-   //top: "50%",
-   //transform: "translate(0%, -50%)",
    padding: "0px"
 }
 
