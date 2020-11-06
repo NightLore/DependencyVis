@@ -84,13 +84,13 @@ function tableHeaders(h1, h2) {
    )
 }
 
-function tableRow(color, description, border) {
+function tableRow(color, description, borderColor = "white") {
    return (
       <tr>
          <td className={"left-column"}>
             <span 
                className={"circle"} 
-               style={{backgroundColor: color, border: border}}
+               style={{backgroundColor: color, border: "1px solid " + borderColor}}
             />
          </td>
          <td className={"right-column"}>{description}</td>
@@ -127,7 +127,7 @@ class ColorLegend extends Component {
                      {tableRow("blue", "Main node")}
                      {tableRow("orange", "Not Loaded")}
                      {tableRow("lightblue", "Loaded")}
-                     {tableRow("white", "Failed to Find", "1px solid black")}
+                     {tableRow("white", "Failed to Find", "black")}
                   </tbody>
                </table>
             ));
