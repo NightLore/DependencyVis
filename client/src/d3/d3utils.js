@@ -22,7 +22,7 @@ async function searchNewGraph(d, graph, options, err) {
    if (error) {
       console.log("Failed Search", d); 
       err("Failed search!");
-      d.loaded.color = "grey"
+      d.loaded.color = "white"
       return;
    }
 
@@ -166,6 +166,8 @@ function createSideNode(node, options) {
          version: node.version
       },
    };
+   if (sideNode.color == "white")
+      sideNode.strokeColor = "black";
    console.log("Create side Node:", sideNode);
    return sideNode;
 }

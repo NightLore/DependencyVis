@@ -192,7 +192,7 @@ class Graph extends Component {
       graphData.node.append("circle")
             .attr("id", d => d.id)
             .attr("r", d => scale(d.radius))
-            .attr("stroke", "white")
+            .attr("stroke", d => d.color == "white" ? "black" : "white")
             .attr("fill", d => d.color)
             .on("mouseover", mouse.handleMouseOver.bind(graphData))
             .on("mouseout", mouse.handleMouseOut.bind(graphData))
