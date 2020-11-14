@@ -127,7 +127,7 @@ class ColorLegend extends Component {
                      {tableRow("blue", "Main node")}
                      {tableRow("orange", "Not Loaded")}
                      {tableRow("lightblue", "Loaded")}
-                     {tableRow("white", "Failed to Find", "black")}
+                     {tableRow("white", "Failed to Load", "black")}
                   </tbody>
                </table>
             ));

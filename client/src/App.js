@@ -35,10 +35,12 @@ const App = () => {
    const [sizeOption, setSizeOption] = useState('nothing');
 
    const setGraph = graph  => {
-      if (graph.nodes)
-         setNodes(graph.nodes);
-      if (graph.links)
-         setLinks(graph.links);
+      if (graph) {
+         if (graph.nodes)
+            setNodes(graph.nodes);
+         if (graph.links)
+            setLinks(graph.links);
+      }
       setNodesChanged(true);
    }
 

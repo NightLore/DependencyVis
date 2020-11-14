@@ -22,7 +22,8 @@ async function searchNewGraph(d, graph, options, err) {
    if (error) {
       console.log("Failed Search", d); 
       err("Failed search!");
-      d.loaded.color = "white"
+      d.loaded.stats = "Could not find source";
+      d.loaded.color = "white";
       return;
    }
 
@@ -42,6 +43,7 @@ async function searchNewGraph(d, graph, options, err) {
    d.all = data;
    d.details.source = getGithubURL(data.username, data.repo);
 
+   d.loaded.stats = "Loaded"
    d.loaded.color = "lightblue"
    d.clicked = true;
    d.source = data.source;
@@ -145,6 +147,10 @@ function createCentralNode(id, username, repo, options) {
       clicked: true,
       details: {
          source: getGithubURL(username, repo)
+      },
+      loaded: {
+         stats: "Loaded Central Node",
+         color: "blue"
       }
    };
    centralNode.color = toNodeColor(centralNode, options);
