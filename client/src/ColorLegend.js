@@ -125,7 +125,7 @@ class ColorLegend extends Component {
                   {tableHeaders("Node", "Status")}
                   <tbody>
                      {tableRow("blue", "Main node")}
-                     {tableRow("orange", "Not Loaded")}
+                     {tableRow("grey", "Not Loaded")}
                      {tableRow("lightblue", "Loaded")}
                      {tableRow("white", "Failed to Load", "black")}
                   </tbody>
@@ -139,6 +139,8 @@ class ColorLegend extends Component {
                <table key="table">
                   {tableHeaders("Node", "Severity")}
                   <tbody>
+                     {tableRow("grey", "Not Loaded")}
+                     {tableRow("white", "Failed to Load", "black")}
                      {tableRow("darkred", "Critical")}
                      {tableRow("red", "High")}
                      {tableRow("orange", "Medium")}

@@ -22,6 +22,7 @@ async function searchNewGraph(d, graph, options, err) {
    if (error) {
       console.log("Failed Search", d); 
       err("Failed search!");
+      d.loaded.failed = true;
       d.loaded.stats = "Could not find source";
       d.loaded.color = "white";
       return;
@@ -79,16 +80,19 @@ function updateNodes(nodes, options) {
 function toNodeColor(data, options) {
    if (data.isCentral)
       return "blue";
+   if (!data.loaded)
+      return "grey";
+   if (data.loaded.failed)
+      return "white";
    switch (options.color) {
       case "loaded":
-         if (data.loaded)
-            return data.loaded.color;
+         return data.loaded.color;
          break;
       case "audit":
          return auditToColor(data.audit);
       default:
    }
-   return "orange";
+   return "grey";
 }
 
 function toNodeSize(data, options) {
