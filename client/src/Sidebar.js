@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import HideButton, { TRANSFORMS } from './HideButton';
+import { getDocumentSize } from './utils';
 
 const { useState } = React;
 
@@ -10,7 +11,8 @@ let SIDEBARSTYLE = {
    display: "inline-block", 
    backgroundColor: "lightsteelblue",
    width: 200,
-   height: 800
+   top: 0,
+   bottom: 0,
 }
 
 const LISTSTYLE = 
@@ -102,7 +104,7 @@ class Sidebar extends Component {
 
    // ---------------- helper functions ---------- //
    updateDimensions = () => {
-      this.setState({ width: window.innerWidth, height: window.innerHeight});
+      this.setState(getDocumentSize());
    };
    setHidden = hidden => {
       this.setState({isHidden: hidden});
@@ -123,7 +125,6 @@ class Sidebar extends Component {
          (value, index) => <ListNode key={value.id} node={value}/>
       );
       let style = Object.assign({}, SIDEBARSTYLE);
-      style.height = this.state.height;
       if (this.state.isHidden)
          style.transform = TRANSFORMS.LEFT;
 

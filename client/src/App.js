@@ -60,7 +60,7 @@ const App = () => {
    };
    console.log("options", options);
    return (
-      <div>
+      <div id="App">
          <Form 
             title={TITLE}
             titleStyle={TITLESTYLE}
