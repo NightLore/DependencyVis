@@ -53,24 +53,24 @@ class ButtonPane extends Component {
          nodes: this.props.nodes,
          links: this.props.links
       };
+      /*
       return (
          <div style={style}>
             <button type="button" onClick={e => this.loadNextLayer(graph)}>Load Next Layer</button>
          </div>
-      )
+      );
+      */
 
-      /*
       return (
-         <div style={style}>
-            <button type="button">Load Next Layer</button>
+         <div id="ButtonPane" style={style}>
+            <button type="button" onClick={e => this.loadNextLayer(graph)}>Load Next Layer</button>
             <HideButton
                isHidden={this.state.isHidden}
                setHidden={this.setHidden}
                direction={"down"}
             />
          </div>
-      )
-      */
+      );
 
    }
 }

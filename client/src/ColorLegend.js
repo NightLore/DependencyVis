@@ -28,10 +28,6 @@ const PANE_TITLE_STYLE = {
    fontSize: "large",
 }
 
-const TEXT_STYLE = {
-   margin: 0
-}
-
 const TABLE_CSS = ""
  + "\n"
  + "table {\n"

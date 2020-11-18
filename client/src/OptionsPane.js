@@ -33,13 +33,6 @@ const BUTTON_STYLE = {
    margin: 0
 }
 
-const TOOLTIP_STYLE = {
-}
-
-// -------------- Tooltip ------------- //
-
-
-
 // -------------- Radio Button ------------- //
 
 const RadioButton = props => {

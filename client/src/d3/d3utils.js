@@ -1,5 +1,20 @@
 import auditToColor from '../dataManagers/audit'
 import { lookup, search } from '../AxiosUtils'
+import {
+   COLOR_OPTION_LOADED, 
+   COLOR_OPTION_AUDIT, 
+   SIZE_OPTIONS,
+//   SIZE_OPTION_NOTHING, 
+//   SIZE_OPTION_STARS, 
+//   SIZE_OPTION_WATCHERS, 
+//   SIZE_OPTION_FORKS, 
+   SIZE_OPTION_OPEN_ISSUES, 
+   SIZE_OPTION_CLOSED_ISSUES, 
+   SIZE_OPTION_OPEN_TOTAL_ISSUES, 
+} from '../Options'
+
+const DEFAULT_SIDE_NODE_SIZE = 8;
+const DEFAULT_CENTRAL_NODE_SIZE = 10;
 
 // -------------- axiosToD3 -------------- //
 
@@ -85,10 +100,9 @@ function toNodeColor(data, options) {
    if (data.loaded.failed)
       return "white";
    switch (options.color) {
-      case "loaded":
+      case COLOR_OPTION_LOADED.NAME:
          return data.loaded.color;
-         break;
-      case "audit":
+      case COLOR_OPTION_AUDIT.NAME:
          return auditToColor(data.audit);
       default:
    }
@@ -96,21 +110,46 @@ function toNodeColor(data, options) {
 }
 
 function toNodeSize(data, options) {
-   switch (options.size) {
-      case "nothing":
-         return data.isCentral ? 10 : 8;
-      case "stars":
+   let option = SIZE_OPTIONS.CHOICES.find(opt => opt.NAME === options.size);
+   switch (option.NAME) {
+/*
+      case SIZE_OPTION_NOTHING.NAME:
+         return _getDefaultSize(data.isCentral);
+      case SIZE_OPTION_STARS.NAME:
          // Note: centralNode does not save this info
-         return data.all ? data.all.stargazers_count : 8;
-      case "watchers":
-         return data.all ? data.all.subscribers_count : 8;
-      case "forks":
-         return data.all ? data.all.forks_count : 8;
-      case "open_issues":
-         return data.all ? data.all.open_issues_count : 8;
+         return _getDataSizeOrDefault(data.all, "stargazers_count");
+      case SIZE_OPTION_WATCHERS.NAME:
+         return _getDataSizeOrDefault(data.all, "subscribers_count");
+      case SIZE_OPTION_FORKS.NAME:
+         return _getDataSizeOrDefault(data.all, "forks_count");
+      case SIZE_OPTION_OPEN_ISSUES.NAME:
+         return _getDataSizeOrDefault(data.all, "open_issues_count");
+      case SIZE_OPTION_CLOSED_ISSUES.NAME:
+         return _getDataSizeOrDefault(data.all, "closed_issues_count");
+*/
+
+      case SIZE_OPTION_OPEN_TOTAL_ISSUES.NAME:
+         let openIssues = _getDataSize(data.all, SIZE_OPTION_OPEN_ISSUES.KEY);
+         let closedIssues = _getDataSize(data.all, SIZE_OPTION_CLOSED_ISSUES.KEY);
+         return openIssues && closedIssues 
+            ? openIssues / (openIssues + closedIssues) 
+            : DEFAULT_SIDE_NODE_SIZE;
+
       default:
    }
-   return data.isCentral ? 10 : 8;
+   return option.KEY ?_getDataSizeOrDefault(data.all, option.KEY) : _getDefaultSize(data.isCentral);
+}
+
+function _getDefaultSize(isCentral) {
+   return isCentral ? DEFAULT_CENTRAL_NODE_SIZE : DEFAULT_SIDE_NODE_SIZE;
+}
+
+function _getDataSize(node, dataType) {
+   return node && node[dataType] ? node[dataType] : undefined;
+}
+
+function _getDataSizeOrDefault(node, dataType) {
+   return _getDataSize(node, dataType) || DEFAULT_SIDE_NODE_SIZE;
 }
 
 function hasNode(nodes, data) {
@@ -176,7 +215,7 @@ function createSideNode(node, options) {
          version: node.version
       },
    };
-   if (sideNode.color == "white")
+   if (sideNode.color === "white")
       sideNode.strokeColor = "black";
    console.log("Create side Node:", sideNode);
    return sideNode;

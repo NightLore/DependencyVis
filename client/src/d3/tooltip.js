@@ -1,3 +1,7 @@
+import {
+   COLOR_OPTION_LOADED,
+   COLOR_OPTION_AUDIT
+} from '../Options'
 
 function updateTooltip(tooltip, d, attributes) {
    attributes.tooltipWidth = 
@@ -14,12 +18,13 @@ function updateTooltip(tooltip, d, attributes) {
    // dy = setName(tooltip, d, attributes, textX, textY, dy);
    // dy = setInfo(tooltip, d, attributes, textX, textY, dy);
    switch (attributes.props.options.color) {
-      case "loaded":
+      case COLOR_OPTION_LOADED.NAME:
          dy = setLoaded(tooltip, d, attributes, textX, textY, dy);
          break;
-      case "audit":
+      case COLOR_OPTION_AUDIT.NAME:
          dy = setAudit(tooltip, d, attributes, textX, textY, dy);
          break;
+      default:
    }
 
    attributes.tooltipHeight = dy + attributes.tooltipTextOffset;
@@ -37,6 +42,7 @@ function addText(tooltip, textX, textY, dy, text) {
          .text(text)
 }
 
+/*
 function setName(tooltip, d, attributes, textX, textY, dy) {
    addText(tooltip, textX, textY, dy, d.id);
    return dy + attributes.tooltipDy;
@@ -51,6 +57,7 @@ function setInfo(tooltip, d, attributes, textX, textY, dy) {
    }
    return dy;
 }
+*/
 
 function setLoaded(tooltip, d, attributes, textX, textY, dy) {
    if (!d.loaded) {
