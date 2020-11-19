@@ -13,10 +13,11 @@ function createOption(title, choices) {
    };
 }
 
-function createChoice(name, displayName, key) {
+function createChoice(name, displayName, tooltip, key) {
    return {
       NAME: name,
       DISPLAY: displayName,
+      TOOLTIP: tooltip,
       KEY: key
    };
 }
@@ -36,17 +37,30 @@ function createHandlers(props) {
 
 const OPTIONS = [
    createOption("Color", [
-      createChoice("loaded", "Load Status"),
-      createChoice("audit", "Audit")
+      createChoice("loaded", "Load Status", 
+         "Color nodes based on their status in the program."),
+      createChoice("audit", "Audit", 
+         "Color nodes based on the highest npm audit severity.")
    ]),
    createOption("Size", [
-      createChoice("nothing", "Nothing"),
-      createChoice("stars", "Stars", "stargazers_count"),
-      createChoice("watchers", "Watchers", "subscribers_count"),
-      createChoice("forks", "Forks", "forks_count"),
-      createChoice("open_issues", "Open Issues", "open_issues_count"),
-      createChoice("closed_issues", "Closed Issues", "closed_issues_count"),
-      createChoice("open_total_issues", "Open/Total Issues"),
+      createChoice("nothing", "Nothing", "Keep all nodes the same size"),
+      createChoice("stars", "Stars", 
+         "Size of nodes are based on the amount of stars found in the github repo.", 
+         "stargazers_count"),
+      createChoice("watchers", "Watchers", 
+         "Size of nodes are based on the amount of github watchers/subscribers.",
+         "subscribers_count"),
+      createChoice("forks", "Forks", 
+         "Size of nodes are based on the number of forks the repo has.",
+         "forks_count"),
+      createChoice("open_issues", "Open Issues", 
+         "number of open issues",
+         "open_issues_count"),
+      createChoice("closed_issues", "Closed Issues", 
+         "number of closed issues",
+         "closed_issues_count"),
+      createChoice("open_total_issues", "Open/Total Issues",
+         "ratio of open over total issues"),
    ]),
 ];
 

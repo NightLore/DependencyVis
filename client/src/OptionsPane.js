@@ -33,11 +33,55 @@ const BUTTON_STYLE = {
    margin: 0
 }
 
+const TOOLTIP_COLOR = "#555";
+const TOOLTIP_ARROW_SIZE = "5px";
+const TOOLTIP_STYLE = ""
+ + "\n.tooltip {"
+ + "\n   position: relative;"
+ + "\n}"
+ + "\n"
+ + "\n.tooltip .tooltiptext {"
+ + "\n   visibility: hidden;"
+ + "\n   background-color: " + TOOLTIP_COLOR + ";"
+ + "\n   color: #fff;"
+ + "\n   text-align: center;"
+ + "\n   border-radius: 6px;"
+ + "\n   padding: 0 " + TOOLTIP_ARROW_SIZE + " " + TOOLTIP_ARROW_SIZE + " " + TOOLTIP_ARROW_SIZE + ";"
+ + "\n"
+ + "\n   position: absolute;"
+ + "\n   z-index: 11;"
+ + "\n   top: 0%;"
+ + "\n   right: 105%;"
+ + "\n   opacity: 0;"
+ + "\n   transition: opacity 0.3s;"
+ + "\n   width: fit-content;"
+ + "\n}"
+ + "\n"
+ + "\n.tooltip .tooltiptext::after {"
+ + "\n   content: \"\";"
+ + "\n   position: absolute;"
+ + "\n   top: 10px;"
+ + "\n   left: 100%;"
+ + "\n   margin-top: -" + TOOLTIP_ARROW_SIZE + ";"
+ + "\n   border-width: " + TOOLTIP_ARROW_SIZE + ";"
+ + "\n   border-style: solid;"
+ + "\n   border-color: transparent transparent transparent " + TOOLTIP_COLOR + ";"
+ + "\n}"
+ + "\n"
+ + "\n.tooltip:hover .tooltiptext {"
+ + "\n   visibility: visible;"
+ + "\n   opacity: 1;"
+ + "\n}"
+ + "\n"
+ + "\n";
+
+
+
 // -------------- Radio Button ------------- //
 
 const RadioButton = props => {
    return (
-      <p style={BUTTON_STYLE}>
+      <p className={"tooltip"} style={BUTTON_STYLE}>
       <label>
          <input 
             type="radio" 
@@ -49,6 +93,7 @@ const RadioButton = props => {
          />
          {props.contents}
       </label>
+      <span className={"tooltiptext"}>{props.tooltip}</span>
       </p>
    )
 }
@@ -72,11 +117,16 @@ class OptionsPane extends Component {
 
       // set pane title
       let toRender = [(
-         <p key={"pane_title"} 
-            style={PANE_TITLE_STYLE}>
-            {PANE_TITLE}
-         </p>
-      )];
+            <style key={"style"}>
+               {TOOLTIP_STYLE}
+            </style>
+         ), (
+            <p key={"pane_title"} 
+               style={PANE_TITLE_STYLE}>
+               {PANE_TITLE}
+            </p>
+         )
+      ];
 
       OPTIONS.forEach((opt, index) => {
          // push option's title element
@@ -96,6 +146,7 @@ class OptionsPane extends Component {
                   group={opt.TITLE}
                   contents={choice.DISPLAY}
                   option={this.props.options[opt.ID]}
+                  tooltip={choice.TOOLTIP}
                   handler={this.handlers[opt.ID]}
                />
             );

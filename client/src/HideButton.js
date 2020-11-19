@@ -26,13 +26,13 @@ const TRANSFORMS = {
 
 const OPEN_STATES = {
    // double down angle brackets, double up angle brackets
-   UP: OpenState("\uFE3E", "\uFE3D", 50, 0),
+   UP: OpenState(" \uFE3E ", " \uFE3D ", 50, 0),
 
    // double left carets, double right carets
    RIGHT: OpenState("\u27EA", "\u27EB", 100, 50),
 
    // double up angle brackets, double down angle brackets
-   DOWN: OpenState("\uFE3D", "\uFE3E", 50, 100),
+   DOWN: OpenState(" \uFE3D ", " \uFE3E ", 50, 100),
    
    // double right carets, double left carets
    LEFT: OpenState("\u27EB", "\u27EA", 0, 50),

@@ -152,7 +152,7 @@ function _getDataSizeOrDefault(node, dataType) {
    return _getDataSize(node, dataType) || DEFAULT_SIDE_NODE_SIZE;
 }
 
-function hasNode(nodes, data) {
+function _hasNode(nodes, data) {
    for (let i = 0; i < nodes.length; i++) {
       if (nodes[i].id === data.name) {
          return true;
@@ -165,8 +165,8 @@ function dependenciesToNodes(dependencies, mainNode, nodes, links, options) {
    let newNodes = [];
    let newLinks = [];
    dependencies.forEach((data, index, array) => {
-      if (!hasNode(nodes, data)) {
-         newNodes.push(createSideNode(data, options));
+      if (!_hasNode(nodes, data)) {
+         newNodes.push(_createSideNode(data, options));
       }
       newLinks.push({
          source: mainNode, 
@@ -202,7 +202,7 @@ function createCentralNode(id, username, repo, options) {
    return centralNode;
 }
 
-function createSideNode(node, options) {
+function _createSideNode(node, options) {
    let sideNode = {
       id: node.name,
       audit: node.audit,
