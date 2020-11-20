@@ -2,7 +2,6 @@ const regFetch = require('npm-registry-fetch');
 
 async function requestAudit(dependencies) {
    const auditData = toAuditFormat(dependencies);
-   console.log("AuditData: ", auditData);
 
    let opts = {
        "color":true,
@@ -21,7 +20,6 @@ async function requestAudit(dependencies) {
       res.error = err;
       console.error(err);
    }
-   console.log("audit response:", JSON.stringify(res, "", 3));
    return res;
 }
 
@@ -29,7 +27,8 @@ function toAuditFormat(dependencies) {
    let auditData = {"requires": {}, "dependencies": {}}
    dependencies.forEach(element => {
       let name = element.name;
-      let version = "0.0.2"; //element.version;
+      let version = "0.0.2";
+      //let version = element.version;
       auditData.requires[name] = version;
       auditData.dependencies[name] = {version: version};
    });

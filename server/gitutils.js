@@ -28,11 +28,36 @@ async function getRepoDetails(repo) {
       data.open_issues_count = details.open_issues_count;
       data.license = details.license;
       data.forks = details.forks;
-      data.open_issues = details.open_issues;
-      data.watchers = details.watchers;
       data.default_branch = details.default_branch;
       data.network_count = details.network_count;
       data.subscribers_count = details.subscribers_count;
+   });
+
+   printPRState = prs => {
+      let numOpen = 0;
+      let numClosed = 0;
+      for (pr of prs) {
+         switch (pr.state) {
+            case "open":
+               numOpen++;
+               break;
+            case "closed":
+               numClosed++;
+               break;
+            default:
+               console.log("Invalid state:", pr.state);
+         }
+      }
+      console.log("open:", numOpen, "; closed:", numClosed, "; all:", prs.length);
+   };
+
+   // request list of open pull requests
+   await repo.listPullRequests({per_page: 100}, (err, prs) => {
+      if (err) return;
+
+      console.log("List PR");
+      printPRState(prs);
+      data.open_pull_request_count = prs.length;
    });
    return data;
 }

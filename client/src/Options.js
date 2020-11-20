@@ -59,8 +59,9 @@ const OPTIONS = [
       createChoice("closed_issues", "Closed Issues", 
          "number of closed issues",
          "closed_issues_count"),
-      createChoice("open_total_issues", "Open/Total Issues",
-         "ratio of open over total issues"),
+      createChoice("open_pull_requests", "Open Pull Requests",
+         "number of open pull requests",
+         "open_pull_request_count"),
    ]),
 ];
 

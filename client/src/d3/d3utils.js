@@ -4,13 +4,6 @@ import {
    COLOR_OPTION_LOADED, 
    COLOR_OPTION_AUDIT, 
    SIZE_OPTIONS,
-//   SIZE_OPTION_NOTHING, 
-//   SIZE_OPTION_STARS, 
-//   SIZE_OPTION_WATCHERS, 
-//   SIZE_OPTION_FORKS, 
-   SIZE_OPTION_OPEN_ISSUES, 
-   SIZE_OPTION_CLOSED_ISSUES, 
-   SIZE_OPTION_OPEN_TOTAL_ISSUES, 
 } from '../Options'
 
 const DEFAULT_SIDE_NODE_SIZE = 8;
@@ -78,7 +71,7 @@ async function searchNewGraph(d, graph, options, err) {
 
 
 function updateNodes(nodes, options) {
-   let maxRadius = 10;
+   let maxRadius = 0;
    let minRadius = Infinity;
    nodes.forEach(node => {
       node.color = toNodeColor(node, options);
@@ -112,32 +105,10 @@ function toNodeColor(data, options) {
 function toNodeSize(data, options) {
    let option = SIZE_OPTIONS.CHOICES.find(opt => opt.NAME === options.size);
    switch (option.NAME) {
-/*
-      case SIZE_OPTION_NOTHING.NAME:
-         return _getDefaultSize(data.isCentral);
-      case SIZE_OPTION_STARS.NAME:
-         // Note: centralNode does not save this info
-         return _getDataSizeOrDefault(data.all, "stargazers_count");
-      case SIZE_OPTION_WATCHERS.NAME:
-         return _getDataSizeOrDefault(data.all, "subscribers_count");
-      case SIZE_OPTION_FORKS.NAME:
-         return _getDataSizeOrDefault(data.all, "forks_count");
-      case SIZE_OPTION_OPEN_ISSUES.NAME:
-         return _getDataSizeOrDefault(data.all, "open_issues_count");
-      case SIZE_OPTION_CLOSED_ISSUES.NAME:
-         return _getDataSizeOrDefault(data.all, "closed_issues_count");
-*/
-
-      case SIZE_OPTION_OPEN_TOTAL_ISSUES.NAME:
-         let openIssues = _getDataSize(data.all, SIZE_OPTION_OPEN_ISSUES.KEY);
-         let closedIssues = _getDataSize(data.all, SIZE_OPTION_CLOSED_ISSUES.KEY);
-         return openIssues && closedIssues 
-            ? openIssues / (openIssues + closedIssues) 
-            : DEFAULT_SIDE_NODE_SIZE;
-
+         // put non-default cases here
       default:
    }
-   return option.KEY ?_getDataSizeOrDefault(data.all, option.KEY) : _getDefaultSize(data.isCentral);
+   return option.KEY ? _getDataSizeOrDefault(data.all, option.KEY) : _getDefaultSize(data.isCentral);
 }
 
 function _getDefaultSize(isCentral) {
