@@ -62,6 +62,9 @@ const OPTIONS = [
       createChoice("open_pull_requests", "Open Pull Requests",
          "number of open pull requests",
          "open_pull_request_count"),
+      createChoice("mean_pull_requests", "Mean Time Pull Requests",
+         "Mean Time it takes for pull requests in the last month to close since it is created",
+         "pull_request_mean_time"),
    ]),
 ];
 
