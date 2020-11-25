@@ -71,9 +71,15 @@ function setLoaded(tooltip, d, attributes, textX, textY, dy) {
 }
 
 function setAudit(tooltip, d, attributes, textX, textY, dy) {
-   if (!d.audit) {
+   if (!d.loaded) {
       return setLoaded(tooltip, d, attributes, textX, textY, dy);
    }
+
+   if (!d.audit) {
+      addText(tooltip, textX, textY, dy, "No severities");
+      return dy + attributes.tooltipDy;
+   }
+
    addText(tooltip, textX, textY, dy, "ID | SEVERITY");
    dy += attributes.tooltipDy;
 
