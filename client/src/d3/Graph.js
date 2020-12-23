@@ -162,12 +162,16 @@ class Graph extends Component {
    }
 
    _createSimulation(width, height) {
-      let dist = Math.min(width, height) / 6;
+      let minDimension = Math.min(width, height);
       graphData.simulation = d3.forceSimulation(graphData.props.nodes)
          .force("link", d3.forceLink(graphData.props.links)
             .id(d => d.id)
-            .distance(d => dist))
-         .force("charge", d3.forceManyBody().strength(d => Math.sqrt(d.radius) * -50))
+            .distance(d => minDimension / 8)
+            )
+         .force("charge", d3.forceManyBody()
+            .distanceMax(minDimension / 2)
+            .strength(d => -50 * d.radius))
+            //.strength(d => Math.sqrt(scale(d.radius * 100)) * -5))
          .force("center", d3.forceCenter(width / 2, height / 2))
    }
 

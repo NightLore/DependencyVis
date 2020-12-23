@@ -51,6 +51,8 @@ async function searchNewGraph(d, graph, options, err) {
    Object.assign(d.details, importData);
    d.all = data;
    d.details.source = getGithubURL(data.username, data.repo);
+   d.details.created = data.created_at;
+   d.details.updated = data.updated_at;
 
    d.loaded.stats = "Loaded"
    d.loaded.color = "lightblue"

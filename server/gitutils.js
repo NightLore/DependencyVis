@@ -31,6 +31,8 @@ async function getRepoDetails(repo) {
       data.default_branch = details.default_branch;
       data.network_count = details.network_count;
       data.subscribers_count = details.subscribers_count;
+      data.created_at = details.created_at;
+      data.updated_at = details.updated_at;
    });
 
    // request list of open pull requests
@@ -45,10 +47,7 @@ async function getRepoDetails(repo) {
    await repo.listPullRequests({state: "closed", per_page: 100}, (err, prs) => {
       if (err) return;
 
-      let numPRs = prs.length;
-      console.log("List Closed PR", numPRs);
-      data.closed_pull_request_count = numPRs; // add num closed PRs
-
+      let numPRs = 0;
       let currentTime = new Date();
       let timeLimit = new Date();
       timeLimit.setMonth(currentTime.getMonth() - 1);
@@ -58,9 +57,20 @@ async function getRepoDetails(repo) {
       for (pr of prs) {
          let createdTime = new Date(pr.created_at);
          let closedTime = new Date(pr.closed_at);
-         sumTime +=  closedTime - createdTime;
+
+         if (closedTime < timeLimit) {
+            console.log("pr rejected", pr.created_at, pr.closed_at);
+            continue;
+         }
+
+         console.log("pr accepted", pr.created_at, pr.closed_at);
+         sumTime += closedTime - createdTime;
+         numPRs++;
       }
+
+      console.log("List Closed PR", numPRs);
       let meanTime = sumTime / numPRs;
+      data.closed_pull_request_count = numPRs; // add num closed PRs used to calculate mean time
       data.pull_request_mean_time = meanTime;
    });
    return data;
