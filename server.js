@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const Github = require('github-api');
 const NpmApi = require('npm-api');
@@ -38,6 +39,9 @@ function error404(res) {
    });
 }
 
+// serve static files from React app
+app.use(express.static(path.join(__dirname, "client/build")));
+
 app.use(
    cors({
       origin:'http://localhost:3000',
@@ -47,8 +51,10 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get('/', (req, res) => res.send("Hello World!"));
-app.put('/', (req, res) => res.send("Hello World!"));
+app.get('/', (req, res) => {
+   console.log("Dirname:", __dirname);
+   res.sendFile(path.join(__dirname+"/client/build/index.html"));
+});
 
 app.post('/lookup', async (req, res, next) => {
    let data = await gitutils.retrieveRepoData(git, {
