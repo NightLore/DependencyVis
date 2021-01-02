@@ -31,6 +31,7 @@ const App = () => {
    const [nodesChanged, setNodesChanged] = useState(false);
    const [showForm, setFormVisibility] = useState(true);
    const [errorText, setErrorText] = useState('');
+   const [dbOption, setDBOption] = useState(true);
    const [colorOption, setColorOption] = useState('loaded');
    const [sizeOption, setSizeOption] = useState('nothing');
 
@@ -55,6 +56,7 @@ const App = () => {
    }
 
    let options = {
+      mongodb: dbOption,
       color: colorOption,
       size: sizeOption
    };
@@ -68,6 +70,7 @@ const App = () => {
             setErrorText={setErrorText}
             showForm={showForm}
             setFormVisibility={setFormVisibility}
+            setDBOption={setDBOption}
             options={options}
          />
          <ErrorText 

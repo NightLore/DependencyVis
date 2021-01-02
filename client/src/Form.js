@@ -29,6 +29,7 @@ const Form = props => {
    const [username, setUsername] = useState('');
    const [repo, setRepo] = useState('');
    const [folder, setFolder] = useState('');
+   const [dbOption, setDBOption] = useState(true);
 
    function getUserInfo() {
       return {
@@ -95,6 +96,16 @@ const Form = props => {
             onChange={event => setFolder(event.target.value)}
             placeholder="optional specified folder"
          />
+         <br/>
+         <label>
+            Use MongoDB Database: 
+            <input
+               type="checkbox"
+               name="dbOption"
+               checked={dbOption}
+               onChange={event => setDBOption(event.target.checked)}
+            />
+         </label>
       </form>
       </div>
       </div>
