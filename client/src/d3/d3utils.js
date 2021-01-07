@@ -12,7 +12,7 @@ const DEFAULT_CENTRAL_NODE_SIZE = 10;
 // -------------- axiosToD3 -------------- //
 
 async function lookupNewGraph(userInfo, mainId, graph, options, err) {
-      let {resp, error} = await lookup(userInfo);
+      let {resp, error} = await lookup(userInfo, options);
       if (error) {err("Failed lookup!"); return;}
 
       console.log("Response Data:", resp);
@@ -26,7 +26,7 @@ async function lookupNewGraph(userInfo, mainId, graph, options, err) {
 
 async function searchNewGraph(d, graph, options, err) {
    if (!d.loaded) d.loaded = {}
-   let {resp: data, error} = await search(d.id);
+   let {resp: data, error} = await search(d.id, options);
    if (error) {
       console.log("Failed Search", d); 
       err("Failed search!");

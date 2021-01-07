@@ -64,26 +64,24 @@ app.get('/', (req, res) => {
 });
 
 app.post('/lookup', async (req, res, next) => {
-   let data = await gitutils.retrieveRepoData(git, {
+   console.log("lookup request data: ", req.body);
+   let urlData = {
       username: req.body.username,
       repo:     req.body.repo,
       folder:   req.body.folder
-   });
+   };
+   let data = await gitutils.retrieveRepoData(git, urlData);
    if (!data) {error404(res); return;}
 
-   let audit = await auditutils.requestAudit(data.dependencies);
-   if (!audit.error) {
-      auditutils.mapAuditToDependency(data.dependencies, audit.resp);
-      auditutils.sortAudit(data.dependencies);
-   }
-   console.log("lookup response data: ", data);
+   await auditutils.setAuditData(data.dependencies);
 
+   console.log("lookup response data: ", data);
    res.status(201).json(data);
    //await pushToDatabase(data);
 });
 
 app.post('/search', async (req, res) => {
-   console.log("search", req.body);
+   console.log("search request data: ", req.body);
    let repo = npm.repo(req.body.querry);
    let pack = await repo.package();
    console.log("Package.json", pack);
@@ -94,8 +92,10 @@ app.post('/search', async (req, res) => {
    let result = await gitutils.retrieveRepoData(git, urlData);
    if (!result) {error404(res); return; }
 
+   await auditutils.setAuditData(result.dependencies);
+
    result.source = "api.github.com/repos/" + urlData.username + "/" + urlData.repo
-   console.log("result", result);
+   console.log("search response data: ", result);
    //let result = await gitutils.searchRepo(git, req.body.querry);
    res.send(result);
 });

@@ -1,5 +1,13 @@
 const regFetch = require('npm-registry-fetch');
 
+async function setAuditData(dependencies) {
+   let response = await requestAudit(dependencies);
+   if (!response.error) {
+      mapAuditToDependency(dependencies, response.body);
+      sortAudit(dependencies);
+   }
+}
+
 async function requestAudit(dependencies) {
    const auditData = toAuditFormat(dependencies);
 
@@ -14,7 +22,7 @@ async function requestAudit(dependencies) {
 
    var res = {}
    try {
-      res.resp = await (await regFetch('/-/npm/v1/security/audits', opts)).json();
+      res.body = await (await regFetch('/-/npm/v1/security/audits', opts)).json();
    }
    catch (err) {
       res.error = err;
@@ -74,7 +82,5 @@ function auditSeverityToValue(severity) {
 }
 
 module.exports = {
-   requestAudit: requestAudit,
-   mapAuditToDependency: mapAuditToDependency,
-   sortAudit: sortAudit,
+   setAuditData: setAuditData
 };
