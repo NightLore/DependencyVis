@@ -39,6 +39,36 @@ function error404(res) {
    });
 }
 
+async function collectInfo(urlData, options) {
+   let data = false;
+   let shouldPush = false;
+
+   // get data from database if requested
+   if (options.mongodb) {
+      console.log("USING DATABASE DATA");
+      data = await database.search(urlData);
+   }
+
+   // get data from Github if not found from database or if preferred
+   if (!data) {
+      console.log("GENERATING DATA");
+      data = await gitutils.retrieveRepoData(git, urlData);
+      shouldPush = true;
+   }
+
+   // populate audit data
+   if (data) {
+      await auditutils.setAuditData(data.dependencies);
+      data.source = "api.github.com/repos/" + urlData.username + "/" + urlData.repo
+
+      if (shouldPush) {
+         database.push(data);
+      }
+   }
+
+   return data;
+}
+
 // --------------- express routes ----------------- //
 
 // enable cors
@@ -70,34 +100,26 @@ app.post('/lookup', async (req, res, next) => {
       repo:     req.body.repo,
       folder:   req.body.folder
    };
-   let data = await gitutils.retrieveRepoData(git, urlData);
-   if (!data) {error404(res); return;}
 
-   await auditutils.setAuditData(data.dependencies);
+   const result = await collectInfo(urlData, req.body.options);
 
-   console.log("lookup response data: ", data);
-   res.status(201).json(data);
-   //await pushToDatabase(data);
+   console.log("lookup response data: ", result);
+   res.status(201).json(result);
+   //await database.push(data);
 });
 
 app.post('/search', async (req, res) => {
    console.log("search request data: ", req.body);
    let repo = npm.repo(req.body.querry);
    let pack = await repo.package();
-   console.log("Package.json", pack);
    let urlData = utils.extractGithubPath(utils.findGithubUrl(pack));
-   console.log("urlData", urlData);
    if (!urlData) {error404(res); return; }
 
-   let result = await gitutils.retrieveRepoData(git, urlData);
-   if (!result) {error404(res); return; }
+   const result = await collectInfo(urlData, req.body.options);
 
-   await auditutils.setAuditData(result.dependencies);
-
-   result.source = "api.github.com/repos/" + urlData.username + "/" + urlData.repo
    console.log("search response data: ", result);
    //let result = await gitutils.searchRepo(git, req.body.querry);
-   res.send(result);
+   res.status(201).json(result);
 });
 
 
