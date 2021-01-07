@@ -29,7 +29,7 @@ async function searchNewGraph(d, graph, options, err) {
    let {resp: data, error} = await search(d.id, options);
    if (error) {
       console.log("Failed Search", d); 
-      err("Failed search!");
+      //err("Failed search!");
       d.loaded.failed = true;
       d.loaded.stats = "Could not find source";
       d.loaded.color = "white";
