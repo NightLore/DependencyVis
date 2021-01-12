@@ -12,6 +12,11 @@ const DIVSTYLE = {
    left: 0,
 }
 
+const SIMULATION = {
+   STRENGTH: 45,
+   DISTANCE_MAX_RATIO: 8
+}
+
 let graphData = {
    tooltipWidth: 100,
    tooltipHeight: 100,
@@ -166,11 +171,12 @@ class Graph extends Component {
       graphData.simulation = d3.forceSimulation(graphData.props.nodes)
          .force("link", d3.forceLink(graphData.props.links)
             .id(d => d.id)
-            .distance(d => minDimension / 8)
+            .distance(link => scale(link.source.radius) + scale(link.target.radius) + minDimension / SIMULATION.DISTANCE_MAX_RATIO)
+            //.distance(d => minDimension / SIMULATION.DISTANCE_MAX_RATIO)
             )
          .force("charge", d3.forceManyBody()
             .distanceMax(minDimension / 2)
-            .strength(d => -50 * d.radius))
+            .strength(d => -1 * SIMULATION.STRENGTH * Math.sqrt(scale(d.radius))))
             //.strength(d => Math.sqrt(scale(d.radius * 100)) * -5))
          .force("center", d3.forceCenter(width / 2, height / 2))
    }
