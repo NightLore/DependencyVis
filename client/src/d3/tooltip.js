@@ -60,8 +60,8 @@ function setInfo(tooltip, d, attributes, textX, textY, dy) {
 */
 
 function setLoaded(tooltip, d, attributes, textX, textY, dy) {
-   if (!d.loaded) {
-      addText(tooltip, textX, textY, dy, "Node Not Loaded");
+   if (!d.loaded || !d.loaded.stats) {
+      addText(tooltip, textX, textY, dy, "Dependencies Not Loaded");
       dy += attributes.tooltipDy;
       addText(tooltip, textX, textY, dy, "Click to Load");
       return dy + attributes.tooltipDy;
@@ -71,7 +71,7 @@ function setLoaded(tooltip, d, attributes, textX, textY, dy) {
 }
 
 function setAudit(tooltip, d, attributes, textX, textY, dy) {
-   if (!d.loaded) {
+   if (!d.loaded || d.loaded.failed) {
       return setLoaded(tooltip, d, attributes, textX, textY, dy);
    }
 

@@ -77,7 +77,11 @@ function updateNodes(nodes, options) {
    let minRadius = Infinity;
    nodes.forEach(node => {
       node.color = toNodeColor(node, options);
+      if (node.color === "white")
+         node.strokeColor = "black"
+
       node.radius = toNodeSize(node, options);
+
       if (node.radius > maxRadius) 
          maxRadius = node.radius;
       if (node.radius < minRadius)
@@ -88,11 +92,7 @@ function updateNodes(nodes, options) {
 };
 
 function toNodeColor(data, options) {
-   if (data.isCentral)
-      return "blue";
-   if (!data.loaded)
-      return "grey";
-   if (data.loaded.failed)
+   if (data.loaded && data.loaded.failed)
       return "white";
    switch (options.color) {
       case COLOR_OPTION_LOADED.NAME:
@@ -179,7 +179,7 @@ function _createSideNode(node, options) {
    let sideNode = {
       id: node.name,
       audit: node.audit,
-      color: toNodeColor(node, options),
+      //color: toNodeColor(node, options),
       radius: toNodeSize(node, options),
       details: {
          version: node.version
@@ -187,9 +187,12 @@ function _createSideNode(node, options) {
       info: {
          version: node.version
       },
+      loaded: {
+         color: "grey"
+      }
    };
-   if (sideNode.color === "white")
-      sideNode.strokeColor = "black";
+   //if (sideNode.color === "white")
+   //   sideNode.strokeColor = "black";
    console.log("Create side Node:", sideNode);
    return sideNode;
 }
