@@ -62,9 +62,9 @@ async function handleMouseClicked(d) {
    if (d.clicked) return;
 
    // set load state
-   d.color = "grey"; // loading color
+   d.color = "lightgrey"; // loading color
    d.loaded = {
-      color: "red"
+      color: "grey"
    };
    let circle = d3.select("#" + d.id);
    circle.attr("fill", d.color);

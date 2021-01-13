@@ -12,19 +12,64 @@ const DEFAULT_CENTRAL_NODE_SIZE = 10;
 // -------------- axiosToD3 -------------- //
 
 async function lookupNewGraph(userInfo, mainId, graph, options, err) {
-      let {resp, error} = await lookup(userInfo, options);
-      if (error) {err("Failed lookup!"); return;}
+   let {resp, error} = await lookup(userInfo, options);
+   if (error) {err("Failed lookup!"); return;}
 
-      console.log("Response Data:", resp);
-      return dependenciesToNodes(
-         resp.dependencies, mainId, 
-         graph.nodes, graph.links, 
-         options
-      );
+   console.log("Response Data:", resp);
+   let newGraph = dependenciesToNodes(
+      resp.dependencies, mainId, 
+      graph.nodes, graph.links, 
+      options
+   );
 
+   if (options.loadAhead) {
+      newGraph.nodes.forEach(node => {
+         lookAtSingle(node, graph, options, err);
+      });
+   }
+
+   return { 
+      nodes: graph.nodes.concat(newGraph.nodes),
+      links: graph.links.concat(newGraph.links)
+   };
 }
 
 async function searchNewGraph(d, graph, options, err) {
+   if (!d.all) {
+      lookAtSingle(d, graph, options, err);
+   }
+
+   if (!d.all) { // lookup failed
+      return;
+   }
+
+   d.loaded.stats = "Loaded"
+   d.loaded.color = "lightblue"
+   d.clicked = true;
+   d.source = d.all.source;
+
+   // get new graph
+   let newGraph = dependenciesToNodes(
+      d.all.dependencies, 
+      d.id, 
+      graph.nodes, 
+      graph.links, 
+      options
+   );
+
+   if (options.loadAhead) {
+      newGraph.nodes.forEach(node => {
+         lookAtSingle(node, graph, options, err);
+      });
+   }
+
+   return { 
+      nodes: graph.nodes.concat(newGraph.nodes),
+      links: graph.links.concat(newGraph.links)
+   };
+}
+
+async function lookAtSingle(d, graph, options, err) {
    if (!d.loaded) d.loaded = {}
    let {resp: data, error} = await search(d.id, options);
    if (error) {
@@ -36,7 +81,7 @@ async function searchNewGraph(d, graph, options, err) {
       return;
    }
 
-   console.log("Search Result:", data);
+   console.log("Look At Single Result:", data);
    let importData = {
       size: data.size,
       archived: data.archived,
@@ -53,20 +98,6 @@ async function searchNewGraph(d, graph, options, err) {
    d.details.source = getGithubURL(data.username, data.repo);
    d.details.created = data.created_at;
    d.details.updated = data.updated_at;
-
-   d.loaded.stats = "Loaded"
-   d.loaded.color = "lightblue"
-   d.clicked = true;
-   d.source = data.source;
-
-   // get new graph
-   return dependenciesToNodes(
-      data.dependencies, 
-      d.id, 
-      graph.nodes, 
-      graph.links, 
-      options
-   );
 }
 
 // -------------- nodes -------------- //
@@ -148,7 +179,7 @@ function dependenciesToNodes(dependencies, mainNode, nodes, links, options) {
       });
    });
    console.log("Dependencies registered: ", newNodes, newLinks);
-   return { nodes: nodes.concat(newNodes), links: links.concat(newLinks) };
+   return { nodes: newNodes, links: newLinks };
 }
 
 function getGithubURL(username, repo) {

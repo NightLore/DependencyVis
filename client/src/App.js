@@ -32,6 +32,7 @@ const App = () => {
    const [showForm, setFormVisibility] = useState(true);
    const [errorText, setErrorText] = useState('');
    const [dbOption, setDBOption] = useState(true);
+   const [loadAheadOption, setLoadAheadOption] = useState(true);
    const [colorOption, setColorOption] = useState('loaded');
    const [sizeOption, setSizeOption] = useState('nothing');
 
@@ -57,6 +58,7 @@ const App = () => {
 
    let options = {
       mongodb: dbOption,
+      loadAhead: loadAheadOption,
       color: colorOption,
       size: sizeOption
    };
@@ -110,5 +112,4 @@ const App = () => {
    )
 }
 
-   //position: "absolute",
 export default App;
