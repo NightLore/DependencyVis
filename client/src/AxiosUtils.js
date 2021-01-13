@@ -13,7 +13,7 @@ async function post(querry, data, options) {
    let error = null;
    data.options = retrieveOptions(options);
    try {
-      resp = (await axios.post('http://localhost:3001/' + querry, data)).data;
+      resp = (await axios.post('/' + querry, data)).data;
    }
    catch (e) {
       error = e;
