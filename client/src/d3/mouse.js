@@ -33,8 +33,8 @@ function drag(simulation) {
 
 function handleMouseOver(d) {
    let p = d3.event.target.parentElement.parentElement.parentElement;
-   this.rectX = d3.mouse(p)[0] + d.radius * 2;
-   this.rectY = d3.mouse(p)[1] + d.radius * 2;
+   this.rectX = d3.mouse(p)[0] + this.scale(d.radius) * 2 / 3;
+   this.rectY = d3.mouse(p)[1] + this.scale(d.radius) * 2 / 3;
 
    console.log("mouseover", d);
    this.tooltip.transition()

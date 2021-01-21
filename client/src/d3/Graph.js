@@ -77,6 +77,7 @@ class Graph extends Component {
    constructor(props) {
       super(props);
       this.state = getSize();
+      graphData.scale = scale;
    }
 
    resize = () => {
