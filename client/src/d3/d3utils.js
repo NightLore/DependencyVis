@@ -23,9 +23,10 @@ async function lookupNewGraph(userInfo, mainId, graph, options, err) {
    );
 
    if (options.loadAhead) {
-      newGraph.nodes.forEach(node => {
-         lookAtSingle(node, graph, options, err);
-      });
+      for (let node of newGraph.nodes) {
+         await lookAtSingle(node, graph, options, err);
+
+      }
    }
 
    return { 
@@ -46,7 +47,6 @@ async function searchNewGraph(d, graph, options, err) {
    d.loaded.stats = "Loaded"
    d.loaded.color = "lightblue"
    d.clicked = true;
-   d.source = d.all.source;
 
    // get new graph
    let newGraph = dependenciesToNodes(
@@ -89,6 +89,9 @@ async function lookAtSingle(d, graph, options, err) {
       language: data.language,
       forks: data.forks,
       watchers: data.subscribers_count,
+      stars: data.stargazers_count,
+      openPRs: data.open_pull_request_count,
+      prMeanTime: data.pull_request_mean_time
    };
    if (!d.info) d.info = {}
    if (!d.details) d.details = {}
@@ -98,6 +101,15 @@ async function lookAtSingle(d, graph, options, err) {
    d.details.source = getGithubURL(data.username, data.repo);
    d.details.created = data.created_at;
    d.details.updated = data.updated_at;
+   d.source = d.all.source;
+
+   if (data.dependencies.length === 0) {
+      d.loaded.stats = "Loaded";
+      d.loaded.color = "lightblue";
+      d.clicked = true;
+   }
+
+
 }
 
 // -------------- nodes -------------- //
