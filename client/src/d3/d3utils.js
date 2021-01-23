@@ -11,27 +11,35 @@ const DEFAULT_CENTRAL_NODE_SIZE = 10;
 
 // -------------- axiosToD3 -------------- //
 
-async function lookupNewGraph(userInfo, mainId, graph, options, err) {
-   let {resp, error} = await lookup(userInfo, options);
+async function lookupNewGraph(userInfo, options, err) {
+   const {username, repo} = userInfo;
+   const {resp, error} = await lookup(userInfo, options);
    if (error) {err("Failed lookup!"); return;}
 
    console.log("Response Data:", resp);
-   let newGraph = dependenciesToNodes(
+
+   const mainId = username + "/" + repo;
+   const graph = {
+      nodes: [createCentralNode(mainId, username, repo, options)],
+      links: []
+   }
+
+   const dependencyNodes = dependenciesToNodes(
       resp.dependencies, mainId, 
       graph.nodes, graph.links, 
       options
    );
 
    if (options.loadAhead) {
-      for (let node of newGraph.nodes) {
+      for (let node of dependencyNodes.nodes) {
          await lookAtSingle(node, graph, options, err);
 
       }
    }
 
    return { 
-      nodes: graph.nodes.concat(newGraph.nodes),
-      links: graph.links.concat(newGraph.links)
+      nodes: graph.nodes.concat(dependencyNodes.nodes),
+      links: graph.links.concat(dependencyNodes.links)
    };
 }
 

@@ -26,60 +26,57 @@ const FORMSTYLE = {
 }
 
 const Form = props => {
-   const [username, setUsername] = useState('');
+   const [org, setOrg] = useState('');
    const [repo, setRepo] = useState('');
    const [folder, setFolder] = useState('');
    const [dbOption, setDBOption] = useState(true);
 
-   function getUserInfo() {
-      return {
-         username: username,
-         repo: repo,
-         folder: folder
-      };
-   }
-
-   function reset() {
-      setUsername('');
+   var reset = () => {
+      setOrg('');
       setRepo('');
       setFolder('');
       props.setErrorText('');
    }
 
-   var handleSubmit = async event => {
-      event.preventDefault();
-      var userInfo = getUserInfo();
+   var handleSubmit = async (o, r, f='') => {
+      var userInfo = {
+         username: o,
+         repo: r,
+         folder: f
+      };
 
-      let mainId = username + "/" + repo;
-      console.log("SUBMIT", mainId);
+      console.log("SUBMIT", userInfo);
 
-      let newGraph = {
-         nodes: [createCentralNode(mainId, username, repo, props.options)],
-         links: []
-      }
-
-      newGraph = await lookupNewGraph(
-         userInfo, mainId,
-         newGraph, props.options,
-         props.setErrorText);
-      props.setGraph(newGraph);
+      props.setGraph(
+         await lookupNewGraph(userInfo, props.options, props.setErrorText)
+      );
 
       props.setFormVisibility(false);
       reset();
    }
 
+   var checkURL = () => {
+      const urlQuerry = new URLSearchParams(window.location.search); 
+      const o = urlQuerry.get('org');
+      const r = urlQuerry.get('repo');
+      if (o && r && props.showForm) {
+         handleSubmit(o, r);
+      }
+   }
+
+   checkURL();
    let display = props.showForm ? "block" : "none";
    return (
       <div style={{display: display}}>
       <div style={FORMBACKGROUND}>
       <div style={FORMSTYLE}>
       <h1 style={props.titleStyle}>{props.title}</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={event => {event.preventDefault(); handleSubmit(org, repo, folder);}}>
          <input
             type="text"
-            value={username}
-            onChange={event => setUsername(event.target.value)}
-            placeholder="GitHub username"
+            value={org}
+            onChange={event => setOrg(event.target.value)}
+            placeholder="GitHub organization"
             required
          />
          <input
