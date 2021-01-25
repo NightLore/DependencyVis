@@ -1,8 +1,5 @@
 import React from 'react'
-import { 
-   createCentralNode, 
-   lookupNewGraph
-} from './d3/d3utils'
+import { lookupNewGraph } from './d3/d3utils'
 const { useState } = React;
 
 const FORMBACKGROUND = {

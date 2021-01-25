@@ -19,8 +19,10 @@ async function lookupNewGraph(userInfo, options, err) {
    console.log("Response Data:", resp);
 
    const mainId = username + "/" + repo;
+   const node = createCentralNode(mainId, username, repo, options);
+   node.all = resp;
    const graph = {
-      nodes: [createCentralNode(mainId, username, repo, options)],
+      nodes: [node],
       links: []
    }
 
