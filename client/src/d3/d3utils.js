@@ -20,7 +20,8 @@ async function lookupNewGraph(userInfo, options, err) {
 
    const mainId = username + "/" + repo;
    const node = createCentralNode(mainId, username, repo, options);
-   node.all = resp;
+   importData(node, resp);
+   
    const graph = {
       nodes: [node],
       links: []
@@ -54,9 +55,7 @@ async function searchNewGraph(d, graph, options, err) {
       return;
    }
 
-   d.loaded.stats = "Loaded"
-   d.loaded.color = "lightblue"
-   d.clicked = true;
+   setLoaded(d);
 
    // get new graph
    let newGraph = dependenciesToNodes(
@@ -92,6 +91,18 @@ async function lookAtSingle(d, graph, options, err) {
    }
 
    console.log("Look At Single Result:", data);
+   importData(d, data);
+   d.details.source = getGithubURL(data.username, data.repo);
+   d.source = d.all.source;
+
+   if (data.dependencies.length === 0) {
+      setLoaded(d);
+   }
+
+
+}
+
+function importData(node, data) {
    let importData = {
       size: data.size,
       archived: data.archived,
@@ -101,25 +112,20 @@ async function lookAtSingle(d, graph, options, err) {
       watchers: data.subscribers_count,
       stars: data.stargazers_count,
       openPRs: data.open_pull_request_count,
-      prMeanTime: data.pull_request_mean_time
+      closedPRs: data.closed_pull_request_count,
+      prMeanTime: data.pull_request_mean_time,
+      created: data.created_at,
+      updated: data.updated_at
    };
-   if (!d.info) d.info = {}
-   if (!d.details) d.details = {}
-   Object.assign(d.info, importData);
-   Object.assign(d.details, importData);
-   d.all = data;
-   d.details.source = getGithubURL(data.username, data.repo);
-   d.details.created = data.created_at;
-   d.details.updated = data.updated_at;
-   d.source = d.all.source;
+   if (!node.details) node.details = {}
+   Object.assign(node.details, importData);
+   node.all = data;
+}
 
-   if (data.dependencies.length === 0) {
-      d.loaded.stats = "Loaded";
-      d.loaded.color = "lightblue";
-      d.clicked = true;
-   }
-
-
+function setLoaded(node) {
+   node.loaded.stats = "Loaded";
+   node.loaded.color = "lightblue";
+   node.clicked = true;
 }
 
 // -------------- nodes -------------- //

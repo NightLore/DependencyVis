@@ -51,6 +51,20 @@ const LISTSTYLE =
  + '}\n'
  + '\n'
 
+function valueToString(key, value) {
+   let v = value;
+   switch (key) {
+      case 'created':
+      case 'updated':
+         v = new Date(value).toISOString().split('T')[0];
+         break;
+      case 'prMeanTime':
+         v = (value / 1000 / 60 / 60 / 24).toFixed(1) + ' days';
+         break;
+   }
+   return key + ": " + v;
+}
+
 const ListNode = props => {
    const [active, setActive] = useState(false);
 
@@ -77,7 +91,7 @@ const ListNode = props => {
    let nodeProps = Object.entries(node.details);
    let propElements = nodeProps.map((value, index) =>
       <li key={value[0]}>
-         <span className="bullet">{value[0] + ": " + value[1]}</span>
+         <span className="bullet">{valueToString(value[0], value[1])}</span>
       </li>
    );
 
