@@ -106,7 +106,7 @@ function importData(node, data) {
    let importData = {
       size: data.size,
       archived: data.archived,
-      license: data.license.name,
+      license: data.license ? data.license.name : data.license,
       language: data.language,
       forks: data.forks,
       watchers: data.subscribers_count,
