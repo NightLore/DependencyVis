@@ -1,6 +1,7 @@
 import * as d3 from 'd3'
 import updateTooltip from './tooltip'
 import { searchNewGraph } from './d3utils'
+import { openInNewTab } from '../utils'
 
 function drag(simulation) {
 
@@ -84,6 +85,7 @@ async function handleMouseClicked(d) {
 }
 
 function handleMouseDoubleClicked(d) {
+   openInNewTab(`?org=${d.all.username}&repo=${d.all.repo}`);
    console.log("Double Clicked", d);
 }
 
