@@ -219,6 +219,7 @@ class Graph extends Component {
             .on("mouseover", mouse.handleMouseOver.bind(graphData))
             .on("mouseout", mouse.handleMouseOut.bind(graphData))
             .on("click", mouse.handleMouseClicked.bind(graphData))
+            .on("dblclick", mouse.handleMouseDoubleClicked.bind(graphData))
 
       graphData.arrow = graphData.svgCanvas.append("g")
          .selectAll("line")

@@ -61,6 +61,7 @@ function valueToString(key, value) {
       case 'prMeanTime':
          v = (value / 1000 / 60 / 60 / 24).toFixed(1) + ' days';
          break;
+      default:
    }
    return key + ": " + v;
 }

@@ -83,11 +83,16 @@ async function handleMouseClicked(d) {
    console.log("Click processed", d);
 }
 
+function handleMouseDoubleClicked(d) {
+   console.log("Double Clicked", d);
+}
+
 const mouse = {
    drag: drag,
    handleMouseOver: handleMouseOver,
    handleMouseOut: handleMouseOut,
-   handleMouseClicked: handleMouseClicked
+   handleMouseClicked: handleMouseClicked,
+   handleMouseDoubleClicked: handleMouseDoubleClicked
 }
 
 export default mouse;
