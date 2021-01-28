@@ -15,6 +15,12 @@ let SIDEBARSTYLE = {
    bottom: 0,
 }
 
+const LISTCONTAINERSTYLE = {
+   //resize: "horizontal", 
+   overflow: "auto", 
+   height: "-webkit-fill-available"
+}
+
 const LISTSTYLE = 
    '.caret::before {\n'
  + '  content: "\\25B6";\n' // Unicode for small right-pointing black triangle
@@ -112,6 +118,29 @@ const ListNode = props => {
 
 };
 
+const CloseDropdownButton = props => {
+   const closeNodes = () => {
+      props.nodes.forEach(node => {
+         node.active = false;
+      });
+      props.toggleUpdate();
+   }
+
+   return (
+      <button 
+         style={{
+            top: "0px",
+            right: "0px",
+            height: "1em",
+            position: "absolute", 
+            translate: "translate(100%, 0%)",
+         }} 
+         onClick={closeNodes}>
+         {" "}
+      </button>
+   );
+}
+
 class Sidebar extends Component {
    constructor(props) {
       super(props);
@@ -119,6 +148,7 @@ class Sidebar extends Component {
          width: 0,
          height: 0,
          isHidden: false,
+         update: false,
       };
    }
 
@@ -128,6 +158,9 @@ class Sidebar extends Component {
    };
    setHidden = hidden => {
       this.setState({isHidden: hidden});
+   }
+   toggleUpdate = () => {
+      this.setState({update: !this.state.update});
    }
 
    // ---------------- render functions ---------- //
@@ -150,10 +183,14 @@ class Sidebar extends Component {
 
       return (
          <div style={style}>
-            <div style={{overflow: "auto", height: "-webkit-fill-available"}}>
+            <div style={LISTCONTAINERSTYLE}>
                <style>{LISTSTYLE}</style>
                <ul className='sidebar-list'>{nodes}</ul>
             </div>
+            <CloseDropdownButton
+               nodes={this.props.nodes}
+               toggleUpdate={this.toggleUpdate}
+            />
             <HideButton
                isHidden={this.state.isHidden}
                setHidden={this.setHidden}
