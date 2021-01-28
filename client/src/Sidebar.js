@@ -52,26 +52,25 @@ const LISTSTYLE =
  + '\n'
 
 function valueToString(key, value) {
+   if (!value) return "";
    let v = value;
    switch (key) {
       case 'created':
       case 'updated':
-         v = new Date(value).toISOString().split('T')[0];
+         v = value.split('T')[0];
          break;
       case 'prMeanTime':
-         v = (value / 1000 / 60 / 60 / 24).toFixed(1) + ' days';
+         v = `${(value / 1000 / 60 / 60 / 24).toFixed(1)} days`;
          break;
       default:
    }
-   return key + ": " + v;
+   return `${key}: ${v}`;
 }
 
 const ListNode = props => {
-   const [active, setActive] = useState(false);
-
-   const toggleActive = () => setActive(!active);
-
-   let node = props.node;
+   const [active, setActive] = useState(false); // solely to update when clicked
+   const node = props.node;
+   const toggleActive = () => {node.active = !node.active; setActive(!active);}
 
    if (!node.details) {
       return (
@@ -81,7 +80,7 @@ const ListNode = props => {
       );
    }
 
-   if (!active) {
+   if (!node.active) {
       return (
          <li>
             <span className="caret" onClick={toggleActive}>{node.id}</span>
@@ -90,11 +89,17 @@ const ListNode = props => {
    }
 
    let nodeProps = Object.entries(node.details);
-   let propElements = nodeProps.map((value, index) =>
-      <li key={value[0]}>
-         <span className="bullet">{valueToString(value[0], value[1])}</span>
-      </li>
-   );
+   let propElements = nodeProps.reduce((elements, value) => {
+      const str = valueToString(value[0], value[1]);
+      if (str) {
+         elements.push(
+            <li key={value[0]}>
+               <span className="bullet">{str}</span>
+            </li>
+         );
+      }
+      return elements;
+   });
 
    return (
       <li>

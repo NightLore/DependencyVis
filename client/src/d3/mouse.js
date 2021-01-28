@@ -60,7 +60,8 @@ function handleMouseOut(d) {
 }
 
 async function handleMouseClicked(d) {
-   if (d.clicked) return;
+   d.active = true;
+   if (d.clicked) {this.props.setNodesChanged(true); return;}
 
    // set load state
    d.color = "lightgrey"; // loading color
