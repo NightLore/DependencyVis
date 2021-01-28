@@ -43,8 +43,8 @@ function handleMouseOver(d) {
          .style("opacity", 0.9)
 
    this.tooltip.selectAll("rect")
-         .attr("x", this.rectX + "px")
-         .attr("y", this.rectY + "px")
+         .attr("x", `${this.rectX}px`)
+         .attr("y", `${this.rectY}px`)
 
    updateTooltip(this.tooltip, d, this);
 }

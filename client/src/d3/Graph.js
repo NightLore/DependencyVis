@@ -195,7 +195,7 @@ class Graph extends Component {
             .attr("markerWidth", arrowSize)
             .attr("markerHeight", arrowSize * 4 / 5)
          .append("path")
-            .attr("d", "M 0 " + (-arrowSize/2) + " L " + arrowSize + " 0 L 0 " + arrowSize/2)
+            .attr("d", `M 0 ${-arrowSize/2} L ${arrowSize} 0 L 0 ${arrowSize/2}`)
             .attr("fill", "#888")
 
       graphData.link = graphData.svgCanvas.append("g")
