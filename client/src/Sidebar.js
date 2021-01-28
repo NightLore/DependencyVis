@@ -57,6 +57,48 @@ const LISTSTYLE =
  + '}\n'
  + '\n'
 
+const TOOLTIP_COLOR = "#555";
+const TOOLTIP_ARROW_SIZE = "5px";
+const TOOLTIP_STYLE = ""
+ + "\n.tooltip {"
+ + "\n   position: relative;"
+ + "\n}"
+ + "\n"
+ + "\n.tooltip .tooltiptext {"
+ + "\n   visibility: hidden;"
+ + "\n   background-color: " + TOOLTIP_COLOR + ";"
+ + "\n   color: #fff;"
+ + "\n   text-align: center;"
+ + "\n   border-radius: 6px;"
+ + "\n   padding: 0 " + TOOLTIP_ARROW_SIZE + " " + TOOLTIP_ARROW_SIZE + " " + TOOLTIP_ARROW_SIZE + ";"
+ + "\n"
+ + "\n   position: absolute;"
+ + "\n   z-index: 11;"
+ + "\n   top: 0%;"
+ + "\n   right: 105%;"
+ + "\n   opacity: 0;"
+ + "\n   transition: opacity 0.3s;"
+ + "\n   width: fit-content;"
+ + "\n}"
+ + "\n"
+ + "\n.tooltip .tooltiptext::after {"
+ + "\n   content: \"\";"
+ + "\n   position: absolute;"
+ + "\n   top: 10px;"
+ + "\n   left: 100%;"
+ + "\n   margin-top: -" + TOOLTIP_ARROW_SIZE + ";"
+ + "\n   border-width: " + TOOLTIP_ARROW_SIZE + ";"
+ + "\n   border-style: solid;"
+ + "\n   border-color: transparent transparent transparent " + TOOLTIP_COLOR + ";"
+ + "\n}"
+ + "\n"
+ + "\n.tooltip:hover .tooltiptext {"
+ + "\n   visibility: visible;"
+ + "\n   opacity: 1;"
+ + "\n}"
+ + "\n"
+ + "\n";
+
 function valueToString(key, value) {
    if (!value) return "";
    let v = value;
@@ -127,7 +169,7 @@ const CloseDropdownButton = props => {
    }
 
    return (
-      <button 
+      <button className={"tooltip"}
          style={{
             top: "0px",
             right: "0px",
@@ -136,7 +178,7 @@ const CloseDropdownButton = props => {
             translate: "translate(100%, 0%)",
          }} 
          onClick={closeNodes}>
-         {" "}
+         <span className={"tooltiptext"}>{"Close All Dropdowns"}</span>
       </button>
    );
 }
@@ -183,6 +225,7 @@ class Sidebar extends Component {
 
       return (
          <div style={style}>
+            <style>{TOOLTIP_STYLE}</style>
             <div style={LISTCONTAINERSTYLE}>
                <style>{LISTSTYLE}</style>
                <ul className='sidebar-list'>{nodes}</ul>
