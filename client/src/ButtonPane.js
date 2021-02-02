@@ -1,17 +1,7 @@
 import React, { Component } from 'react';
+import './css/ButtonPane.css'
 import HideButton, { TRANSFORMS } from './HideButton';
 import { searchNewGraph } from './d3/d3utils';
-
-const STYLE = {
-   position: "absolute",
-   padding: "0px 2px 2px 2px",
-   margin: "1px auto auto auto",
-   zIndex: 4,
-   left: 0,
-   right: 0,
-   width: "fit-content",
-   backgroundColor: "lightsteelblue"
-}
 
 class ButtonPane extends Component {
    constructor(props) {
@@ -45,7 +35,7 @@ class ButtonPane extends Component {
    }
 
    render() {
-      let style = Object.assign({}, STYLE);
+      let style = {};
       if (this.state.isHidden)
          style.transform = TRANSFORMS.UP;
 
@@ -53,16 +43,9 @@ class ButtonPane extends Component {
          nodes: this.props.nodes,
          links: this.props.links
       };
-      /*
-      return (
-         <div style={style}>
-            <button type="button" onClick={e => this.loadNextLayer(graph)}>Load Next Layer</button>
-         </div>
-      );
-      */
 
       return (
-         <div id="ButtonPane" style={style}>
+         <div id="button-pane" style={style}>
             <button type="button" onClick={e => this.loadNextLayer(graph)}>Load Next Layer</button>
             <HideButton
                isHidden={this.state.isHidden}

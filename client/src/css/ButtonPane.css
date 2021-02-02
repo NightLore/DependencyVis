@@ -1,0 +1,11 @@
+
+#button-pane {
+   position: absolute;
+   padding: 0px 2px 2px 2px;
+   margin: 1px auto auto auto;
+   z-index: 4;
+   left: 0;
+   right: 0;
+   width: fit-content;
+   background-color: lightsteelblue;
+}
