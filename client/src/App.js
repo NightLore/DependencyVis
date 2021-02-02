@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './css/App.css';
 import Graph from './d3/Graph';
 import Sidebar from './Sidebar';
 import Form from './Form';
@@ -9,14 +9,6 @@ import ButtonPane from './ButtonPane';
 import ErrorText from './ErrorText';
 
 const { useState } = React;
-
-const TITLE = "DependencyVis"
-const TITLESTYLE = {
-   fontSize: "4em",
-   fontStyle: "italic",
-   textAlign: "center",
-   color: "rgb(75, 35, 92)",
-}
 
 const TOP_RIGHT_STYLE = {
    position: "absolute",
@@ -66,8 +58,6 @@ const App = () => {
    return (
       <div id="App">
          <Form 
-            title={TITLE}
-            titleStyle={TITLESTYLE}
             setGraph={setGraph}
             setErrorText={setErrorText}
             showForm={showForm}

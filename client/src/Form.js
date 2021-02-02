@@ -1,26 +1,7 @@
-import React from 'react'
-import { lookupNewGraph } from './d3/d3utils'
+import React from 'react';
+import './css/Form.css';
+import { lookupNewGraph } from './d3/d3utils';
 const { useState } = React;
-
-const FORMBACKGROUND = {
-   zIndex: "5",
-   backgroundColor: "rgb(191, 226, 227)",
-
-   position: "absolute",
-   width: "100%",
-   height: "100%",
-}
-
-const FORMSTYLE = {
-   width: "fit-content",
-
-   // center on page 
-   position: "absolute",
-   margin: "auto",
-   left: "50%",
-   top: "30%",
-   transform: "translate(-50%, -50%)",
-}
 
 const Form = props => {
    const [org, setOrg] = useState('');
@@ -51,6 +32,10 @@ const Form = props => {
       props.setFormVisibility(false);
       reset();
    }
+   var handleSubmitEvent = event => {
+      event.preventDefault(); 
+      handleSubmit(org, repo, folder);
+   }
 
    var checkURL = () => {
       const urlQuerry = new URLSearchParams(window.location.search); 
@@ -62,13 +47,12 @@ const Form = props => {
    }
 
    checkURL();
-   let display = props.showForm ? "block" : "none";
    return (
-      <div style={{display: display}}>
-      <div style={FORMBACKGROUND}>
-      <div style={FORMSTYLE}>
-      <h1 style={props.titleStyle}>{props.title}</h1>
-      <form onSubmit={event => {event.preventDefault(); handleSubmit(org, repo, folder);}}>
+      <div style={{display: props.showForm ? "block" : "none"}}>
+      <div id='form_background'>
+      <div id='form'>
+      <h1 id='form_title'>{"DependencyVis"}</h1>
+      <form onSubmit={handleSubmitEvent}>
          <input
             type="text"
             value={org}
