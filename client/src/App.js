@@ -9,14 +9,6 @@ import ButtonPane from './ButtonPane';
 import ErrorText from './ErrorText';
 
 const { useState } = React;
-
-const TOP_RIGHT_STYLE = {
-   position: "absolute",
-   top: "0px",
-   right: "0px",
-   display: "flex",
-}
-
 const App = () => {
    const [nodes, setNodes] = useState([]);
    const [links, setLinks] = useState([]);
@@ -72,7 +64,7 @@ const App = () => {
             nodes={nodes} 
             links={links}
          />
-         <div style={TOP_RIGHT_STYLE}>
+         <div className='top-right'>
             <ColorLegend
                colorOption={colorOption}
             />

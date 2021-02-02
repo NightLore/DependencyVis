@@ -1,102 +1,51 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import './css/Sidebar.css';
 import HideButton, { TRANSFORMS } from './HideButton';
 import { getDocumentSize } from './utils';
 
 const { useState } = React;
 
-let SIDEBARSTYLE = {
-   margin: "1px",
-   position: "absolute",
-   zIndex: "4",
-   display: "inline-block", 
-   backgroundColor: "lightsteelblue",
-   width: 200,
-   top: 0,
-   bottom: 0,
-}
-
-const LISTCONTAINERSTYLE = {
-   //resize: "horizontal", 
-   overflow: "auto", 
-   height: "-webkit-fill-available"
-}
-
-const LISTSTYLE = 
-   '.caret::before {\n'
- + '  content: "\\25B6";\n' // Unicode for small right-pointing black triangle
- + '  color: black;\n'
- + '  display: inline-block;\n'
- + '  margin-right: 0.5em;\n'
- + '}\n'
- + '\n'
- + '.caret-down::before {\n'
- + '  -ms-transform: rotate(90deg);\n' /* IE 9 */
- + '  -webkit-transform: rotate(90deg);\n' /* Safari */
- + '  transform: rotate(90deg);\n'  
- + '}\n'
- + '\n'
- + '.caret {\n'
- + '  cursor: pointer;\n'
- + '  -webkit-user-select: none;\n' // Safari 3.1+
- + '  -moz-user-select: none;\n' // Firefox 2+
- + '  -ms-user-select: none;\n' // IE 10+
- + '  user-select: none;\n'
- + '  list-style-type: none;\n'
- + '}\n'
- + '\n'
- + '.bullet::before {\n'
- + '  content: "\\25AA";\n' // Unicode for small square
- + '  color: black;\n'
- + '  margin-right: 0.5em;\n'
- + '}\n'
- + '\n'
- + 'ul, .sidebar-list {\n'
- + '  margin: 0;\n'
- + '  padding-left: 0.5em;\n'
- + '  list-style-type: none\n'
- + '}\n'
- + '\n'
-
 const TOOLTIP_COLOR = "#555";
 const TOOLTIP_ARROW_SIZE = "5px";
 const TOOLTIP_STYLE = ""
- + "\n.tooltip {"
+ + "\n.sidebar-tooltip {"
  + "\n   position: relative;"
  + "\n}"
  + "\n"
- + "\n.tooltip .tooltiptext {"
+ + "\n.sidebar-tooltip .sidebar-tooltiptext {"
  + "\n   visibility: hidden;"
- + "\n   background-color: " + TOOLTIP_COLOR + ";"
+ + `\n   background-color: ${TOOLTIP_COLOR};`
  + "\n   color: #fff;"
  + "\n   text-align: center;"
  + "\n   border-radius: 6px;"
- + "\n   padding: 0 " + TOOLTIP_ARROW_SIZE + " " + TOOLTIP_ARROW_SIZE + " " + TOOLTIP_ARROW_SIZE + ";"
+ + `\n   padding: ${TOOLTIP_ARROW_SIZE};`
  + "\n"
  + "\n   position: absolute;"
  + "\n   z-index: 11;"
- + "\n   top: 0%;"
- + "\n   right: 105%;"
+ + "\n   top: 150%;"
+ + "\n   left: 50%;"
  + "\n   opacity: 0;"
  + "\n   transition: opacity 0.3s;"
  + "\n   width: fit-content;"
+ + "\n   transform: translate(-50%, 0%);"
  + "\n}"
  + "\n"
- + "\n.tooltip .tooltiptext::after {"
+ + "\n.sidebar-tooltip .sidebar-tooltiptext::after {"
  + "\n   content: \"\";"
  + "\n   position: absolute;"
- + "\n   top: 10px;"
- + "\n   left: 100%;"
- + "\n   margin-top: -" + TOOLTIP_ARROW_SIZE + ";"
- + "\n   border-width: " + TOOLTIP_ARROW_SIZE + ";"
+ + `\n   top: -${TOOLTIP_ARROW_SIZE};`
+ + "\n   left: 50%;"
+ + `\n   margin-top: -${TOOLTIP_ARROW_SIZE};`
+ + `\n   border-width: ${TOOLTIP_ARROW_SIZE};`
  + "\n   border-style: solid;"
- + "\n   border-color: transparent transparent transparent " + TOOLTIP_COLOR + ";"
+ + `\n   border-color: transparent transparent ${TOOLTIP_COLOR} transparent;`
+ + "\n   transform: translate(-50%, 0%);"
  + "\n}"
  + "\n"
- + "\n.tooltip:hover .tooltiptext {"
+ + "\n.sidebar-tooltip:hover .sidebar-tooltiptext {"
  + "\n   visibility: visible;"
  + "\n   opacity: 1;"
  + "\n}"
- + "\n"
  + "\n";
 
 function valueToString(key, value) {
@@ -123,7 +72,7 @@ const ListNode = props => {
    if (!node.details) {
       return (
          <li>
-            <span className="bullet">{node.id}</span>
+            <span className='sidebar-bullet'>{node.id}</span>
          </li>
       );
    }
@@ -131,27 +80,26 @@ const ListNode = props => {
    if (!node.active) {
       return (
          <li>
-            <span className="caret" onClick={toggleActive}>{node.id}</span>
+            <span className='sidebar-caret' onClick={toggleActive}>{node.id}</span>
          </li>
       );
    }
 
-   let nodeProps = Object.entries(node.details);
-   let propElements = nodeProps.reduce((elements, value) => {
+   const propElements = Object.entries(node.details).reduce((elements, value) => {
       const str = valueToString(value[0], value[1]);
       if (str) {
          elements.push(
             <li key={value[0]}>
-               <span className="bullet">{str}</span>
+               <span className='sidebar-bullet'>{str}</span>
             </li>
          );
       }
       return elements;
-   });
+   }, []);
 
    return (
       <li>
-         <span className="caret caret-down" onClick={toggleActive}>{node.id}</span>
+         <span className='sidebar-caret sidebar-caret-down' onClick={toggleActive}>{node.id}</span>
          <ul style={{marginLeft: "0.5em"}}>
             {propElements}
          </ul>
@@ -169,16 +117,10 @@ const CloseDropdownButton = props => {
    }
 
    return (
-      <button className={"tooltip"}
-         style={{
-            top: "0px",
-            right: "0px",
-            height: "1em",
-            position: "absolute", 
-            translate: "translate(100%, 0%)",
-         }} 
-         onClick={closeNodes}>
-         <span className={"tooltiptext"}>{"Close All Dropdowns"}</span>
+      <button id='sidebar-close-button' 
+              className={'sidebar-tooltip'} 
+              onClick={closeNodes}>
+         <span className={'sidebar-tooltiptext'}>{'Close All Dropdowns'}</span>
       </button>
    );
 }
@@ -219,15 +161,14 @@ class Sidebar extends Component {
       let nodes = this.props.nodes.map(
          (value, index) => <ListNode key={value.id} node={value}/>
       );
-      let style = Object.assign({}, SIDEBARSTYLE);
+      let style = {};
       if (this.state.isHidden)
          style.transform = TRANSFORMS.LEFT;
 
       return (
-         <div style={style}>
+         <div id='sidebar' style={style}>
             <style>{TOOLTIP_STYLE}</style>
-            <div style={LISTCONTAINERSTYLE}>
-               <style>{LISTSTYLE}</style>
+            <div id='sidebar-list-container'>
                <ul className='sidebar-list'>{nodes}</ul>
             </div>
             <CloseDropdownButton

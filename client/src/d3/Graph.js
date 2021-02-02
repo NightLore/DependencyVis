@@ -1,16 +1,9 @@
 import React, { Component } from 'react'
+import '../css/Graph.css'
 import * as d3 from 'd3'
 import mouse from './mouse'
 import { updateNodes } from './d3utils'
 import { getDocumentSize } from '../utils';
-
-const DIVSTYLE = {
-   position: "absolute",
-   top: 0,
-   right: 0,
-   bottom: 0,
-   left: 0,
-}
 
 const SIMULATION = {
    STRENGTH: 45,
@@ -125,7 +118,7 @@ class Graph extends Component {
 
          console.log("Changed", this.props.nodes);
       }
-      return <div id="graph" style={DIVSTYLE} ref={this._setRef.bind(this)}/> 
+      return <div id="graph" ref={this._setRef.bind(this)}/> 
    }
 
    /*
