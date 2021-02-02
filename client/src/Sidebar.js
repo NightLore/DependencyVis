@@ -49,7 +49,7 @@ const ListNode = props => {
    if (!node.details) {
       return (
          <li>
-            <span className='sidebar-bullet'>{node.id}</span>
+            <span className={'sidebar-bullet'}>{node.id}</span>
          </li>
       );
    }
@@ -57,7 +57,9 @@ const ListNode = props => {
    if (!node.active) {
       return (
          <li>
-            <span className='sidebar-caret' onClick={toggleActive}>{node.id}</span>
+         <span className={'sidebar-caret'} onClick={toggleActive}>
+            {node.id}
+         </span>
          </li>
       );
    }
@@ -67,7 +69,7 @@ const ListNode = props => {
       if (str) {
          elements.push(
             <li key={value[0]}>
-               <span className='sidebar-bullet'>{str}</span>
+               <span className={'sidebar-bullet'}>{str}</span>
             </li>
          );
       }
@@ -76,7 +78,7 @@ const ListNode = props => {
 
    return (
       <li>
-         <span className='sidebar-caret sidebar-caret-down' onClick={toggleActive}>{node.id}</span>
+         <span className={'sidebar-caret sidebar-caret-down'} onClick={toggleActive}>{node.id}</span>
          <ul style={{marginLeft: "0.5em"}}>
             {propElements}
          </ul>
@@ -94,7 +96,7 @@ const CloseDropdownButton = props => {
    }
 
    return (
-      <button id='sidebar-close-button' 
+      <button id={'sidebar-close-button'}
               className={'sidebar-tooltip'} 
               onClick={closeNodes}>
          <span className={'sidebar-tooltiptext'}>{'Close All Dropdowns'}</span>
@@ -143,10 +145,10 @@ class Sidebar extends Component {
          style.transform = TRANSFORMS.LEFT;
 
       return (
-         <div id='sidebar' style={style}>
+         <div id={'sidebar'} style={style}>
             <style>{TOOLTIP_STYLE}</style>
-            <div id='sidebar-list-container'>
-               <ul className='sidebar-list'>{nodes}</ul>
+            <div id={'sidebar-list-container'}>
+               <ul className={'sidebar-list'}>{nodes}</ul>
             </div>
             <CloseDropdownButton
                nodes={this.props.nodes}
@@ -155,7 +157,7 @@ class Sidebar extends Component {
             <HideButton
                isHidden={this.state.isHidden}
                setHidden={this.setHidden}
-               direction={"right"}
+               direction={'right'}
             />
          </div>
       )

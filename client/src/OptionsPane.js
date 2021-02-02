@@ -1,90 +1,42 @@
-import React, { Component } from 'react'
-import HideButton, { TRANSFORMS } from './HideButton'
-import OPTIONS, { createHandlers } from './Options'
+import React, { Component } from 'react';
+import './css/OptionsPane.css';
+import HideButton, { TRANSFORMS } from './HideButton';
+import OPTIONS, { createHandlers } from './Options';
 
 const PANE_TITLE = "Options";
 
 // -------------- Styles ------------- //
-const STYLE = {
-   margin: "1px",
-   padding: "0.5em 1em 1em 1em",
-   zIndex: "4",
-   position: "relative",
-   width: "fit-content",
-   height: "fit-content",
-   backgroundColor: "lightsteelblue",
-   display: "inline-block"
-}
-
-const PANE_TITLE_STYLE = {
-   margin: "0px",
-   textAlign: "center",
-   fontWeight: "bold",
-   fontStyle: "italic",
-   fontSize: "large",
-}
-
-const HEADER_STYLE = {
-   margin: "0.5em 0 0 0",
-   fontWeight: "bold"
-}
-
-const BUTTON_STYLE = {
-   margin: 0
-}
 
 const TOOLTIP_COLOR = "#555";
+const TOOLTIP_TEXT_COLOR = "#fff";
 const TOOLTIP_ARROW_SIZE = "5px";
 const TOOLTIP_STYLE = ""
- + "\n.tooltip {"
- + "\n   position: relative;"
- + "\n}"
+ + "\n.options-tooltip .options-tooltiptext {"
+ + `\n   background-color: ${TOOLTIP_COLOR};`
+ + `\n   color: ${TOOLTIP_TEXT_COLOR};`
+ + `\n   padding: 0 ${TOOLTIP_ARROW_SIZE} ${TOOLTIP_ARROW_SIZE} ${TOOLTIP_ARROW_SIZE};`
  + "\n"
- + "\n.tooltip .tooltiptext {"
- + "\n   visibility: hidden;"
- + "\n   background-color: " + TOOLTIP_COLOR + ";"
- + "\n   color: #fff;"
- + "\n   text-align: center;"
- + "\n   border-radius: 6px;"
- + "\n   padding: 0 " + TOOLTIP_ARROW_SIZE + " " + TOOLTIP_ARROW_SIZE + " " + TOOLTIP_ARROW_SIZE + ";"
- + "\n"
- + "\n   position: absolute;"
- + "\n   z-index: 11;"
  + "\n   top: 0%;"
  + "\n   right: 105%;"
- + "\n   opacity: 0;"
- + "\n   transition: opacity 0.3s;"
- + "\n   width: fit-content;"
  + "\n}"
  + "\n"
- + "\n.tooltip .tooltiptext::after {"
- + "\n   content: \"\";"
- + "\n   position: absolute;"
+ + "\n.options-tooltip .options-tooltiptext::after {"
  + "\n   top: 10px;"
  + "\n   left: 100%;"
- + "\n   margin-top: -" + TOOLTIP_ARROW_SIZE + ";"
- + "\n   border-width: " + TOOLTIP_ARROW_SIZE + ";"
- + "\n   border-style: solid;"
- + "\n   border-color: transparent transparent transparent " + TOOLTIP_COLOR + ";"
+ + `\n   margin-top: -${TOOLTIP_ARROW_SIZE};`
+ + `\n   border-width: ${TOOLTIP_ARROW_SIZE};`
+ + `\n   border-color: transparent transparent transparent ${TOOLTIP_COLOR};`
  + "\n}"
- + "\n"
- + "\n.tooltip:hover .tooltiptext {"
- + "\n   visibility: visible;"
- + "\n   opacity: 1;"
- + "\n}"
- + "\n"
  + "\n";
-
-
 
 // -------------- Radio Button ------------- //
 
 const RadioButton = props => {
    return (
-      <p className={"tooltip"} style={BUTTON_STYLE}>
+      <p className={'options-tooltip options-choice'}>
       <label>
          <input 
-            type="radio" 
+            type='radio' 
             id={props.name}
             name={props.group}
             value={props.name}
@@ -93,7 +45,7 @@ const RadioButton = props => {
          />
          {props.contents}
       </label>
-      <span className={"tooltiptext"}>{props.tooltip}</span>
+      <span className={'options-tooltiptext'}>{props.tooltip}</span>
       </p>
    )
 }
@@ -111,18 +63,18 @@ class OptionsPane extends Component {
    handlers = createHandlers(this.props);
 
    render() {
-      let style = Object.assign({}, STYLE);
+      let style = {};
       if (this.state.isHidden)
          style.transform = TRANSFORMS.UP;
 
       // set pane title
       let toRender = [(
-            <style key={"style"}>
+            <style key={'style'}>
                {TOOLTIP_STYLE}
             </style>
          ), (
-            <p key={"pane_title"} 
-               style={PANE_TITLE_STYLE}>
+            <p key={'pane_title'}
+               className={'options-title'}>
                {PANE_TITLE}
             </p>
          )
@@ -132,7 +84,7 @@ class OptionsPane extends Component {
          // push option's title element
          toRender.push(
             <p key={index}
-               style={HEADER_STYLE}>
+               className={'options-header'}>
                {opt.TITLE}
             </p>
          );
@@ -154,12 +106,12 @@ class OptionsPane extends Component {
       });
 
       return (
-         <div style={style}>
+         <div id={'options'} style={style}>
             {toRender}
             <HideButton
                isHidden={this.state.isHidden}
                setHidden={this.setHidden}
-               direction={"down"}
+               direction={'down'}
             />
          </div>
       );

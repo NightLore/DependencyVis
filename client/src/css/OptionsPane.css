@@ -1,0 +1,56 @@
+
+#options {
+   margin: 1px;
+   padding: 0.5em 1em 1em 1em;
+   z-index: 4;
+   position: relative;
+   width: fit-content;
+   height: fit-content;
+   background-color: lightsteelblue;
+   display: inline-block;
+}
+
+.options-title {
+   margin: 0px;
+   text-align: center;
+   font-weight: bold;
+   font-style: italic;
+   font-size: large;
+}
+
+.options-header {
+   margin: 0.5em 0 0 0;
+   font-weight: bold;
+}
+
+.options-choice {
+   margin: 0;
+}
+
+/* ------------ Tooltip ------------ */
+.options-tooltip {
+   position: relative;
+}
+
+.options-tooltip .options-tooltiptext {
+   visibility: hidden;
+   text-align: center;
+   border-radius: 6px;
+   
+   position: absolute;
+   z-index: 11;
+   opacity: 0;
+   transition: opacity 0.3s;
+   width: fit-content;
+}
+
+.options-tooltip .options-tooltiptext::after {
+   content: '';
+   position: absolute;
+   border-style: solid;
+}
+
+.options-tooltip:hover .options-tooltiptext {
+   visibility: visible;
+   opacity: 1;
+}
