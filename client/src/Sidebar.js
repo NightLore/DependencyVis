@@ -6,45 +6,22 @@ import { getDocumentSize } from './utils';
 const { useState } = React;
 
 const TOOLTIP_COLOR = "#555";
+const TOOLTIP_TEXT_COLOR = "#fff";
 const TOOLTIP_ARROW_SIZE = "5px";
 const TOOLTIP_STYLE = ""
- + "\n.sidebar-tooltip {"
- + "\n   position: relative;"
- + "\n}"
- + "\n"
  + "\n.sidebar-tooltip .sidebar-tooltiptext {"
- + "\n   visibility: hidden;"
  + `\n   background-color: ${TOOLTIP_COLOR};`
- + "\n   color: #fff;"
- + "\n   text-align: center;"
- + "\n   border-radius: 6px;"
+ + `\n   color: ${TOOLTIP_TEXT_COLOR};`
  + `\n   padding: ${TOOLTIP_ARROW_SIZE};`
- + "\n"
- + "\n   position: absolute;"
- + "\n   z-index: 11;"
- + "\n   top: 150%;"
- + "\n   left: 50%;"
- + "\n   opacity: 0;"
- + "\n   transition: opacity 0.3s;"
- + "\n   width: fit-content;"
- + "\n   transform: translate(-50%, 0%);"
  + "\n}"
  + "\n"
  + "\n.sidebar-tooltip .sidebar-tooltiptext::after {"
- + "\n   content: \"\";"
- + "\n   position: absolute;"
  + `\n   top: -${TOOLTIP_ARROW_SIZE};`
  + "\n   left: 50%;"
  + `\n   margin-top: -${TOOLTIP_ARROW_SIZE};`
  + `\n   border-width: ${TOOLTIP_ARROW_SIZE};`
- + "\n   border-style: solid;"
  + `\n   border-color: transparent transparent ${TOOLTIP_COLOR} transparent;`
  + "\n   transform: translate(-50%, 0%);"
- + "\n}"
- + "\n"
- + "\n.sidebar-tooltip:hover .sidebar-tooltiptext {"
- + "\n   visibility: visible;"
- + "\n   opacity: 1;"
  + "\n}"
  + "\n";
 

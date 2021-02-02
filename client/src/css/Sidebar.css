@@ -50,11 +50,46 @@ ul, .sidebar-list {
    list-style-type: none;
 }
 
-#sidebar-close-button {
+/* ----------------- Close Button --------------- */
+#sidebar-close-button::before {
    content: '\25B2';
+   color: black;
+}
+
+#sidebar-close-button {
    top: 0px;
    right: 0px;
-   height: 1em;
    position: absolute;
    transform: translate(100%, 0%);
+}
+
+/* ----------------- Tooltip --------------- */
+.sidebar-tooltip {
+   position: relative;
+}
+
+.sidebar-tooltip .sidebar-tooltiptext {
+   visibility: hidden;
+   text-align: center;
+   border-radius: 6px;
+
+   position: absolute;
+   z-index: 11;
+   top: 150%;
+   left: 50%;
+   opacity: 0;
+   transition: opacity 0.3s;
+   width: fit-content;
+   transform: translate(-50%, 0%);
+}
+
+.sidebar-tooltip .sidebar-tooltiptext::after {
+   content: "";
+   position: absolute;
+   border-style: solid;
+}
+
+.sidebar-tooltip:hover .sidebar-tooltiptext {
+   visibility: visible;
+   opacity: 1;
 }
