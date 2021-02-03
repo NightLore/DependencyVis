@@ -1,0 +1,47 @@
+
+#colorlegend {
+   margin: 1px;
+   padding: 0.5em 1em 1em 1em;
+   z-index: 4;
+   position: relative;
+   width: fit-content;
+   height: fit-content;
+   background-color: lightsteelblue;
+   display: inline-block;
+}
+
+#colorlegend-title {
+   margin: 0px;
+   text-align: center;
+   font-weight: bold;
+   font-style: italic;
+   font-size: large;
+}
+
+.colorlegend-table {
+   border-collapse: collapse;
+}
+
+.colorlegend-th {
+  border-bottom: 1px solid black;
+}
+
+.colorlegend-left {
+  border-right: 1px solid black;
+  padding-right: 0.4em;
+}
+
+.colorlegend-right {
+  padding-left: 0.4em;
+}
+
+.colorlegend-circle {
+  display: block;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  margin: auto;
+  color: #fff;
+  line-height: 10px;
+  text-align: center;
+}
