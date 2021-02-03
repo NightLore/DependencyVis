@@ -1,11 +1,7 @@
-import React from 'react'
+import React from 'react';
+import './css/HideButton.css';
 
-const HIDEBUTTONSTYLE = {
-   position: "absolute",
-   padding: "0px"
-}
-
-function OpenState(open, close, x, y) {
+function OpenState(open, close, x, y, w, h) {
    let tx = x - 100;
    let ty = y - 100;
    return {
@@ -13,6 +9,8 @@ function OpenState(open, close, x, y) {
       CLOSE: close,
       LEFT: `${x}%`,
       TOP: `${y}%`,
+      WIDTH: `${w}`,
+      HEIGHT: `${h}`,
       TRANSFORM: `translate(${tx}%, ${ty}%)`
    }
 }
@@ -26,34 +24,39 @@ const TRANSFORMS = {
 
 const OPEN_STATES = {
    // double down angle brackets, double up angle brackets
-   UP: OpenState(" \uFE3E ", " \uFE3D ", 50, 0),
+   UP: OpenState(" \uFE3E ", " \uFE3D ", 50, 0, '2em', '1em'),
 
    // double left carets, double right carets
-   RIGHT: OpenState("\u27EA", "\u27EB", 100, 50),
+   RIGHT: OpenState("\u27EA", "\u27EB", 100, 50, '1em', '2em'),
 
    // double up angle brackets, double down angle brackets
-   DOWN: OpenState(" \uFE3D ", " \uFE3E ", 50, 100),
+   DOWN: OpenState(" \uFE3D ", " \uFE3E ", 50, 100, '2em', '1em'),
    
    // double right carets, double left carets
-   LEFT: OpenState("\u27EB", "\u27EA", 0, 50),
+   LEFT: OpenState("\u27EB", "\u27EA", 0, 50, '1em', '2em'),
 }
 
 const HideButton = props => {
    const toggleHidden = () => {
       props.setHidden(!props.isHidden);
    };
-   let state = OPEN_STATES[props.direction.toUpperCase()];
-   let style = Object.assign({}, HIDEBUTTONSTYLE);
-   style.top = state.TOP;
-   style.left = state.LEFT;
-   style.transform = state.TRANSFORM;
+   const state = OPEN_STATES[props.direction.toUpperCase()];
+   const style = {
+      top: state.TOP,
+      left: state.LEFT,
+      width: state.WIDTH,
+      height: state.HEIGHT,
+      lineHeight: state.HEIGHT,
+      transform: state.TRANSFORM
+   };
 
    let buttonContents 
       = props.isHidden ? state.CLOSE : state.OPEN;
 
    return (
-      <button style={style} 
-            onClick={toggleHidden}>
+      <button className={'hide-button'}
+              style={style} 
+              onClick={toggleHidden}>
          {buttonContents}
       </button>
    )

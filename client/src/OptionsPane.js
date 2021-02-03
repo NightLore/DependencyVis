@@ -1,39 +1,14 @@
 import React, { Component } from 'react';
 import './css/OptionsPane.css';
+import './css/tooltip.css';
 import HideButton, { TRANSFORMS } from './HideButton';
 import OPTIONS, { createHandlers } from './Options';
-
-const PANE_TITLE = "Options";
-
-// -------------- Styles ------------- //
-
-const TOOLTIP_COLOR = "#555";
-const TOOLTIP_TEXT_COLOR = "#fff";
-const TOOLTIP_ARROW_SIZE = "5px";
-const TOOLTIP_STYLE = ""
- + "\n.options-tooltip .options-tooltiptext {"
- + `\n   background-color: ${TOOLTIP_COLOR};`
- + `\n   color: ${TOOLTIP_TEXT_COLOR};`
- + `\n   padding: 0 ${TOOLTIP_ARROW_SIZE} ${TOOLTIP_ARROW_SIZE} ${TOOLTIP_ARROW_SIZE};`
- + "\n"
- + "\n   top: 0%;"
- + "\n   right: 105%;"
- + "\n}"
- + "\n"
- + "\n.options-tooltip .options-tooltiptext::after {"
- + "\n   top: 10px;"
- + "\n   left: 100%;"
- + `\n   margin-top: -${TOOLTIP_ARROW_SIZE};`
- + `\n   border-width: ${TOOLTIP_ARROW_SIZE};`
- + `\n   border-color: transparent transparent transparent ${TOOLTIP_COLOR};`
- + "\n}"
- + "\n";
 
 // -------------- Radio Button ------------- //
 
 const RadioButton = props => {
    return (
-      <p className={'options-tooltip options-choice'}>
+      <p className={'tooltip options-tooltip options-choice'}>
       <label>
          <input 
             type='radio' 
@@ -45,7 +20,9 @@ const RadioButton = props => {
          />
          {props.contents}
       </label>
-      <span className={'options-tooltiptext'}>{props.tooltip}</span>
+      <span className={'tooltiptext options-tooltiptext'}>
+         {props.tooltip}
+      </span>
       </p>
    )
 }
@@ -69,16 +46,10 @@ class OptionsPane extends Component {
 
       // set pane title
       let toRender = [(
-            <style key={'style'}>
-               {TOOLTIP_STYLE}
-            </style>
-         ), (
-            <p key={'pane_title'}
-               className={'options-title'}>
-               {PANE_TITLE}
-            </p>
-         )
-      ];
+         <p key={'pane_title'} className={'options-title'}>
+            {"Options"}
+         </p>
+      )];
 
       OPTIONS.forEach((opt, index) => {
          // push option's title element

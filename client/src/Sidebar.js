@@ -1,29 +1,10 @@
 import React, { Component } from 'react';
 import './css/Sidebar.css';
+import './css/tooltip.css';
 import HideButton, { TRANSFORMS } from './HideButton';
 import { getDocumentSize } from './utils';
 
 const { useState } = React;
-
-const TOOLTIP_COLOR = "#555";
-const TOOLTIP_TEXT_COLOR = "#fff";
-const TOOLTIP_ARROW_SIZE = "5px";
-const TOOLTIP_STYLE = ""
- + "\n.sidebar-tooltip .sidebar-tooltiptext {"
- + `\n   background-color: ${TOOLTIP_COLOR};`
- + `\n   color: ${TOOLTIP_TEXT_COLOR};`
- + `\n   padding: ${TOOLTIP_ARROW_SIZE};`
- + "\n}"
- + "\n"
- + "\n.sidebar-tooltip .sidebar-tooltiptext::after {"
- + `\n   top: -${TOOLTIP_ARROW_SIZE};`
- + "\n   left: 50%;"
- + `\n   margin-top: -${TOOLTIP_ARROW_SIZE};`
- + `\n   border-width: ${TOOLTIP_ARROW_SIZE};`
- + `\n   border-color: transparent transparent ${TOOLTIP_COLOR} transparent;`
- + "\n   transform: translate(-50%, 0%);"
- + "\n}"
- + "\n";
 
 function valueToString(key, value) {
    if (!value) return "";
@@ -78,10 +59,13 @@ const ListNode = props => {
 
    return (
       <li>
-         <span className={'sidebar-caret sidebar-caret-down'} onClick={toggleActive}>{node.id}</span>
-         <ul style={{marginLeft: "0.5em"}}>
-            {propElements}
-         </ul>
+      <span className={'sidebar-caret sidebar-caret-down'} 
+            onClick={toggleActive}>
+         {node.id}
+      </span>
+      <ul style={{marginLeft: "0.5em"}}>
+         {propElements}
+      </ul>
       </li>
    );
 
@@ -97,9 +81,11 @@ const CloseDropdownButton = props => {
 
    return (
       <button id={'sidebar-close-button'}
-              className={'sidebar-tooltip'} 
+              className={'tooltip sidebar-tooltip'} 
               onClick={closeNodes}>
-         <span className={'sidebar-tooltiptext'}>{'Close All Dropdowns'}</span>
+         <span className={'tooltiptext sidebar-tooltiptext'}>
+            {'Close All Dropdowns'}
+         </span>
       </button>
    );
 }
@@ -146,7 +132,6 @@ class Sidebar extends Component {
 
       return (
          <div id={'sidebar'} style={style}>
-            <style>{TOOLTIP_STYLE}</style>
             <div id={'sidebar-list-container'}>
                <ul className={'sidebar-list'}>{nodes}</ul>
             </div>
