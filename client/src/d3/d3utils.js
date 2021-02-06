@@ -35,7 +35,7 @@ async function lookupNewGraph(userInfo, options, err) {
 
    if (options.loadAhead) {
       for (let node of dependencyNodes.nodes) {
-         await lookAtSingle(node, graph, options, err);
+         await lookAtSingle(node, options, err);
 
       }
    }
@@ -48,7 +48,7 @@ async function lookupNewGraph(userInfo, options, err) {
 
 async function searchNewGraph(d, graph, options, err) {
    if (!d.all) {
-      lookAtSingle(d, graph, options, err);
+      lookAtSingle(d, options, err);
    }
 
    if (!d.all) { // lookup failed
@@ -68,7 +68,7 @@ async function searchNewGraph(d, graph, options, err) {
 
    if (options.loadAhead) {
       newGraph.nodes.forEach(node => {
-         lookAtSingle(node, graph, options, err);
+         lookAtSingle(node, options, err);
       });
    }
 
@@ -78,7 +78,22 @@ async function searchNewGraph(d, graph, options, err) {
    };
 }
 
-async function lookAtSingle(d, graph, options, err) {
+/* params: name of node to lookup, parent, current graph, options, error callback */
+async function addSingle(name, p, graph, options, err) {
+   let newNode = _createSideNode({name: name}, options);
+   await lookAtSingle(newNode, options, err);
+
+   const newNodes = [newNode];
+   const newLinks = [_createLink(p, newNode)];
+   console.log("Add Single", newNodes, newLinks);
+
+   return {
+      nodes: graph.nodes.concat(newNodes),
+      links: graph.links.concat(newLinks)
+   }
+}
+
+async function lookAtSingle(d, options, err) {
    if (!d.loaded) d.loaded = {}
    let {resp: data, error} = await search(d.id, options);
    if (error) {
@@ -196,15 +211,11 @@ function _hasNode(nodes, data) {
 function dependenciesToNodes(dependencies, mainNode, nodes, links, options) {
    let newNodes = [];
    let newLinks = [];
-   dependencies.forEach((data, index, array) => {
-      if (!_hasNode(nodes, data)) {
-         newNodes.push(_createSideNode(data, options));
+   dependencies.forEach((dependency, index, array) => {
+      if (!_hasNode(nodes, dependency)) {
+         newNodes.push(_createSideNode(dependency, options));
       }
-      newLinks.push({
-         source: mainNode, 
-         target: data.name, 
-         value: data.name.length
-      });
+      newLinks.push(_createLink(mainNode, dependency));
    });
    console.log("Dependencies registered: ", newNodes, newLinks);
    return { nodes: newNodes, links: newLinks };
@@ -256,10 +267,21 @@ function _createSideNode(node, options) {
    return sideNode;
 }
 
+function _createLink(source, target) {
+   console.log("Create new link:", source, target);
+   let name = target.name || target.id;
+   return {
+      source: source, 
+      target: name, 
+      value: name.length
+   };
+}
+
 export { 
    createCentralNode,
    lookupNewGraph,
    searchNewGraph,
+   addSingle,
    updateNodes,
    getGithubURL
 }

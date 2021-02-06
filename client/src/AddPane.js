@@ -1,63 +1,54 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './css/AddPane.css'
 import HideButton, { TRANSFORMS } from './HideButton';
-import { searchNewGraph } from './d3/d3utils';
+import { addSingle } from './d3/d3utils';
+const { useState } = React;
 
-class AddPane extends Component {
-   constructor(props) {
-      super(props);
-      this.state = {
-         isHidden: false
-      };
-   }
-   setHidden = hidden => {this.setState({isHidden: hidden})};
+const AddPane = props => {
+   const [isHidden, setHidden] = useState(false);
+   const [dependency, setDependency] = useState("");
 
-   async addDependency(graph, node) {
-      console.log("add dependency", graph);
-      let newGraph = {
-         nodes: [].concat(graph.nodes), 
-         links: [].concat(graph.links)
-      };
+   var addDependency = async (graph, name) => {
+      console.log("add dependency", name, graph);
 
-      console.log("searching...", newGraph);
-      let ng = await searchNewGraph(node, newGraph, 
-         this.props.options, 
-         this.props.setErrorText
-      );
-      if (ng) newGraph = ng;
-      this.props.setGraph(newGraph);
+      let ng = await addSingle(name, graph.nodes[0], graph, 
+         props.options, props.setErrorText);
+      if (ng)
+         props.setGraph(ng);
    }
 
-   render() {
-      let style = {};
-      if (this.state.isHidden)
-         style.transform = TRANSFORMS.UP;
-
+   var handleSubmit = event => {
+      event.preventDefault();
       let graph = {
-         nodes: this.props.nodes,
-         links: this.props.links
-      };
-
-      return (
-         <div id="add-pane" style={style}>
-            <form onSubmit={this.addDependency}>
-               <input
-                  type='text'
-                  onChange={event => {}}
-                  placeholder="Try a dependency here"
-                  required
-               />
-               <button type='submit'>Add</button>
-            </form>
-            <HideButton
-               isHidden={this.state.isHidden}
-               setHidden={this.setHidden}
-               direction={"up"}
-            />
-         </div>
-      );
-
+         nodes: props.nodes,
+         links: props.links
+      }
+      addDependency(graph, dependency);
    }
+
+   let style = {};
+   if (isHidden)
+      style.transform = TRANSFORMS.UP;
+
+   return (
+      <div id="add-pane" style={style}>
+         <form onSubmit={handleSubmit}>
+            <input
+               type='text'
+               value={dependency}
+               onChange={event => setDependency(event.target.value)}
+               placeholder="Try a dependency here"
+               required
+            />
+            <button type='submit'>Add</button>
+         </form>
+         <HideButton
+            isHidden={isHidden}
+            setHidden={setHidden}
+            direction={"up"}
+         />
+      </div>
+   );
 }
 
 export default AddPane;
