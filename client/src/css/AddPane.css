@@ -1,0 +1,11 @@
+
+#add-pane {
+   position: absolute;
+   padding: 0px 2px 2px 2px;
+   margin: auto 1px 1px auto;
+   z-index: 4;
+   bottom: 0;
+   right: 0;
+   width: fit-content;
+   background-color: lightsteelblue;
+}

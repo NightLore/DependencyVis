@@ -6,6 +6,7 @@ import Form from './Form';
 import ColorLegend from './ColorLegend';
 import OptionsPane from './OptionsPane';
 import ButtonPane from './ButtonPane';
+import AddPane from './AddPane';
 import ErrorText from './ErrorText';
 
 const { useState } = React;
@@ -74,6 +75,13 @@ const App = () => {
                setSizeOption={handleSizeOption}
             />
          </div>
+         <AddPane
+            nodes={nodes}
+            links={links}
+            setGraph={setGraph}
+            options={options}
+            setErrorText={setErrorText}
+         />
          <ButtonPane
             nodes={nodes}
             links={links}
