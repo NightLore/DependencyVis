@@ -1,10 +1,64 @@
 import React, { Component } from 'react';
 import './css/ColorLegend.css';
-import HideButton, { TRANSFORMS } from './HideButton'
+import HideButton, { TRANSFORMS } from './HideButton';
+import licenseManager from './dataManagers/license.js';
 import { 
    COLOR_OPTION_LOADED, 
-   COLOR_OPTION_AUDIT
+   COLOR_OPTION_AUDIT,
+   COLOR_OPTION_LICENSE
 } from './Options'
+
+// -------------- Different States ------------- //
+//
+
+function getLoadedLegend() {
+   return (
+      <table key='table' className={'colorlegend-table'}>
+      {tableHeaders("Node", "Status")}
+      <tbody>
+         {tableRow("blue", "Main node")}
+         {tableRow("grey", "Not Loaded")}
+         {tableRow("lightblue", "Loaded")}
+         {tableRow("white", "Failed to Load", "black")}
+      </tbody>
+      </table>
+   );
+}
+
+function getAuditLegend() {
+   return (
+      <table key="table">
+      {tableHeaders("Node", "Severity")}
+      <tbody>
+         {tableRow("grey", "Partially Loaded")}
+         {tableRow("white", "Failed to Load", "black")}
+         {tableRow("darkred", "Critical")}
+         {tableRow("red", "High")}
+         {tableRow("orange", "Medium")}
+         {tableRow("yellow", "Low")}
+         {tableRow("green", "No severity")}
+      </tbody>
+      </table>
+   );
+}
+
+function getLicenseLegend() {
+   const licenses = licenseManager.getAllColors();
+   const display = [];
+   for (const license of licenses) {
+      display.push(tableRow(license.color, license.name));
+   }
+
+
+   return (
+      <table key="table">
+      {tableHeaders("Node", "License")}
+      <tbody>
+         {display}
+      </tbody>
+      </table>
+   );
+}
 
 // -------------- ColorLegend ------------- //
 
@@ -21,7 +75,7 @@ function tableHeaders(h1, h2) {
 
 function tableRow(color, description, borderColor = 'white') {
    return (
-      <tr>
+      <tr key={color + description}>
          <td className={'colorlegend-left'}>
             <span 
                className={'colorlegend-circle'} 
@@ -58,34 +112,15 @@ class ColorLegend extends Component {
 
       switch (colorOption) {
          case COLOR_OPTION_LOADED.NAME:
-            toRender.push((
-               <table key='table' className={'colorlegend-table'}>
-               {tableHeaders("Node", "Status")}
-               <tbody>
-                  {tableRow("blue", "Main node")}
-                  {tableRow("grey", "Not Loaded")}
-                  {tableRow("lightblue", "Loaded")}
-                  {tableRow("white", "Failed to Load", "black")}
-               </tbody>
-               </table>
-            ));
+            toRender.push(getLoadedLegend());
             break;
 
          case COLOR_OPTION_AUDIT.NAME:
-            toRender.push((
-               <table key="table">
-               {tableHeaders("Node", "Severity")}
-               <tbody>
-                  {tableRow("grey", "Partially Loaded")}
-                  {tableRow("white", "Failed to Load", "black")}
-                  {tableRow("darkred", "Critical")}
-                  {tableRow("red", "High")}
-                  {tableRow("orange", "Medium")}
-                  {tableRow("yellow", "Low")}
-                  {tableRow("green", "No severity")}
-               </tbody>
-               </table>
-            ));
+            toRender.push(getAuditLegend());
+            break;
+
+         case COLOR_OPTION_LICENSE.NAME:
+            toRender.push(getLicenseLegend());
             break;
          default:
       }

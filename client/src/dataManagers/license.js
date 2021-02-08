@@ -3,7 +3,6 @@
 const _colors = [
    'blueviolet',
    'cornflowerblue',
-   'brown',
    'crimson',
    'olivedrab',
    'teal',
@@ -20,6 +19,17 @@ const _colors = [
 const indices = {}
 let count = 0; // note: can use size of indices instead
 
+function getAllColors() {
+   const mappings = [];
+   for (const license of Object.keys(indices)) {
+      mappings.push({
+         name: license,
+         color: getColor(license)
+      });
+   }
+   return mappings;
+}
+
 function getColor(license) {
    if (license in indices)
       return _colors[indices[license]];
@@ -35,6 +45,7 @@ function push(license) {
 }
 
 const licenseManager = {
+   getAllColors,
    getColor,
    push,
 }
