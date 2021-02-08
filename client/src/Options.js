@@ -40,7 +40,9 @@ const OPTIONS = [
       createChoice("loaded", "Load Status", 
          "Color nodes based on their status in the program."),
       createChoice("audit", "Audit", 
-         "Color nodes based on the highest npm audit severity.")
+         "Color nodes based on the highest npm audit severity."),
+      createChoice("license", "License", 
+         "Nodes with the same color have the same license.")
    ]),
    createOption("Size", [
       createChoice("nothing", "Nothing", "Keep all nodes the same size"),
@@ -69,8 +71,9 @@ const OPTIONS = [
 ];
 
 const COLOR_OPTIONS = OPTIONS[0];
-const COLOR_OPTION_LOADED = COLOR_OPTIONS.CHOICES[0];
-const COLOR_OPTION_AUDIT  = COLOR_OPTIONS.CHOICES[1];
+const COLOR_OPTION_LOADED  = COLOR_OPTIONS.CHOICES[0];
+const COLOR_OPTION_AUDIT   = COLOR_OPTIONS.CHOICES[1];
+const COLOR_OPTION_LICENSE = COLOR_OPTIONS.CHOICES[2];
 
 const SIZE_OPTIONS = OPTIONS[1];
 const SIZE_OPTION_NOTHING           = SIZE_OPTIONS.CHOICES[0];
@@ -85,6 +88,7 @@ export {
    COLOR_OPTIONS, 
    COLOR_OPTION_LOADED, 
    COLOR_OPTION_AUDIT, 
+   COLOR_OPTION_LICENSE, 
    SIZE_OPTIONS, 
    SIZE_OPTION_NOTHING, 
    SIZE_OPTION_STARS, 

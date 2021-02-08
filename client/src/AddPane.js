@@ -28,7 +28,7 @@ const AddPane = props => {
 
    let style = {};
    if (isHidden)
-      style.transform = TRANSFORMS.UP;
+      style.transform = TRANSFORMS.DOWN;
 
    return (
       <div id="add-pane" style={style}>

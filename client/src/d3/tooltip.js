@@ -1,6 +1,7 @@
 import {
    COLOR_OPTION_LOADED,
-   COLOR_OPTION_AUDIT
+   COLOR_OPTION_AUDIT,
+   COLOR_OPTION_LICENSE
 } from '../Options'
 
 function updateTooltip(tooltip, d, attributes) {
@@ -23,6 +24,9 @@ function updateTooltip(tooltip, d, attributes) {
          break;
       case COLOR_OPTION_AUDIT.NAME:
          dy = setAudit(tooltip, d, attributes, textX, textY, dy);
+         break;
+      case COLOR_OPTION_LICENSE.NAME:
+         dy = setLicense(tooltip, d, attributes, textX, textY, dy);
          break;
       default:
    }
@@ -89,6 +93,20 @@ function setAudit(tooltip, d, attributes, textX, textY, dy) {
       
    });
    return dy;
+}
+
+function setLicense(tooltip, d, attributes, textX, textY, dy) {
+   if (!d.loaded || d.loaded.failed) {
+      return setLoaded(tooltip, d, attributes, textX, textY, dy);
+   }
+
+   if (!d.details.license) {
+      addText(tooltip, textX, textY, dy, "License Not Found");
+      return dy + attributes.tooltipDy;
+   }
+
+   addText(tooltip, textX, textY, dy, d.details.license);
+   return dy + attributes.tooltipDy;
 }
 
 export default updateTooltip;

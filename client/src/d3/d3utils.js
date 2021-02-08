@@ -3,6 +3,7 @@ import { lookup, search } from '../AxiosUtils'
 import {
    COLOR_OPTION_LOADED, 
    COLOR_OPTION_AUDIT, 
+   COLOR_OPTION_LICENSE, 
    SIZE_OPTIONS,
 } from '../Options'
 
@@ -168,11 +169,15 @@ function updateNodes(nodes, options) {
 function toNodeColor(data, options) {
    if (data.loaded && data.loaded.failed)
       return "white";
+
    switch (options.color) {
       case COLOR_OPTION_LOADED.NAME:
          return data.loaded.color;
       case COLOR_OPTION_AUDIT.NAME:
          return auditToColor(data.audit);
+      case COLOR_OPTION_LICENSE.NAME:
+         return "purple";
+
       default:
    }
    return "grey";

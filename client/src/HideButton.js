@@ -16,7 +16,7 @@ function OpenState(open, close, x, y, w, h) {
 }
 
 const TRANSFORMS = {
-   UP:    "translate(0%, 100%)",
+   UP:    "translate(0%, -100%)",
    RIGHT: "translate(100%, 0%)",
    DOWN:  "translate(0%, 100%)",
    LEFT:  "translate(-100%, 0%)",
