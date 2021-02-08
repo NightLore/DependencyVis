@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import '../css/Graph.css'
 import * as d3 from 'd3'
 import mouse from './mouse'
-import { updateNodes } from './d3utils'
-import { getDocumentSize } from '../utils';
+import { updateNodes } from '../utils/d3'
+import { getDocumentSize } from '../utils/utils';
 
 const SIMULATION = {
    STRENGTH: 45,

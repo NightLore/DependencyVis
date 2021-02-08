@@ -1,7 +1,7 @@
 import React from 'react';
 import './css/AddPane.css'
 import HideButton, { TRANSFORMS } from './HideButton';
-import { addSingle } from './d3/d3utils';
+import { addSingle } from './utils/d3';
 const { useState } = React;
 
 const AddPane = props => {

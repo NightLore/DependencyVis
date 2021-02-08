@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 import updateTooltip from './tooltip'
-import { searchNewGraph } from './d3utils'
-import { openInNewTab } from '../utils'
+import { searchNewGraph } from '../utils/d3'
+import { openInNewTab } from '../utils/utils'
 
 function drag(simulation) {
 

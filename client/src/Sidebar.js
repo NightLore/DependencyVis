@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './css/Sidebar.css';
 import './css/tooltip.css';
 import HideButton, { TRANSFORMS } from './HideButton';
-import { getDocumentSize } from './utils';
+import { getDocumentSize } from './utils/utils';
 
 const { useState } = React;
 

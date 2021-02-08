@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './css/ButtonPane.css'
 import HideButton, { TRANSFORMS } from './HideButton';
-import { searchNewGraph } from './d3/d3utils';
+import { searchNewGraph } from './utils/d3';
 
 class ButtonPane extends Component {
    constructor(props) {

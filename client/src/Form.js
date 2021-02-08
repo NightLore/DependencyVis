@@ -1,6 +1,6 @@
 import React from 'react';
 import './css/Form.css';
-import { lookupNewGraph } from './d3/d3utils';
+import { lookupNewGraph } from './utils/d3';
 const { useState } = React;
 
 const Form = props => {

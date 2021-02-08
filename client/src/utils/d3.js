@@ -1,5 +1,6 @@
 import auditToColor from '../dataManagers/audit'
-import { lookup, search } from '../AxiosUtils'
+import licenseManager from '../dataManagers/license'
+import { lookup, search } from './axios'
 import {
    COLOR_OPTION_LOADED, 
    COLOR_OPTION_AUDIT, 
@@ -136,6 +137,9 @@ function importData(node, data) {
    if (!node.details) node.details = {}
    Object.assign(node.details, importData);
    node.all = data;
+   if (importData.license) {
+      licenseManager.push(importData.license);
+   }
 }
 
 function setLoaded(node) {
@@ -176,7 +180,7 @@ function toNodeColor(data, options) {
       case COLOR_OPTION_AUDIT.NAME:
          return auditToColor(data.audit);
       case COLOR_OPTION_LICENSE.NAME:
-         return "purple";
+         return licenseManager.getColor(data.details.license);
 
       default:
    }
