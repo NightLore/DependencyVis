@@ -61,7 +61,7 @@ const OPTIONS = [
       createChoice("open_pull_requests", "Open PRs",
          "number of open pull requests (max 100)",
          "open_pull_request_count"),
-      createChoice("closed_pull_requests", "Closed PRs", 
+      createChoice("closed_pull_requests", "Closed PRs (30 days)", 
          "number of closed PRs within the last 30 days",
          "closed_pull_request_count"),
       createChoice("mean_pull_requests", "Mean Time PR Review",
