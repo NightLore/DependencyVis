@@ -40,7 +40,7 @@ const OPTIONS = [
       createChoice("loaded", "Load Status", 
          "Color nodes based on their status in the program."),
       createChoice("audit", "Audit", 
-         "Color nodes based on the highest npm audit severity."),
+         "Color nodes based on the highest npm audit severity. Go to https://www.npmjs.com/advisories/<id> for more info."),
       createChoice("license", "License", 
          "Nodes with the same color have the same license.")
    ]),
