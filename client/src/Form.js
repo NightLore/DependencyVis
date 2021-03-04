@@ -4,7 +4,7 @@ import { lookupNewGraph } from './utils/d3';
 const { useState } = React;
 
 const Form = props => {
-   const [org, setOrg] = useState('');
+   const [owner, setOrg] = useState('');
    const [repo, setRepo] = useState('');
    const [folder, setFolder] = useState('');
    const [dbOption, setDBOption] = useState(true);
@@ -34,12 +34,12 @@ const Form = props => {
    }
    var handleSubmitEvent = event => {
       event.preventDefault(); 
-      handleSubmit(org, repo, folder);
+      handleSubmit(owner, repo, folder);
    }
 
    var checkURL = () => {
       const urlQuerry = new URLSearchParams(window.location.search); 
-      const o = urlQuerry.get('org');
+      const o = urlQuerry.get('owner');
       const r = urlQuerry.get('repo');
       if (o && r && props.showForm) {
          handleSubmit(o, r);
@@ -55,9 +55,9 @@ const Form = props => {
       <form onSubmit={handleSubmitEvent}>
          <input
             type="text"
-            value={org}
+            value={owner}
             onChange={event => setOrg(event.target.value)}
-            placeholder="GitHub organization"
+            placeholder="GitHub owner"
             required
          />
          <input

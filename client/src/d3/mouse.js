@@ -86,7 +86,7 @@ async function handleMouseClicked(d) {
 }
 
 function handleMouseDoubleClicked(d) {
-   openInNewTab(`?org=${d.all.username}&repo=${d.all.repo}`);
+   openInNewTab(`?owner=${d.all.username}&repo=${d.all.repo}`);
    console.log("Double Clicked", d);
 }
 
