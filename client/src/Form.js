@@ -76,7 +76,7 @@ const Form = props => {
          />
          <br/>
          <label>
-            Use MongoDB Database: 
+            Use own database? 
             <input
                type="checkbox"
                name="dbOption"

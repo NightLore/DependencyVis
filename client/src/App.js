@@ -17,7 +17,7 @@ const App = () => {
    const [showForm, setFormVisibility] = useState(true);
    const [errorText, setErrorText] = useState('');
    const [dbOption, setDBOption] = useState(true);
-   const [loadAheadOption, setLoadAheadOption] = useState(true);
+   const [loadAheadOption, setLoadAheadOption] = useState(true); // switch to false to keep from loading all information ahead of time
    const [colorOption, setColorOption] = useState('loaded');
    const [sizeOption, setSizeOption] = useState('nothing');
 
