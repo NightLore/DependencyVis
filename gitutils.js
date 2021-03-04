@@ -1,5 +1,4 @@
 const utils = require('./utils');
-const npmFetch = require('npm-registry-fetch');
 
 async function getRepoDetails(repo) {
    console.log("getRepoDetails", repo);
