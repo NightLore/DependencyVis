@@ -24,5 +24,8 @@ Then go to http://localhost:3000 to connect to client
 `MONGO_DB_PASSWORD=`
 4. run server with `node server.js`
 
-### Usage Note
+### Usage Notes
 _We have deployed and hosted the most recent version of this project on Heroku (database on MongoDB Atlas/AWS). Here's the link to the tool: http://dependencyvis.herokuapp.com/ This is a proof of concept and as of now does not use a robust infrainstracture to be used in large scale._
+
+### Input Restrictions
+_DependencyVis can only work on GitHub repositories that have a package.json pushed to them._
