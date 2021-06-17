@@ -1,5 +1,5 @@
 
-#form_background {
+#form-background {
    z-index: 5;
    background-color: rgb(191, 226, 227);
 
@@ -19,9 +19,17 @@
    transform: translate(-50%, -50%);
 }
 
-#form_title {
+#form-title {
    font-size: 4em;
    font-style: italic;
    text-align: center;
    color: rgb(75, 35, 92);
+}
+
+#form-links {
+   position: absolute;
+   bottom: 0;
+   right: 0;
+   margin: 1em 2em;
+   font-size: 1.2em;
 }

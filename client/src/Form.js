@@ -49,43 +49,46 @@ const Form = props => {
    checkURL();
    return (
       <div style={{display: props.showForm ? "block" : "none"}}>
-      <div id='form_background'>
-      <div id='form'>
-      <h1 id='form_title'>{"DependencyVis"}</h1>
-      <form onSubmit={handleSubmitEvent}>
-         <input
-            type="text"
-            value={owner}
-            onChange={event => setOrg(event.target.value)}
-            placeholder="GitHub owner"
-            required
-         />
-         <input
-            type="text"
-            value={repo}
-            onChange={event => setRepo(event.target.value)}
-            placeholder="GitHub repo"
-            required
-         />
-         <button type="submit">Search</button>
-         <input
-            type="text"
-            value={folder}
-            onChange={event => setFolder(event.target.value)}
-            placeholder="optional specified folder"
-         />
-         <br/>
-         <label>
-            Use own database? 
+      <div id='form-background'>
+         <div id='form'>
+         <h1 id='form-title'>{"DependencyVis"}</h1>
+         <form onSubmit={handleSubmitEvent}>
             <input
-               type="checkbox"
-               name="dbOption"
-               checked={dbOption}
-               onChange={event => setDBOption(event.target.checked)}
+               type="text"
+               value={owner}
+               onChange={event => setOrg(event.target.value)}
+               placeholder="GitHub owner"
+               required
             />
-         </label>
-      </form>
-      </div>
+            <input
+               type="text"
+               value={repo}
+               onChange={event => setRepo(event.target.value)}
+               placeholder="GitHub repo"
+               required
+            />
+            <button type="submit">Search</button>
+            <input
+               type="text"
+               value={folder}
+               onChange={event => setFolder(event.target.value)}
+               placeholder="optional specified folder"
+            />
+            <br/>
+            <label>
+               Use own database? 
+               <input
+                  type="checkbox"
+                  name="dbOption"
+                  checked={dbOption}
+                  onChange={event => setDBOption(event.target.checked)}
+               />
+            </label>
+         </form>
+         </div>
+         <div id='form-links'>
+            <a href='https://github.com/NightLore/DependencyVis'>DependencyVis GitHub</a>
+         </div>
       </div>
       </div>
    )
