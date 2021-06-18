@@ -87,6 +87,19 @@ const Form = props => {
             </label>
          </form>
          </div>
+
+         <div id='form-examples'>
+            <h2>Examples:</h2>
+            <span id='example-owners'>
+               <p>owner: <a href='https://github.com/expressjs/express'>expressjs</a></p>
+               <p>owner: <a href='https://github.com/d3/d3'>d3</a></p>
+            </span>
+            <span id='example-repos'>
+               <p>repo: <a href='https://github.com/expressjs/express'>express</a></p>
+               <p>repo: <a href='https://github.com/d3/d3'>d3</a></p>
+            </span>
+         </div>
+
          <div id='form-links'>
             <a href='https://github.com/NightLore/DependencyVis'><AiFillGithub/> DependencyVis repository</a>
          </div>

@@ -13,9 +13,8 @@
 
    /* center on page */
    position: absolute;
-   margin: auto;
    left: 50%;
-   top: 30%;
+   top: 40%;
    transform: translate(-50%, -50%);
 }
 
@@ -24,6 +23,30 @@
    font-style: italic;
    text-align: center;
    color: rgb(75, 35, 92);
+}
+
+#form-examples {
+   position: absolute;
+   display: inline-block;
+   left: 50%;
+   top: 75%;
+   transform: translate(-50%, -50%);
+   padding: 0.3em 1em 1em;
+   border: 1px solid black;
+   border-radius: 1em;
+}
+
+#form-examples h2 {
+   margin: 0.3em 0;
+}
+
+#form-examples p {
+   margin: 0.5em 1.5em;
+}
+
+#form-examples span {
+   display: inline-block;
+   margin: 0 1em;
 }
 
 #form-links {
