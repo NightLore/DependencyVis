@@ -1,6 +1,7 @@
 import React from 'react';
 import './css/Form.css';
 import { lookupNewGraph } from './utils/d3';
+import { AiFillGithub } from 'react-icons/ai';
 const { useState } = React;
 
 const Form = props => {
@@ -87,7 +88,7 @@ const Form = props => {
          </form>
          </div>
          <div id='form-links'>
-            <a href='https://github.com/NightLore/DependencyVis'>DependencyVis GitHub</a>
+            <a href='https://github.com/NightLore/DependencyVis'><AiFillGithub/> DependencyVis repository</a>
          </div>
       </div>
       </div>

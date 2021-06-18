@@ -12,7 +12,8 @@
     "got": "^11.7.0",
     "mongodb": "^3.5.2",
     "npm-api": "^1.0.0",
-    "npm-registry-fetch": "^8.1.0"
+    "npm-registry-fetch": "^8.1.0",
+    "react-icons": "^4.2.0"
   },
   "devDependencies": {},
   "scripts": {
